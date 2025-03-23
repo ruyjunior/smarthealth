@@ -1,23 +1,22 @@
+import { auth } from "@/utils/auth"; // Certifique-se de que auth está exportado corretamente
 import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt"; // Função para obter e verificar o token
-import type { NextRequest } from "next/server";
+import NextAuth from 'next-auth';
 
-// Configuração para o segredo do JWT
-const secret = process.env.AUTH_SECRET;
+export async function middleware(request: Request) {
+  const session = await auth(); // auth() já retorna os dados da sessão corretamente
+  const isLoggedIn = !!session?.user; // Agora acessamos session.user diretamente
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret });
+  const { pathname } = new URL(request.url);
+  const isPublicRoute = pathname === "/" || pathname === "/plans" ||
+    pathname === "/login" || pathname === "/register" ||
+    pathname === "/forgot-password" || pathname === "/reset-password";
 
-  if (!token) {
-    // Se o token não for encontrado ou for inválido, redireciona para a página de login
-    return NextResponse.redirect(new URL("/login", req.url));
+  if (!isPublicRoute && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-
-  // Se o token for válido, continue para a próxima ação
   return NextResponse.next();
 }
 
-// Aplicar middleware apenas em rotas protegidas
 export const config = {
   matcher: ["/dashboard/:path*"],
 };
