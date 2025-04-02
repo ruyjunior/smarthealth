@@ -4,11 +4,27 @@ import { sql } from "@vercel/postgres";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { JWT } from "next-auth/jwt";
-import { User } from "next-auth/providers/notion";
+import { AdapterUser } from "next-auth/adapters";
+import  { DefaultSession, User, CustomUser } from "next-auth";
 
-async function getUser(email: string): Promise< User | null> {
+declare module "next-auth" {
+  interface CustomUser extends AdapterUser {
+    role: string; 
+    password: string;
+  }
+  interface Session {
+    user: CustomUser & DefaultSession["user"]; 
+  }
+}
+declare module "next-auth/jwt" {
+  interface JWT {
+    role: string; 
+  }
+}
+
+async function getUser(email: string): Promise<CustomUser | null> {
   try {
-    const users = await sql<User>`SELECT * FROM smarthealth.users WHERE email=${email}`;
+    const users = await sql<CustomUser>`SELECT * FROM smarthealth.users WHERE email=${email}`;
     return users.rows[0] || null;
   } catch (error) {
     console.error("Erro ao buscar usuário:", error);
@@ -16,7 +32,7 @@ async function getUser(email: string): Promise< User | null> {
   }
 }
 
-export const {handlers, auth, signIn, signOut} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
     signOut: "/login",
@@ -64,14 +80,15 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
     maxAge: 60 * 60 * 24 * 7 // Expiração do token JWT
   },
   callbacks: {
-    async jwt ({ token, user }) {
+    async jwt({ token, user }) {
       //console.log("Dados do usuário no JWT antes:", token); // Debug
       if (user) {
         return {
-        ...token,
-        id : user.id,
-        name : user.name,
-        email : user.email,
+          ...token,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role : (user as CustomUser).role
         };
       }
       //console.log("Token final com role:", token); // Debug
@@ -79,10 +96,11 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
     },
     async session({ session, token }: { session: any, token: JWT }) {
       if (session.user) {
-          session.user.id = token.id as string;
-          session.user.name =  token.name as string;
-          session.user.email =  token.email as string;
-        }
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.role = token.role as string;
+      }
       return session;
     },
     async redirect({ url, baseUrl }: { url: string, baseUrl: string }) {
