@@ -1,7 +1,7 @@
 // Loading animation
 const shimmer =
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
-import {TableRowSkeleton} from '@/app/components/ui/skeletons';
+import { TableRowSkeleton } from '@/app/components/ui/skeletons';
 
 export function ServiceSkeleton() {
   return (
@@ -58,20 +58,18 @@ export function ServicesTableSkeleton() {
             <ServicesMobileSkeleton />
           </div>
           <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
+            <thead className="bg-green-100 text-left text-xs font-medium">
               <tr>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  NAME
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  EMAIL
-                </th>
-                <th
-                  scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2 sm:pr-6"
-                >
-                  <span className="sr-only">Edit</span>
-                </th>
+                <th className="px-2 py-2">Editar</th>
+                <th className="px-2 py-2">Data</th>
+                <th className="px-2 py-2">Situação</th>
+                <th className="px-2 py-2">Início</th>
+                <th className="px-2 py-2">Fim</th>
+                <th className="px-2 py-2">Paciente</th>
+                <th className="px-2 py-2">Consultório</th>
+                <th className="px-2 py-2">Atendimento</th>
+                <th className="px-2 py-2">Profissional</th>
+                <th className="px-2 py-2">Deletar</th>
               </tr>
             </thead>
             <tbody className="bg-white">

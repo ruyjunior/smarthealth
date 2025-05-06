@@ -27,11 +27,10 @@ export async function fetchFilteredServices(
   try {
     const data = await sql<Service>`
     SELECT 
-        id, iduser, idoffice, idclient, idtype, status, date, starttime, endtime 
-      FROM smarthealth.services
-      WHERE iduser::text ILIKE ${`%${query}%`}
-      ORDER BY starttime DESC
-       `;
+            id, iduser, idoffice, idclient, idtype, status, date, starttime, endtime 
+                  FROM smarthealth.services
+                                            ORDER BY date, starttime ASC
+          `;
     const services = data.rows;
     return services;
   } catch (err) {
