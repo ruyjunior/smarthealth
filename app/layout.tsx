@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/main/navbar";
 import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
@@ -15,9 +14,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart Health",
-  description: "your virtual clinic app",
+  title: {
+    template: '%s | SH',
+    default: 'Smart Health',
+  },
+  description: 'your virtual clinic app',
+  //metadataBase: new URL('https://www.autoric.com.br'),
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+  },
+  robots: {
+    follow: true,
+    index: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
+
 
 export default function RootLayout({
   children,
@@ -30,7 +47,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          <Navbar />
           {children}
         </SessionProvider>
 

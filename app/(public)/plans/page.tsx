@@ -1,6 +1,6 @@
 'use client';
 import Image from "next/image";
-import  { handleCheckout }  from '@/utils/stripe/checkout';
+import  { handleCheckout }  from '@/app/lib/stripe/checkout';
 
 const idPlanYear = "price_1R3eqQBTcFRiXn7vvWKKEo4M";
 const idPlanMonth = "price_1R3eqQBTcFRiXn7vAoRz3RmC";

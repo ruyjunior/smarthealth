@@ -1,4 +1,4 @@
-import { auth } from "@/utils/auth"; // Certifique-se de que auth está exportado corretamente
+import { auth } from "@/app/lib/auth"; // Certifique-se de que auth está exportado corretamente
 import { NextResponse } from "next/server";
 
 export async function middleware(request: Request) {

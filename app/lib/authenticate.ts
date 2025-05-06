@@ -1,5 +1,5 @@
 'use server'
-import { signIn } from '@/utils/auth';
+import { signIn } from '@/app/lib/auth';
 import AuthError  from 'next-auth';
 
 

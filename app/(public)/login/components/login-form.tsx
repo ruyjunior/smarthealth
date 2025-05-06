@@ -2,9 +2,9 @@
 import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon, } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useActionState } from 'react';
-import { authenticate } from '@/utils/authenticate';
+import { authenticate } from '@/app/lib/authenticate';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/button';
+import { Button } from '@/app/components/ui/button';
 
 
 export default function LoginForm() {

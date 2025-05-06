@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
-import LoginForm from "@/components/login-form";
+import LoginForm from "./components/login-form";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
