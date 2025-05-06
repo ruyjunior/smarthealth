@@ -7,7 +7,7 @@ export default function Nav() {
   const pathname = usePathname();
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: <Home size={20} /> },
-    { name: "Agenda", path: "/shedule", icon: <CalendarDays size={20} /> },
+    { name: "Agenda", path: "/services", icon: <CalendarDays size={20} /> },
     { name: "Perfil", path: '/users', icon: <UserIcon size={20} /> },
     { name: "Gerência", path: "/manager", icon: <ClipboardList size={20} /> },
     { name: "Pacientes", path: "/clients", icon: <HeartPulse size={20} /> },

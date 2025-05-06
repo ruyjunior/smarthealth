@@ -69,7 +69,7 @@ export async function createService(prevState: State, formData: FormData) {
   redirect('/services');
 }
 
-export async function updateServcie(
+export async function updateService(
   id: string,
   prevState: State,
   formData: FormData
