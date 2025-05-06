@@ -1,7 +1,7 @@
 'use client';
 import { useActionState } from 'react';
 import { Service } from '@/app/query/services/definitions';
-import { UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon, BuildingOffice2Icon, QueueListIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { updateService, State } from '@/app/query/services/actions';
@@ -85,7 +85,7 @@ export default function EditServiceForm({
                 </option>
               ))}
             </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="base-error" aria-live="polite" aria-atomic="true">
             {state.errors?.idoffice &&
@@ -119,7 +119,7 @@ export default function EditServiceForm({
                 </option>
               ))}
             </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <QueueListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="base-error" aria-live="polite" aria-atomic="true">
             {state.errors?.idtype &&
@@ -134,7 +134,7 @@ export default function EditServiceForm({
         {/* Paciente */}
         <div className="mb-4">
           <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
-            Consultório
+            Paciente
           </label>
           <div className="relative">
             <select
@@ -153,7 +153,7 @@ export default function EditServiceForm({
                 </option>
               ))}
             </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="base-error" aria-live="polite" aria-atomic="true">
             {state.errors?.idclient &&
@@ -176,7 +176,7 @@ export default function EditServiceForm({
                 id="date"
                 name="date"
                 type="date"
-                defaultValue={service.date}
+                defaultValue={date}
                 maxLength={10}
                 //nChange={handleChangeDate}
                 placeholder="Insira o nascimento"
@@ -233,7 +233,7 @@ export default function EditServiceForm({
         {/* Status */}
         <div className="mb-4">
           <label htmlFor="status" className="mb-2 block text-sm font-medium">
-            Escolha o estado
+            Situação
           </label>
           <div className="relative">
             <select
@@ -243,12 +243,12 @@ export default function EditServiceForm({
               aria-describedby="status-error"
               defaultValue={service.status}
             >
-              <option value="" disabled> Select a status </option>
+              <option value="" disabled> Selecione a situação </option>
               <option value="vazio"> Vazio </option>
               <option value="ocupado"> Ocupado </option>
               <option value="feito"> Feito </option>
             </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <QuestionMarkCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="status-error" aria-live="polite" aria-atomic="true">
             {state.errors?.status &&

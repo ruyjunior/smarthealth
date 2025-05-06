@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useActionState } from 'react';
 import Link from 'next/link';
-import { TagIcon, UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon, BuildingOffice2Icon, QueueListIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
 import { createService, State } from '@/app/query/services/actions';
 import { Office } from '@/app/query/offices/definitions';
@@ -11,7 +11,7 @@ import { Type } from '@/app/query/types/definitions';
 import { User } from '@/app/query/users/definitions';
 
 
-export default function Form({ data } : {data: any}) {
+export default function Form({ data }: { data: any }) {
   console.log('data', data);
 
   const { clients, offices, types, users } = data;
@@ -88,7 +88,7 @@ export default function Form({ data } : {data: any}) {
                 </option>
               ))}
             </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="base-error" aria-live="polite" aria-atomic="true">
             {state.errors?.idoffice &&
@@ -122,7 +122,7 @@ export default function Form({ data } : {data: any}) {
                 </option>
               ))}
             </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <QueueListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="base-error" aria-live="polite" aria-atomic="true">
             {state.errors?.idtype &&
@@ -137,7 +137,7 @@ export default function Form({ data } : {data: any}) {
         {/* Paciente */}
         <div className="mb-4">
           <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
-            Consultório
+            Paciente
           </label>
           <div className="relative">
             <select
@@ -148,7 +148,7 @@ export default function Form({ data } : {data: any}) {
               aria-describedby="provider-error"
             >
               <option value="" disabled>
-                Selecione um cliente
+                Selecione um paciente
               </option>
               {clients?.map((client: Client) => (
                 <option key={client.id} value={client.id}>
@@ -156,7 +156,7 @@ export default function Form({ data } : {data: any}) {
                 </option>
               ))}
             </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="base-error" aria-live="polite" aria-atomic="true">
             {state.errors?.idclient &&
@@ -250,7 +250,7 @@ export default function Form({ data } : {data: any}) {
               <option value="ocupado"> Ocupado </option>
               <option value="feito"> Feito </option>
             </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <QuestionMarkCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
           <div id="status-error" aria-live="polite" aria-atomic="true">
             {state.errors?.status &&
