@@ -244,9 +244,9 @@ export default function EditServiceForm({
               defaultValue={service.status}
             >
               <option value="" disabled> Selecione a situação </option>
-              <option value="vazio"> Vazio </option>
-              <option value="ocupado"> Ocupado </option>
-              <option value="feito"> Feito </option>
+              <option value="Vazia"> Vazia </option>
+              <option value="Marcada"> Marcada </option>
+              <option value="Feito"> Feito </option>
             </select>
             <QuestionMarkCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>

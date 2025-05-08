@@ -29,7 +29,7 @@ export default function EditOfficeForm({
             <div className="relative">
               <input
                 id="title"
-                title="title"
+                name="title"
                 type="text"
                 placeholder="Insira um Título"
                 defaultValue={office.title}
@@ -58,7 +58,7 @@ export default function EditOfficeForm({
             <div className="relative">
               <input
                 id="description"
-                title="description"
+                name="description"
                 type="description"
                 placeholder="Insira uma descrição"
                 defaultValue={office.description}

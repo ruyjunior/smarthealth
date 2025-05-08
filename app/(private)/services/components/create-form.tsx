@@ -245,10 +245,10 @@ export default function Form({ data }: { data: any }) {
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="status-error"
             >
-              <option value="" disabled> Select a status </option>
-              <option value="vazio"> Vazio </option>
-              <option value="ocupado"> Ocupado </option>
-              <option value="feito"> Feito </option>
+              <option value="" disabled> Selecione a situação </option>
+              <option value="Vazia"> Vazia </option>
+              <option value="Marcada"> Marcada </option>
+              <option value="Feito"> Feito </option>
             </select>
             <QuestionMarkCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
