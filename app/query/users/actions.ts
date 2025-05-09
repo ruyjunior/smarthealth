@@ -10,8 +10,9 @@ const FormSchema = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string(),
-  role: z.string()
+  role: z.string(),
 });
+
 
 const CreateUser = FormSchema.omit({ id: true });
 const UpdateUser = FormSchema.omit({ id: true });
@@ -76,17 +77,30 @@ export async function updateUser(
       message: 'Missing Fields. Failed to Update User.',
     };
   }
-
+  console.log('validatedFields', validatedFields);
   const { name, email, password, role } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    await sql`
-    UPDATE smarthealth.users
-    SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role} 
-    WHERE id = ${id}
-  `;
-  } catch (error) {
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      console.log('Senha' + password);
+      console.log('Senha Criptografada' + hashedPassword);
+
+      await sql`
+        UPDATE autoricapp.users
+        SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}
+        WHERE id = ${id}
+      `;
+    } else {
+      console.log(password);
+
+      await sql`
+        UPDATE autoricapp.users
+        SET name = ${name}, email = ${email}, role = ${role}
+        WHERE id = ${id}
+      `;
+    }  } catch (error) {
     console.error('Database Error:', error);
     return { message: 'Database Error: Failed to Update User.' };
   }

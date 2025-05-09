@@ -82,7 +82,7 @@ export async function fetchServiceById(id: string) {
     //console.log('Service: ' + service[0]);
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch proposal.');
+    throw new Error('Failed to fetch service.');
   }
 }
 
