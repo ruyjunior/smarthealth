@@ -105,7 +105,7 @@ export default function Form() {
               id="role"
               name="role"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue="oper"
+              defaultValue="Funcionário"
               aria-describedby="role-error"
             >
               <option value="Funcionário"> Funcionário</option>

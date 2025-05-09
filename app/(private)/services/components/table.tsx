@@ -5,6 +5,9 @@ import { fetchClients } from '@/app/query/clients/data';
 import { fetchOffices } from '@/app/query/offices/data';
 import { fetchTypes } from '@/app/query/types/data';
 import { fetchUsers } from '@/app/query/users/data';
+import CalendarView from './calendarView';
+import { ServiceWithDetails } from '@/app/query/services/definitions';
+
 
 export default async function ServicesTable({
   query,
@@ -20,6 +23,21 @@ export default async function ServicesTable({
   const types = await fetchTypes();
   const users = await fetchUsers();
 
+  const ServicesData: ServiceWithDetails[] = services.map((service) => {
+    const user = users.find((u) => u.id === service.iduser) || { name: 'Unknown User' };
+    const client = clients.find((c) => c.id === service.idclient) || { name: 'Unknown Client' };
+    const office = offices.find((o) => o.id === service.idoffice) || { title: 'Unknown Office' };
+    const type = types.find((t) => t.id === service.idtype) || { title: 'Unknown Type' };
+  
+    return {
+      ...service,
+      user,
+      client,
+      office,
+      type,
+    };
+  });
+  
 
   return (
     <div className="w-full">

@@ -3,13 +3,12 @@
 import { useState, useMemo } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import ptBR from 'date-fns/locale/pt-BR';
-
-import { ServiceWithDetails } from '@/types'; // Crie esse tipo combinando os dados do service + joins
+import { format } from 'date-fns';
+import { parse } from 'date-fns/parse';
+import { startOfWeek} from 'date-fns/startOfWeek';
+import { getDay } from 'date-fns/getDay';
+import { ptBR } from 'date-fns/locale/pt-BR';
+import { ServiceWithDetails } from '@/app/query/services/definitions'; 
 import { formatTime } from '@/app/lib/utils';
 
 const locales = {

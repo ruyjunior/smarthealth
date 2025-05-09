@@ -32,7 +32,7 @@ export default function Sidebar() {
       <div className="mt-6 mb-4 text-center md:text-left hidden md:block">
         <h1 className="text-lg font-semibold">Bem-vindo, {session.user.name}</h1>
         {session.user.role && (
-          <p className="text-sm text-gray-400">Função: {session.user.role}</p>
+          <p className="text-sm text-gray-400"> {session.user.role} </p>
         )}
       </div>
 
