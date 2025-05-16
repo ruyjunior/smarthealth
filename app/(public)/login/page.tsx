@@ -33,12 +33,10 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="max-w-md mx-auto mt-10 p-6 bg-black shadow-md rounded-md">
-        <Suspense fallback={<div>Loading...</div>}>
-          <LoginForm />
-        </Suspense>
-      </div>
-    </main>
+    <div className="text-gray-900 bg-gradient-to-br from-blue-100 to-blue-900">
+      <Suspense fallback={<div>Loading...</div>}>
+        <LoginForm />
+      </Suspense>
+    </div>
   );
 }

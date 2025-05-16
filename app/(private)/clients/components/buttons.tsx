@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon, EyeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteClient } from '@/app/query/clients/actions';
 
@@ -21,6 +21,17 @@ export function UpdateClient({ id }: { id: string }) {
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />
+    </Link>
+  );
+}
+
+export function ViewClient({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/clients/${id}/view`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      <EyeIcon className="w-5" />
     </Link>
   );
 }

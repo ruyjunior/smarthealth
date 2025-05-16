@@ -1,17 +1,47 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
+import { lusitana } from '@/app/components/ui/fonts';
+import { Home, UserIcon, HospitalIcon, ListCollapseIcon } from "lucide-react";
+import Link from "next/link";
+
 
 export const metadata: Metadata = {
   title: 'Gerência',
 };
 
+export default async function Page() {
+  const menuItems = [
+    { name: "Consultórios", path: "/manager/offices", icon: <HospitalIcon size={20} /> },
+    { name: "Especialidades", path: "/manager/types", icon: <ListCollapseIcon size={20} /> },
+    { name: "Usuários", path: '/manager/users', icon: <UserIcon size={20} /> },
+  ];
 
-export default function Page() {
 
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="w-full">
-        <h1>GERÊNCIA</h1>
+    <div className="w-full">
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`${lusitana.className} text-2xl`}>Gerência</h1>
       </div>
-    </main>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <nav>
+          <ul>
+            {menuItems.map(({ name, path, icon }) => (
+              <li
+                key={path}
+                className={`mb-2 rounded-lg`}
+              >
+                <Link
+                  href={path}
+                  className="flex items-center p-3 hover:bg-gray-700 rounded-lg"
+                >
+                  {icon}
+                  <span className="ml-3 md:inline">{name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+      </div>
+    </div>
   );
 }

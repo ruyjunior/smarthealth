@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function middleware(request: Request) {
   const session = await auth(); // auth() já retorna os dados da sessão corretamente
   const isLoggedIn = !!session?.user; // Agora acessamos session.user diretamente
-  const isManager = session?.user.role === 'manager';
+  const isManager = session?.user.role === 'Gerente';
 
   const { pathname } = new URL(request.url);
   const isPublicRoute = pathname === "/" || pathname === "/plans" ||

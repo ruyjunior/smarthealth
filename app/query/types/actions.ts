@@ -48,8 +48,8 @@ export async function createType(prevState: State, formData: FormData) {
       message: 'Database Error: Failed to Create Type.',
     };
   }
-  revalidatePath('/types');
-  redirect('/types');
+  revalidatePath('/manager/types');
+  redirect('/manager/types');
 }
 
 export async function updateType(
@@ -82,13 +82,13 @@ export async function updateType(
     return { message: 'Database Error: Failed to Update Type.' };
   }
 
-  revalidatePath('/types');
-  redirect('/types');
+  revalidatePath('/manager/types');
+  redirect('/manager/types');
 }
 
 export async function deleteType(id: string) {
   //throw new Error('Failed to Delete Invoice');
 
   await sql`DELETE FROM smarthealth.types WHERE id = ${id}`;
-  revalidatePath('/types');
+  revalidatePath('/manager/types');
 }

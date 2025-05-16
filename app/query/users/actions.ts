@@ -54,8 +54,8 @@ export async function createUser(prevState: State, formData: FormData) {
       message: 'Database Error: Failed to Create User.',
     };
   }
-  revalidatePath('/users');
-  redirect('/users');
+  revalidatePath('/manager/users');
+  redirect('/manager/users');
 }
 
 export async function updateUser(
@@ -77,41 +77,42 @@ export async function updateUser(
       message: 'Missing Fields. Failed to Update User.',
     };
   }
-  console.log('validatedFields', validatedFields);
+  //console.log('validatedFields', validatedFields);
   const { name, email, password, role } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
-      console.log('Senha' + password);
-      console.log('Senha Criptografada' + hashedPassword);
+      //console.log('Senha' + password);
+      //console.log('Senha Criptografada' + hashedPassword);
 
       await sql`
-        UPDATE autoricapp.users
+        UPDATE smarthealth.users
         SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}
         WHERE id = ${id}
       `;
     } else {
-      console.log(password);
+      //console.log(password);
 
       await sql`
-        UPDATE autoricapp.users
+        UPDATE smarthealth.users
         SET name = ${name}, email = ${email}, role = ${role}
         WHERE id = ${id}
       `;
-    }  } catch (error) {
+    }
+  } catch (error) {
     console.error('Database Error:', error);
     return { message: 'Database Error: Failed to Update User.' };
   }
 
-  revalidatePath('/users');
-  redirect('/users');
+  revalidatePath('/manager/users');
+  redirect('/manager/users');
 }
 
 export async function deleteUser(id: string) {
   //throw new Error('Failed to Delete Invoice');
 
   await sql`DELETE FROM smarthealth.users WHERE id = ${id}`;
-  revalidatePath('/users');
+  revalidatePath('/manager/users');
 }

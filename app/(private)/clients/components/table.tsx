@@ -1,4 +1,4 @@
-import { UpdateClient, DeleteClient } from './buttons';
+import { UpdateClient, DeleteClient, ViewClient } from './buttons';
 import {
   formatDateToLocal, formatCurrency,
   formatCPF, formatCEP, formatPhone
@@ -10,7 +10,7 @@ export default async function ClientsTable({
   currentPage,
 }: {
   query: string;
-  currentPage: number;
+  currentPage: number | undefined | null;
 }) {
   const clients = await fetchFilteredClients(query, currentPage);
 
@@ -31,6 +31,7 @@ export default async function ClientsTable({
                     <p className="text-sm text-gray-600">Phone: {formatPhone(client.phone)}</p>
                   </div>
                   <div className="flex justify-end gap-3 pt-3">
+                    <ViewClient id={client.id} />
                     <UpdateClient id={client.id} />
                     <DeleteClient id={client.id} />
                   </div>
@@ -59,6 +60,7 @@ export default async function ClientsTable({
                 return (
                   <tr key={client.id} className="hover:bg-gray-300">
                     <td className="py-2 px-2 flex gap-2">
+                      <ViewClient id={client.id} />
                       <UpdateClient id={client.id} />
                     </td>
                     <td className="px-2 py-2 text-xs">{client.name}</td>

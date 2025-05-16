@@ -48,8 +48,8 @@ export async function createOffice(prevState: State, formData: FormData) {
     };
   }
   
-  revalidatePath('/offices');
-  redirect('/offices');
+  revalidatePath('/manager/offices');
+  redirect('/manager/offices');
 }
 
 export async function updateOffice(
@@ -80,13 +80,13 @@ export async function updateOffice(
     return { message: 'Database Error: Failed to Update Office.' };
   }
 
-  revalidatePath('/offices');
-  redirect('/offices');
+  revalidatePath('/manager/offices');
+  redirect('/manager/offices');
 }
 
 export async function deleteOffice(id: string) {
   //throw new Error('Failed to Delete Invoice');
 
   await sql`DELETE FROM smarthealth.offices WHERE id = ${id}`;
-  revalidatePath('/offices');
+  revalidatePath('/manager/offices');
 }

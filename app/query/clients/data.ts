@@ -19,14 +19,17 @@ export async function fetchClients() {
 
 export async function fetchFilteredClients(
   query: string,
-  currentPage: number) {
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  currentPage: number | undefined | null) {
+    
+  const page = currentPage ?? 1;
+  const offset = (page - 1) * ITEMS_PER_PAGE;
   
   try {
     const data = await sql<Client>`
       SELECT id, cpf, name, birth, email, phone, cep
       FROM smarthealth.clients
       WHERE
+        clients.id::text ILIKE ${`%${query}%`} OR
         clients.name ILIKE ${`%${query}%`} OR
         clients.email ILIKE ${`%${query}%`} OR
         clients.birth::text ILIKE ${`%${query}%`} OR
