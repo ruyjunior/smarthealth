@@ -17,7 +17,7 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="mb-6 flex justify-center">
         <Image
-          src="/images/logo.png"
+          src="/images/logos/logoApp.png"
           width={150}
           height={150}
           alt="Logo da Empresa"
