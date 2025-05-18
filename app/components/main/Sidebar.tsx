@@ -1,6 +1,6 @@
-import Nav from "@/app/components/main/nav";
+import Nav from "../ui/navlist";
 import UserCard from "../ui/userCard";
-import Logout from "./logout";
+import Logout from "../ui/logout";
 import ClinicCard from "../ui/clinicCard";
 
 
