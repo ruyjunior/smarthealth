@@ -1,6 +1,5 @@
-import Nav from "./nav";
+import Nav from './nav';
 import UserCard from "../ui/userCard";
-import Logo from "../ui/logoApp";
 import Logout from "./logout";
 import ClinicCard from "../ui/clinicCard";
 
