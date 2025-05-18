@@ -26,7 +26,6 @@ export type State = {
     email?: string[];
     phone?: string[];
     cep?: string[];
-    idclinic?: string[];
   };
   message?: string | null;
 };

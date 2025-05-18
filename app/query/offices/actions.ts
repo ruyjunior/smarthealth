@@ -19,7 +19,6 @@ export type State = {
   errors?: {
     title?: string[];
     description?: string[];
-    idclinic?: string[];
   };
   message?: string | null;
 };

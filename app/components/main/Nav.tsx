@@ -13,7 +13,7 @@ export default function Nav() {
   ];
 
   return (
-    <div className='flex flex-row items-left justify-left md:justify-right leading-none text-white m-5'>
+    <div className='flex flex-row items-left justify-center md:justify-center leading-none text-white m-5'>
 
       <nav>
         <ul>

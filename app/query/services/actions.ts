@@ -31,7 +31,6 @@ export type State = {
     date?: string[];
     starttime?: string[];
     endtime?: string[];
-    idclinic?: string[];
   };
 };
 

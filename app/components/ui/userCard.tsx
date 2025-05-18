@@ -7,9 +7,10 @@ export default async function UserCard() {
 
   return (
     <div>
-      <div className='flex flex-row items-center justify-center leading-none text-white m-5'>
-        <p> {session.user.name} | {session.user.role}</p>
+      <div className="flex flex-col md:flex-row items-center justify-center leading-none text-white m-5 mb-10">
+        <span className="font-semibold">{session.user.name}</span>
+        <span className="text-xs md:ml-2 text-blue-100">{session.user.role}</span>
       </div>
     </div>
-  )
+  );
 }

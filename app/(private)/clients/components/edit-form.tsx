@@ -17,7 +17,7 @@ export default function EditClientForm({
   client: Client;
 }) {
 
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: '', errors: {} };
   const updateClientWithId = updateClient.bind(null, client.id);
   const [state, formAction] = useActionState(updateClientWithId, initialState);
 
@@ -197,8 +197,8 @@ export default function EditClientForm({
             </div>
           </div>
         </div>
-
       </div>
+
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/clients"

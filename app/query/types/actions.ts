@@ -20,7 +20,6 @@ export type State = {
     title?: string[];
     description?: string[];
     price?: string[];
-    idclinic?: string[];
   };
   message?: string | null;
 };
