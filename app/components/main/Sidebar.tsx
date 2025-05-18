@@ -1,4 +1,4 @@
-import Nav from './nav';
+import Nav from "@/app/components/main/nav";
 import UserCard from "../ui/userCard";
 import Logout from "./logout";
 import ClinicCard from "../ui/clinicCard";
