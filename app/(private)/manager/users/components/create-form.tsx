@@ -5,12 +5,16 @@ import { TagIcon, AtSymbolIcon, KeyIcon, UserCircleIcon } from '@heroicons/react
 import { Button } from '@/app/components/ui/button';
 import { createUser, State } from '@/app/query/users/actions';
 
-export default function Form() {
+export default function Form({id }: { id: string | undefined }) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createUser, initialState);
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        {/* ID */}
+        <input type="hidden" name="idclinic" value={id} />
+
         {/* NAME */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
@@ -96,6 +100,8 @@ export default function Form() {
         </div>
 
         {/* Role */}
+        <input type="hidden" name="role" value="Funcionário" />
+        {/*}
         <div className="mb-4">
           <label htmlFor="role" className="mb-2 block text-sm font-medium">
             Cargo
@@ -122,6 +128,7 @@ export default function Form() {
               ))}
           </div>
         </div>
+        */}
 
       </div>
       <div className="mt-6 flex justify-end gap-4">

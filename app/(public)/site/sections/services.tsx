@@ -6,7 +6,7 @@ import { FcBullish, FcCalculator, FcDocument, FcOvertime } from "react-icons/fc"
 const Services = () => {
   const services = [
     { title: "Agenda", desc: "Não perca nenhum atendimento.", icon: <FcOvertime size={32} /> },
-    { title: "Evolução", desc: "Gerencie facilmente o acompanhamento dos seus casos.", icon: <FcBullish size={32} /> },
+    { title: "Evolução", desc: "Gerencie facilmente cada paciente.", icon: <FcBullish size={32} /> },
     { title: "Receita", desc: "Disponibilize receitas digitais profissionais.", icon: <FcDocument size={32} /> },
     { title: "Balanço", desc: "Faturamento da sua clínica de forma clara e objetiva.", icon: <FcCalculator size={32} /> }
   ];

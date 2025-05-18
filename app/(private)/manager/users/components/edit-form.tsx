@@ -12,7 +12,7 @@ export default function EditUserForm({
   user: User;
 }) {
 
-  const initialState: State = { message: null, errors: {} };
+  const initialState = { message: '', errors: {} };
   const updateUserWithId = updateUser.bind(null, user.id);
   const [state, formAction] = useActionState(updateUserWithId, initialState);
 
@@ -108,6 +108,8 @@ export default function EditUserForm({
         </div>
 
         {/* Role */}
+        <input type="hidden" name="role" value={user.role === "Gerente" ? "Gerente" : "Funcionário"} />
+        {/*
         <div className="mb-4">
           <label htmlFor="role" className="mb-2 block text-sm font-medium">
             Cargo
@@ -134,7 +136,7 @@ export default function EditUserForm({
               ))}
           </div>
         </div>
-
+        */}
 
       </div>
       <div className="mt-6 flex justify-end gap-4">

@@ -14,7 +14,7 @@ export default async function NotesTable({
 
   const notes = await fetchFilteredNotes(query, currentPage);
   const clients = await fetchClients();
-  const users = await fetchUsers();  
+  const users = await fetchUsers();
 
   return (
     <div className="w-full">
@@ -22,6 +22,7 @@ export default async function NotesTable({
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-lg bg-gray-50 shadow-md p-4 md:pt-0">
+
               {/* Mobile View */}
               <div className="md:hidden">
                 {notes?.map((note) => {
@@ -34,9 +35,9 @@ export default async function NotesTable({
                       <div className="border-b pb-4">
                         <h3 className="text-xl font-semibold text-gray-900">{formatDateToLocal(note.date)}</h3>
                         <p className="text-sm text-gray-600"> Profissional: {user?.name}</p>
-                        <p className="text-sm text-gray-600"> Altura: {note?.height}</p>
-                        <p className="text-sm text-gray-600"> Peso: {note?.weight}</p>
-                        <p className="text-sm text-gray-600"> Gordura: {note?.fat}</p>
+                        <p className="text-sm text-gray-600"> Altura(cm): {note?.height}</p>
+                        <p className="text-sm text-gray-600"> Peso(kg): {note?.weight}</p>
+                        <p className="text-sm text-gray-600"> % de Gordura: {note?.fat}</p>
                         <p className="text-sm text-gray-600"> Nota: {note?.note}</p>
                       </div>
                       <div className="flex justify-end gap-3 pt-3">
@@ -55,9 +56,9 @@ export default async function NotesTable({
                     <th className="px-2 py-2">Editar</th>
                     <th className="px-2 py-2">Data</th>
                     <th className="px-2 py-2">Profissional</th>
-                    <th className="px-2 py-2">Altura</th>
-                    <th className="px-2 py-2">Peso</th>
-                    <th className="px-2 py-2">Gordura</th>
+                    <th className="px-2 py-2">Altura(cm)</th>
+                    <th className="px-2 py-2">Peso(kg)</th>
+                    <th className="px-2 py-2">% Gordura</th>
                     <th className="px-2 py-2">Nota</th>
                     <th className="px-2 py-2">Deletar</th>
                   </tr>
@@ -65,15 +66,15 @@ export default async function NotesTable({
                 <tbody className="divide-y divide-gray-200">
                   {notes.map((note) => {
 
-                  const client = clients.find((c) => c.id === note.idclient);
-                  const user = users.find((u) => u.id === note.iduser);
+                    const client = clients.find((c) => c.id === note.idclient);
+                    const user = users.find((u) => u.id === note.iduser);
 
                     return (
                       <tr key={note.id} className="hover:bg-gray-300">
                         <td className="py-2 px-2 flex gap-2">
                           <UpdateNote id={note.id} />
                         </td>
-                        <td className="px-2 py-2 text-xs">{formatDateToLocal(note.date)}</td>  
+                        <td className="px-2 py-2 text-xs">{formatDateToLocal(note.date)}</td>
                         <td className="px-2 py-2 text-xs">{user?.name}</td>
                         <td className="px-2 py-2 text-xs">{note.height}</td>
                         <td className="px-2 py-2 text-xs">{note.weight}</td>

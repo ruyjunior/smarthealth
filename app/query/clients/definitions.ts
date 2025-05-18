@@ -6,5 +6,6 @@ export type Client = {
   email: string;
   phone: string;
   cep: string;
+  idclinic: string;
 };
 

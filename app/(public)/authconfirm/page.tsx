@@ -41,7 +41,7 @@ function ConfirmPassword() {
 
   return (
     <main className="flex items-center justify-center md:h-screen">
-      <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
+      <div className="max-w-md mx-auto mt-10 p-6 shadow-md rounded-md">
         <h2 className="text-2xl font-semibold mb-4">
           Definir nova senha
         </h2>

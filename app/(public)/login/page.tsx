@@ -1,15 +1,21 @@
-"use client";
-
-import { Suspense, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+//import { useRouter } from "next/navigation";
 import LoginForm from "./components/login-form";
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'LOGIN',
+  description: 'Página de login do sistema Smart Health',
+};
 
 export default function LoginPage() {
+  /*
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const router = useRouter();
+  //const router = useRouter();
 
+  /*
   const handleSubmit = async (e: React.FormEvent) => {
 
     e.preventDefault();
@@ -31,9 +37,9 @@ export default function LoginPage() {
       setMessage(data.message);
     }
   };
-
+*/
   return (
-    <div className="text-gray-900 bg-gradient-to-br from-blue-100 to-blue-900">
+    <div className="text-gray-900">
       <Suspense fallback={<div>Loading...</div>}>
         <LoginForm />
       </Suspense>

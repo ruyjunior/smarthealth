@@ -8,17 +8,19 @@ const FormSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
-  price: z.string()
+  price: z.string(),
+  idclinic: z.string(),
 });
 
 const CreateType = FormSchema.omit({ id: true });
-const UpdateType = FormSchema.omit({ id: true });
+const UpdateType = FormSchema.omit({ id: true, idclinic: true });
 
 export type State = {
   errors?: {
     title?: string[];
     description?: string[];
     price?: string[];
+    idclinic?: string[];
   };
   message?: string | null;
 };
@@ -27,7 +29,8 @@ export async function createType(prevState: State, formData: FormData) {
   const validatedFields = CreateType.safeParse({
     title: formData.get('title'),
     description: formData.get('description'),
-    price: formData.get('price')
+    price: formData.get('price'),
+    idclinic: formData.get('idclinic')
   });
 
   if (!validatedFields.success) {
@@ -36,12 +39,12 @@ export async function createType(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create.',
     };
   }
-  const { title, description, price } = validatedFields.data;
+  const { title, description, price, idclinic } = validatedFields.data;
 
   try {
     await sql`
-        INSERT INTO smarthealth.types ( title, description, price)
-        VALUES (${title}, ${description}, ${price})
+        INSERT INTO smarthealth.types ( title, description, price, idclinic)
+        VALUES (${title}, ${description}, ${price}, ${idclinic})
         `;
   } catch (error) {
     return {

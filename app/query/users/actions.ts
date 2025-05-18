@@ -11,11 +11,12 @@ const FormSchema = z.object({
   email: z.string(),
   password: z.string(),
   role: z.string(),
+  idclinic: z.string(),
 });
 
 
 const CreateUser = FormSchema.omit({ id: true });
-const UpdateUser = FormSchema.omit({ id: true });
+const UpdateUser = FormSchema.omit({ id: true, idclinic: true });
 
 export type State = {
   errors?: {
@@ -23,6 +24,7 @@ export type State = {
     email?: string[];
     password?: string[];
     role?: string[];
+    idclinic?: string[];
   };
   message?: string | null;
 };
@@ -33,6 +35,7 @@ export async function createUser(prevState: State, formData: FormData) {
     email: formData.get('email'),
     password: formData.get('password'),
     role: formData.get('role'),
+    idclinic: formData.get('idclinic'),
   });
 
   if (!validatedFields.success) {
@@ -41,13 +44,13 @@ export async function createUser(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create.',
     };
   }
-  const { name, email, password, role } = validatedFields.data;
+  const { name, email, password, role, idclinic } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     await sql`
-        INSERT INTO smarthealth.users ( name, email, password, role)
-        VALUES (${name}, ${email}, ${hashedPassword}, ${role})
+        INSERT INTO smarthealth.users ( name, email, password, role, idclinic)
+        VALUES (${name}, ${email}, ${hashedPassword}, ${role}, ${idclinic})
         `;
   } catch (error) {
     return {

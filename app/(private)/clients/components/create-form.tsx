@@ -3,18 +3,14 @@ import { useActionState } from 'react';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  IdentificationIcon, PhoneIcon, TagIcon, TruckIcon, CurrencyDollarIcon,
-  AtSymbolIcon, CalendarDateRangeIcon, BuildingOfficeIcon
+  IdentificationIcon, PhoneIcon, TagIcon, TruckIcon, AtSymbolIcon, CalendarDateRangeIcon, 
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
 import { createClient, State } from '@/app/query/clients/actions';
-import {
-  formatDateToLocal, formatCurrency, formatCurrencyInput,
-  formatCPF, formatCEP, formatPhone, formatDateBr
-} from '@/app/lib/utils';
+import { formatCPF, formatCEP, formatPhone, formatDateBr} from '@/app/lib/utils';
 
 
-export default function Form() {
+export default function Form({id} : {id: string | undefined}) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createClient, initialState);
 
@@ -43,6 +39,9 @@ export default function Form() {
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        <input type="hidden" name="idclinic" value={id} />
+
         {/* NAME */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
@@ -54,6 +53,7 @@ export default function Form() {
                 id="name"
                 name="name"
                 type="text"
+                required
                 placeholder="Insira um nome"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="name-error"
@@ -110,6 +110,7 @@ export default function Form() {
                 id="cpf"
                 name="cpf"
                 type="text"
+                required
                 value={cpf}
                 maxLength={14}
                 onChange={handleChangeCPF}
@@ -189,7 +190,6 @@ export default function Form() {
             </div>
           </div>
         </div>
-
 
       </div>
       <div className="mt-6 flex justify-end gap-4">

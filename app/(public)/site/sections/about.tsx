@@ -3,7 +3,7 @@ const About = () => {
     <section id="about"
       className="py-20 text-center">
       <h2 className="text-3xl font-bold mb-6">
-        O que esperar do Smart Health
+        O que esperar do Smart Health?
       </h2>
       <div className="flex justify-center flex-wrap gap-6">
         <div className="flex items-center justify-center bg-gray-100 px-2 py-3 rounded-lg shadow-md">

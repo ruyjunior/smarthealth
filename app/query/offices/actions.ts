@@ -9,15 +9,17 @@ const FormSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string(),
+  idclinic: z.string(),
 });
 
 const CreateOffice = FormSchema.omit({ id: true });
-const UpdateOffice = FormSchema.omit({ id: true });
+const UpdateOffice = FormSchema.omit({ id: true, idclinic: true });
 
 export type State = {
   errors?: {
     title?: string[];
     description?: string[];
+    idclinic?: string[];
   };
   message?: string | null;
 };
@@ -25,7 +27,8 @@ export type State = {
 export async function createOffice(prevState: State, formData: FormData) {
   const validatedFields = CreateOffice.safeParse({
     title: formData.get('title'),
-    description: formData.get('description')
+    description: formData.get('description'),
+    idclinic: formData.get('idclinic'),
   });
 
   if (!validatedFields.success) {
@@ -34,12 +37,12 @@ export async function createOffice(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create.',
     };
   }
-  const { title, description } = validatedFields.data;
+  const { title, description, idclinic } = validatedFields.data;
 
   try {
     await sql`
-      INSERT INTO smarthealth.offices (title, description)
-      VALUES (${title}, ${description})
+      INSERT INTO smarthealth.offices (title, description, idclinic)
+      VALUES (${title}, ${description}, ${idclinic})
     `;
   } catch (error) {
     console.error('Error creating office:', error);

@@ -1,10 +1,10 @@
 import { sql } from '@vercel/postgres';
-import { Office } from './definitions';
+import { Clinic } from './definitions';
 import { auth } from '@/app/lib/auth';
 import { fetchUserById } from '@/app/query/users/data';
 
 
-export async function fetchOffices() {
+export async function fetchClinics() {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
     throw new Error('User session is not available.');
@@ -12,21 +12,21 @@ export async function fetchOffices() {
   const user = await fetchUserById(session.user.id);
 
   try {
-    const data = await sql<Office>`
-      SELECT id, title, description
-      FROM smarthealth.offices
-      WHERE idclinic = ${user.idclinic}
+    const data = await sql<Clinic>`
+      SELECT id, title, idmanager, logourl
+      FROM smarthealth.clinics
+      WHERE clinics.id = ${user.idclinic}
       ORDER BY title ASC
     `;
-    const offices = data.rows;
-    return offices;
+    const clinics = data.rows;
+    return clinics;
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch.');
   }
 }
 
-export async function fetchFilteredOffices(
+export async function fetchFilteredClinics(
   query: string,
   currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -38,25 +38,23 @@ export async function fetchFilteredOffices(
   const user = await fetchUserById(session.user.id);
 
   try {
-    const data = await sql<Office>`
-      SELECT id, title, description
-      FROM smarthealth.offices
+    const data = await sql<Clinic>`
+      SELECT id, title, idmanager, logourl
+      FROM smarthealth.clinics
       WHERE
-        (offices.title ILIKE ${`%${query}%`} OR
-        offices.description ILIKE ${`%${query}%`}) AND
-        offices.idclinic = ${user.idclinic}
+        clinics.title ILIKE ${`%${query}%`} AND clinics.id = ${user.idclinic}
       ORDER BY title ASC
     `;
-    const offices = data.rows;
-    return offices;
+    const clinics = data.rows;
+    return clinics;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to search offices.');
+    throw new Error('Failed to search clinics.');
   }
 }
 const ITEMS_PER_PAGE = 6;
 
-export async function fetchOfficesPages(query: string) {
+export async function fetchClinicsPages(query: string) {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
     throw new Error('User session is not available.');
@@ -66,8 +64,9 @@ export async function fetchOfficesPages(query: string) {
   try {
     const count = await sql`
     SELECT COUNT(*) 
-    FROM smarthealth.offices 
-    WHERE idclinic = ${user.idclinic}`;
+    FROM smarthealth.clinics
+    WHERE clinics.id = ${user.idclinic}
+    `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;
@@ -77,28 +76,21 @@ export async function fetchOfficesPages(query: string) {
   }
 }
 
-export async function fetchOfficeById(id: string) {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
-
+export async function fetchClinicById(id: string) {
   try {
-    const data = await sql<Office>`
-      SELECT id, title, description
-      FROM smarthealth.offices
-      WHERE offices.id = ${id} AND offices.idclinic = ${user.idclinic}
-    `;
+    const data = await sql<Clinic>`
+      SELECT id, title, idmanager, logourl
+      FROM smarthealth.clinics
+      WHERE clinics.id = ${id} `;
 
-    const office = data.rows.map((office) => ({
-      ...office,
+    const clinic = data.rows.map((clinic) => ({
+      ...clinic,
     }));
 
-    return office[0];
-    console.log('Office: ' + office[0]);
+    return clinic[0];
+    console.log('Clinic: ' + clinic[0]);
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch office.');
+    throw new Error('Failed to fetch clinic.');
   }
 }

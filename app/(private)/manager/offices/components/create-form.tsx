@@ -5,13 +5,15 @@ import { TagIcon, AtSymbolIcon, ChatBubbleBottomCenterTextIcon } from '@heroicon
 import { Button } from '@/app/components/ui/button';
 import { createOffice, State } from '@/app/query/offices/actions';
 
-export default function Form() {
+export default function Form({ id }: { id: string | undefined }) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createOffice, initialState);
 
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        <input type="hidden" name="idclinic" value={id} />
 
         {/* Title */}
         <div className="mb-4">

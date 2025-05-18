@@ -14,7 +14,7 @@ import { User } from '@/app/query/users/definitions';
 export default function Form({ data }: { data: any }) {
   console.log('data', data);
 
-  const { clients, offices, types, users } = data;
+  const { clients, offices, types, users, idclinic } = data;
 
   const initialState: State = { message: '', errors: {} };
   const [state, formAction] = useActionState(createService, initialState);
@@ -31,6 +31,8 @@ export default function Form({ data }: { data: any }) {
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
+        <input type="hidden" name="idclinic" value={idclinic} />
 
         {/* User */}
         <div className="mb-4">

@@ -15,8 +15,8 @@ export default function LoginForm() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <form action={formAction} className="w-full max-w-md rounded-xl bg-white shadow-lg px-8 py-10">
+    <div className="min-h-screen flex items-center justify-center ">
+      <form action={formAction} className="w-full max-w-md rounded-xl shadow-lg px-8 py-10 bg-white">
         <h1 className="mb-1 text-3xl font-bold text-blue-700 text-center">
           Acesse sua conta
         </h1>

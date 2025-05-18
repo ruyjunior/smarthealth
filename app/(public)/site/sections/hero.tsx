@@ -10,16 +10,7 @@ const Hero = () => {
           width={1024}
           height={840}
           className="absolute inset-0 w-full h-auto max-h-[80vh] object-cover opacity-90"
-          />
-          {/* Video Background 
-        <video
-          className="absolute inset-0 w-full h-auto max-h-[80vh] object-cover opacity-30"
-          src="/videos/background.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-        />*/}
+        />
       </section>
 
       <section className="relative flex flex-col items-center justify-center text-blue-800 text-center px-6 md:pt-30 mb-0 md:mb-16">

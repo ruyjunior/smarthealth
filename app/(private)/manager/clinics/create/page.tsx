@@ -12,10 +12,10 @@ export default async function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Consultórios', href: '/manager/offices' },
+          { label: 'Consultórios', href: '/manager/clinics' },
           {
             label: 'Novo Consultório',
-            href: '/manager/offices/create',
+            href: '/manager/clinics/create',
             active: true,
           },
         ]}

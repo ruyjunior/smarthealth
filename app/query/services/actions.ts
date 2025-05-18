@@ -14,10 +14,11 @@ const FormSchema = z.object({
   date: z.string(),
   starttime: z.string(),
   endtime: z.string(),
+  idclinic: z.string(),
 });
 
 const CreateService = FormSchema.omit({ id: true });
-const UpdateService = FormSchema.omit({ id: true });
+const UpdateService = FormSchema.omit({ id: true, idclinic: true });
 
 export type State = {
   message?: string;
@@ -30,6 +31,7 @@ export type State = {
     date?: string[];
     starttime?: string[];
     endtime?: string[];
+    idclinic?: string[];
   };
 };
 
@@ -43,6 +45,7 @@ export async function createService(prevState: State, formData: FormData) {
     date: formData.get('date'),
     starttime: formData.get('starttime'),
     endtime: formData.get('endtime'),
+    idclinic: formData.get('idclinic'),
   });
 
   if (!validatedFields.success) {
@@ -51,13 +54,13 @@ export async function createService(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create.',
     };
   }
-  const { iduser, idoffice, idclient, idtype, status, date, starttime, endtime } = validatedFields.data;
+  const { iduser, idoffice, idclient, idtype, status, date, starttime, endtime, idclinic } = validatedFields.data;
 
   try {
     await sql`
         INSERT INTO smarthealth.services ( 
-          iduser, idoffice, idclient, idtype, status, date, starttime, endtime )
-        VALUES (${iduser}, ${idoffice}, ${idclient}, ${idtype}, ${status}, ${date}, ${starttime}, ${endtime})
+          iduser, idoffice, idclient, idtype, status, date, starttime, endtime, idclinic )
+        VALUES (${iduser}, ${idoffice}, ${idclient}, ${idtype}, ${status}, ${date}, ${starttime}, ${endtime}, ${idclinic})
         `;
   } catch (error) {
     console.error('Database Error:', error);

@@ -3,4 +3,5 @@ export type Type = {
   title: string;
   description: string;
   price: number;
+  idclinic: string;
 };

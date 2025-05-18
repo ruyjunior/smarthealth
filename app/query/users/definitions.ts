@@ -7,4 +7,5 @@ export type User = {
   status: string;
   payment_itent: string;
   amount_paid: number;
+  idclinic: string;
 }

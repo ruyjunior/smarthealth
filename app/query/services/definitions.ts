@@ -8,6 +8,7 @@ export type Service = {
   date: string;
   starttime: string;
   endtime: string;
+  idclinic: string;
 };
 
 export interface ServiceWithDetails {
