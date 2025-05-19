@@ -49,7 +49,7 @@ export async function createClinic(prevState: State, formData: FormData) {
       message: 'Database Error: Failed to Create Clinic.',
     };
   }
-  
+
   revalidatePath('/manager/clinics');
   redirect('/manager/clinics');
 }
@@ -59,11 +59,13 @@ export async function updateClinic(
   prevState: State,
   formData: FormData
 ) {
+  //console.log('Clinic formData' + formData.values);
   const validatedFields = UpdateClinic.safeParse({
     title: formData.get('title'),
     logourl: formData.get('logourl'),
   });
-
+  console.log('Clinic formData: ' + validatedFields.data?.logourl);
+  console.log('Clinic formData: ' + validatedFields.data?.title);
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,

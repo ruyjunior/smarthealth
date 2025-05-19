@@ -1,11 +1,10 @@
 'use client';
-import { useActionState, useState, useRef } from 'react';
+import { useActionState, useState } from 'react';
 import { Clinic } from '@/app/query/clinics/definitions';
 import { TagIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { updateClinic, State } from '@/app/query/clinics/actions';
-import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 
 export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
@@ -23,9 +22,10 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
     try {
       const newBlob = await upload(file.name, file, {
         access: 'public',
-        handleUploadUrl: 'api/upload',
+        handleUploadUrl: '/api/upload',
       });
       setLogoUrl(newBlob.url);
+      console.log('UrlBlob' + newBlob.url);
     } finally {
       setUploading(false);
     }
@@ -34,6 +34,7 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
+
         {/* Title */}
         <div className="mb-4">
           <label htmlFor="title" className="mb-2 block text-sm font-medium">
@@ -64,36 +65,44 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
         </div>
 
         {/* Logo */}
-        <label htmlFor="logo" className="mb-2 block text-sm font-medium">
-          Logo da clínica
-        </label>
-        <input
-          id="logo"
-          name="logo"
-          type="file"
-          accept="image/*"
-          className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-200"
-          onChange={handleLogoChange}
-          disabled={uploading}
-        />
-        {uploading && <p className="text-xs text-blue-600 mt-1">Enviando logo...</p>}
-        {logoUrl && (
-          <div className="mt-2">
-            <img src={logoUrl} alt="Preview" className="h-20 rounded-md" />
-            <input type="hidden" name="logo" value={logoUrl} />
+        <div className="mb-4">
+          <label htmlFor="logo" className="mb-2 block text-sm font-medium">
+            Logo da clínica
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="logo"
+                name="logo"
+                type="file"
+                accept="image/*"
+                className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-200"
+                onChange={handleLogoChange}
+                disabled={uploading}
+              />
+            </div>
+            <div>
+              {uploading && <p className="text-xs text-blue-600 mt-1">Enviando logo...</p>}
+              {logoUrl && (
+                <div className="mt-2">
+                  <img src={logoUrl} alt="Preview" className="h-20 rounded-md" />
+                  <input type="hidden" name="logourl" value={logoUrl} />
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Botões */}
-      <div className="mt-6 flex justify-end gap-4">
-        <Link
-          href="/manager/clinics"
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-        >
-          Cancelar
-        </Link>
-        <Button type="submit">Editar</Button>
+        {/* Botões */}
+        <div className="mt-6 flex justify-end gap-4">
+          <Link
+            href="/manager/clinics"
+            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          >
+            Cancelar
+          </Link>
+          <Button type="submit">Editar</Button>
+        </div>
       </div>
     </form>
   );

@@ -1,10 +1,12 @@
 'use client';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { User } from '@/app/query/users/definitions';
 import { TagIcon, AtSymbolIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { updateUser, State } from '@/app/query/users/actions';
+import { upload } from '@vercel/blob/client';
+
 
 export default function EditUserForm({
   user,
@@ -15,6 +17,27 @@ export default function EditUserForm({
   const initialState = { message: '', errors: {} };
   const updateUserWithId = updateUser.bind(null, user.id);
   const [state, formAction] = useActionState(updateUserWithId, initialState);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(user.avatarurl ?? null);
+  const [uploading, setUploading] = useState(false);
+
+
+  // Upload avatar ao selecionar arquivo
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/upload',
+      });
+      setAvatarUrl(newBlob.url);
+      console.log('UrlBlob' + newBlob.url);
+    } finally {
+      setUploading(false);
+    }
+  }
+
 
   return (
     <form action={formAction}>
@@ -109,34 +132,35 @@ export default function EditUserForm({
 
         {/* Role */}
         <input type="hidden" name="role" value={user.role === "Gerente" ? "Gerente" : "Funcionário"} />
-        {/*
+
+        {/* Avatar */}
         <div className="mb-4">
-          <label htmlFor="role" className="mb-2 block text-sm font-medium">
-            Cargo
+          <label htmlFor="avatar" className="mb-2 block text-sm font-medium">
+            Avatar do Usuário
           </label>
-          <div className="relative">
-            <select
-              id="role"
-              name="role"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={user.role}
-              aria-describedby="role-error"
-            >
-              <option value="Funcionário"> Funcionário</option>
-              <option value="Gerente"> Gerente</option>
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="role-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.role &&
-              state.errors.role.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="avata"
+                name="avatar"
+                type="file"
+                accept="image/*"
+                className="block w-full text-sm text-gray-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-200"
+                onChange={handleAvatarChange}
+                disabled={uploading}
+              />
+            </div>
+            <div>
+              {uploading && <p className="text-xs text-blue-600 mt-1">Enviando avatar...</p>}
+              {avatarUrl && (
+                <div className="mt-2">
+                  <img src={avatarUrl} alt="Preview" className="h-20 rounded-md" />
+                  <input type="hidden" name="avatarurl" value={avatarUrl} />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        */}
 
       </div>
       <div className="mt-6 flex justify-end gap-4">
@@ -144,9 +168,9 @@ export default function EditUserForm({
           href="/manager/users"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
-          Cancel
+          Cancelar
         </Link>
-        <Button type="submit">Edit User</Button>
+        <Button type="submit">Editar</Button>
       </div>
     </form>
   );

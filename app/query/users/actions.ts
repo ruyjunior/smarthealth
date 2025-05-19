@@ -12,6 +12,7 @@ const FormSchema = z.object({
   password: z.string(),
   role: z.string(),
   idclinic: z.string(),
+  avatarurl: z.string()
 });
 
 
@@ -66,12 +67,13 @@ export async function updateUser(
   prevState: State,
   formData: FormData
 ) {
-
+  console.log('User formData' + formData);
   const validatedFields = UpdateUser.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
     password: formData.get('password'),
     role: formData.get('role'),
+    avatarurl: formData.get('avatarurl'),
   });
   //console.log('validatedFields', validatedFields);
   if (!validatedFields.success) {
@@ -81,7 +83,7 @@ export async function updateUser(
     };
   }
   //console.log('validatedFields', validatedFields);
-  const { name, email, password, role } = validatedFields.data;
+  const { name, email, password, role, avatarurl } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -92,7 +94,7 @@ export async function updateUser(
 
       await sql`
         UPDATE smarthealth.users
-        SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}
+        SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}, avatarurl = ${avatarurl}
         WHERE id = ${id}
       `;
     } else {
@@ -100,7 +102,7 @@ export async function updateUser(
 
       await sql`
         UPDATE smarthealth.users
-        SET name = ${name}, email = ${email}, role = ${role}
+        SET name = ${name}, email = ${email}, role = ${role}, avatarurl = ${avatarurl}
         WHERE id = ${id}
       `;
     }

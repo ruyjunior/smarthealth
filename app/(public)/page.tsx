@@ -4,7 +4,7 @@ import About from "./site/sections/about";
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Smart Health',
+  title: 'Smart Health App',
   description: 'Sua clínica online, na palma da sua mão!',
 };
 
