@@ -12,7 +12,7 @@ const FormSchema = z.object({
   password: z.string(),
   role: z.string(),
   idclinic: z.string(),
-  avatarurl: z.string()
+  avatarurl: z.string().optional(),
 });
 
 
@@ -31,13 +31,19 @@ export type State = {
 };
 
 export async function createUser(prevState: State, formData: FormData) {
+  console.log('User formData: ' + formData.get('name'));
+  console.log('User formData: ' + formData.get('email'));
+  console.log('User formData: ' + formData.get('password'));
+  console.log('User formData: ' + formData.get('role'));
+  console.log('User formData: ' + formData.get('idclinic'));
   const validatedFields = CreateUser.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
     password: formData.get('password'),
     role: formData.get('role'),
-    idclinic: formData.get('idclinic'),
+    idclinic: formData.get('idclinic')
   });
+  console.log('validatedFields', validatedFields);
 
   if (!validatedFields.success) {
     return {
