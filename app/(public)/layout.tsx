@@ -12,11 +12,7 @@ export const metadata: Metadata = {
     default: 'SMART HEALTH',
   },
   description: 'Sua Clínica Online.',
-  metadataBase: new URL('https://www.smarthealth.com.br'),
-  openGraph: {
-    type: 'website',
-    locale: 'pt_BR',
-  },
+  metadataBase: new URL('https://smarthealth-one.vercel.app/'),
   robots: {
     follow: true,
     index: true,
@@ -26,6 +22,29 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+
+    title: 'SMART HEALTH',
+    description: 'Sua Clínica Online.',
+    url: 'https://smarthealth-one.vercel.app/',
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 500,
+        height: 500,
+        alt: 'SMART HEALTH',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SMART HEALTH',
+    description: 'Sua Clínica Online.',
+    images: ['/images/logo.png'],
+  },
+
 };
 
 export default function RootLayout({
