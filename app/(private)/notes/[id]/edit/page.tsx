@@ -36,7 +36,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           { label: 'Paciente', href: `/clients` },
           { label: `Nota: ${client?.name}`, href: `/clients/${client.id}/view` },
           {
-            label: 'Editar Nota',
+            label: 'Editar Ficha',
             href: `/notes/${id}/edit`,
             active: true,
           }]}

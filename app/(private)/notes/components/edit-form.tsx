@@ -77,7 +77,7 @@ export default function EditNoteForm({
           <>
             <div className="mb-4">
               <label className="mb-2 block text-sm font-medium">
-                Campos
+                {note.fields[0] ? 'Campos' : ''}
               </label>
               {type?.fieldslabels.map((label, idx) => (
                 <div key={idx} className="relative mt-2 rounded-md">
@@ -95,7 +95,7 @@ export default function EditNoteForm({
             </div>
             <div className="mb-4">
               <label className="mb-2 block text-sm font-medium">
-                Caixas de seleção
+                {note.checks[0] ? 'Caixas de seleção' : ''}
               </label>
               {type?.checkslabels.map((label, idx) => (
                 <div key={idx} className="relative mt-2 rounded-md flex items-center gap-2">

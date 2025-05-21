@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth/unstorage-adapter": "^2.8.0",
     "@heroicons/react": "^2.2.0",
+    "@react-pdf/renderer": "^4.3.0",
     "@stripe/stripe-js": "^6.0.0",
     "@vercel/blob": "^1.0.1",
     "@vercel/postgres": "^0.10.0",

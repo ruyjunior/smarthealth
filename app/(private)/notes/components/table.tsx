@@ -1,4 +1,4 @@
-import { UpdateNote, DeleteNote } from './buttons';
+import { UpdateNote, DeleteNote, PdfNotes } from './buttons';
 import { fetchFilteredNotes } from '@/app/query/notes/data';
 import { formatDateToLocal, formatTime } from '@/app/lib/utils';
 import { fetchClients } from '@/app/query/clients/data';
@@ -62,6 +62,7 @@ export default async function NotesTable({
                         })}
                       </div>
                       <div className="flex justify-end gap-3 pt-3">
+                        <PdfNotes id={note.id} />
                         <UpdateNote id={note.id} />
                         <DeleteNote id={note.id} />
                       </div>
@@ -95,6 +96,7 @@ export default async function NotesTable({
                       <tr key={note.id} className="hover:bg-blue-300">
                         <td className="py-2 px-2 flex gap-2 items-center justify-center">
                           <UpdateNote id={note.id} />
+                          <PdfNotes id={note.id} />
                         </td>
                         <td className="px-2 py-2 text-xs">{formatDateToLocal(note.date)}</td>
                         <td className="px-2 py-2 text-xs">{type?.title}</td>

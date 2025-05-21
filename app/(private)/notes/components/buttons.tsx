@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon, PrinterIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteNote } from '@/app/query/notes/actions';
 
@@ -36,3 +36,15 @@ export function DeleteNote({ id }: { id: string }) {
     </form>
   );
 }
+
+export function PdfNotes({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/notes/${id}/pdf`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      <PrinterIcon className="w-5" />
+    </Link>
+  );
+}
+
