@@ -50,6 +50,16 @@ export default async function NotesTable({
                             </p>
                           )
                         })}
+                        {note.checks.map((check, index) => {
+                          const checklabel = type?.checkslabels[index];
+                          return (
+                            <div key={index} className="flex flex-row gap-1 items-center">
+                              <span className="text-sm text-gray-600">{checklabel}</span>
+                              <span>{check ?
+                                <CheckCircleIcon className='w-5' /> : ''}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                       <div className="flex justify-end gap-3 pt-3">
                         <UpdateNote id={note.id} />
