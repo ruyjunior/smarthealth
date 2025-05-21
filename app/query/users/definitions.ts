@@ -9,4 +9,5 @@ export type User = {
   amount_paid: number;
   idclinic: string;
   avatarurl: string;
+  category: string;
 }

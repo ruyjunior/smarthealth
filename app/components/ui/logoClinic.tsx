@@ -9,6 +9,7 @@ export default async function Logo({ w, h, dw, dh, logourl }: { w: number; h: nu
         alt="logo App"
         width={200}
         height={200}
+        priority={true}
         className={`w-${w} h-${h} md:w-${dw} md:h-${dh} mr-0 rounded-md`}
       />
     </div>

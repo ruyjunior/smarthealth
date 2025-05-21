@@ -13,6 +13,7 @@ const FormSchema = z.object({
   role: z.string(),
   idclinic: z.string(),
   avatarurl: z.string().optional(),
+  category: z.string().optional(),
 });
 
 
@@ -26,6 +27,7 @@ export type State = {
     password?: string[];
     role?: string[];
     idclinic?: string[];
+    category?: string[];
   };
   message?: string | null;
 };
@@ -41,7 +43,8 @@ export async function createUser(prevState: State, formData: FormData) {
     email: formData.get('email'),
     password: formData.get('password'),
     role: formData.get('role'),
-    idclinic: formData.get('idclinic')
+    idclinic: formData.get('idclinic'),
+    category: formData.get('category'),
   });
   console.log('validatedFields', validatedFields);
 
@@ -51,13 +54,13 @@ export async function createUser(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create.',
     };
   }
-  const { name, email, password, role, idclinic } = validatedFields.data;
+  const { name, email, password, role, idclinic, category } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     await sql`
-        INSERT INTO smarthealth.users ( name, email, password, role, idclinic)
-        VALUES (${name}, ${email}, ${hashedPassword}, ${role}, ${idclinic})
+        INSERT INTO smarthealth.users ( name, email, password, role, idclinic, category)
+        VALUES (${name}, ${email}, ${hashedPassword}, ${role}, ${idclinic}, ${category})
         `;
   } catch (error) {
     return {
@@ -80,6 +83,7 @@ export async function updateUser(
     password: formData.get('password'),
     role: formData.get('role'),
     avatarurl: formData.get('avatarurl'),
+    category: formData.get('category'),
   });
   //console.log('validatedFields', validatedFields);
   if (!validatedFields.success) {
@@ -89,7 +93,7 @@ export async function updateUser(
     };
   }
   //console.log('validatedFields', validatedFields);
-  const { name, email, password, role, avatarurl } = validatedFields.data;
+  const { name, email, password, role, avatarurl, category } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
@@ -100,7 +104,7 @@ export async function updateUser(
 
       await sql`
         UPDATE smarthealth.users
-        SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}, avatarurl = ${avatarurl}
+        SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}, avatarurl = ${avatarurl}, category = ${category}
         WHERE id = ${id}
       `;
     } else {
@@ -108,7 +112,7 @@ export async function updateUser(
 
       await sql`
         UPDATE smarthealth.users
-        SET name = ${name}, email = ${email}, role = ${role}, avatarurl = ${avatarurl}
+        SET name = ${name}, email = ${email}, role = ${role}, avatarurl = ${avatarurl}, category = ${category}
         WHERE id = ${id}
       `;
     }

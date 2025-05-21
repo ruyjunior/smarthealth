@@ -11,7 +11,7 @@ export async function fetchUsers() {
 
   try {
     const data = await sql<User>`
-      SELECT id, name, email, role, avatarurl
+      SELECT id, name, email, role, avatarurl, category
       FROM smarthealth.users
       WHERE users.idclinic = ${user.idclinic}
       ORDER BY name ASC
@@ -37,7 +37,7 @@ export async function fetchFilteredUsers(
 
   try {
     const data = await sql<User>`
-      SELECT id, name, email, role, avatarurl
+      SELECT id, name, email, role, avatarurl, category
       FROM smarthealth.users
       WHERE
         (users.name ILIKE ${`%${query}%`} OR
@@ -81,7 +81,7 @@ export async function fetchUserById(id: string) {
   try {
     const data = await sql<User>`
       SELECT
-        id, name, email, role, idclinic, avatarurl
+        id, name, email, role, idclinic, avatarurl, category
         FROM smarthealth.users
         WHERE users.id = ${id} 
         `;

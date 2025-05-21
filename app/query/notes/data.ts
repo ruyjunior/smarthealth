@@ -7,7 +7,7 @@ export async function fetchNotes() {
   try {
     const data = await sql<Note>`
     SELECT 
-      id, iduser, idclient, weight, height, date, fat, note
+      id, iduser, idclient, idnotetype, date, fields, checks
     FROM smarthealth.notes
     ORDER BY date ASC    
     `;
@@ -27,7 +27,7 @@ export async function fetchFilteredNotes(
   try {
     const data = await sql<Note>`
     SELECT 
-      notes.id, iduser, idclient, height, weight, date, fat, note
+      notes.id, iduser, idclient, idnotetype, date, fields, checks
     FROM smarthealth.notes
     LEFT JOIN smarthealth.clients ON notes.idclient = clients.id
     WHERE notes.idclient::text ILIKE ${`%${query ?? ''}%`} OR
@@ -62,7 +62,7 @@ export async function fetchNoteById(id: string) {
   try {
     const data = await sql<Note>`
     SELECT 
-      id, iduser, idclient, weight, height, date, fat, note
+      id, iduser, idclient, idnotetype, date, fields, checks
     FROM smarthealth.notes
     WHERE notes.id = ${id} 
     `;
@@ -80,7 +80,7 @@ export async function fetchNotesByClient(id: string) {
   try {
     const data = await sql<Note>`
       SELECT 
-        id, iduser, idclient, weight, height, date, fat, note
+        id, iduser, idclient, idnotetype, date, fields, checks
       FROM smarthealth.notes
       WHERE notes.idclient = ${id} 
       ORDER BY date ASC

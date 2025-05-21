@@ -18,7 +18,7 @@ export default async function clinicsTable({
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden rounded-lg bg-gray-50 shadow-md p-4 md:pt-0">
+            <div className="overflow-hidden rounded-lg bg-blue-200 shadow-md p-4 md:pt-0">
               {/* Mobile View */}
               <div className="md:hidden">
                 {clinics?.map((clinic) => {

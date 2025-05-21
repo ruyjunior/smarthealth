@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { lusitana } from '@/app/components/ui/fonts';
-import { Home, UserIcon, HospitalIcon, ListCollapseIcon, HeartHandshakeIcon, FolderHeartIcon } from "lucide-react";
+import { UserIcon, HospitalIcon, HeartHandshakeIcon, FolderHeartIcon, ClipboardPenLine } from "lucide-react";
 import Link from "next/link";
 
 
@@ -10,10 +10,11 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const menuItems = [
-    { name: "Consultórios", path: "/manager/offices", icon: <HeartHandshakeIcon size={20} /> },
-    { name: "Especialidades", path: "/manager/types", icon: <FolderHeartIcon size={20} /> },
-    { name: "Usuários", path: '/manager/users', icon: <UserIcon size={20} /> },
     { name: "Clínica", path: '/manager/clinics', icon: <HospitalIcon size={20} /> },
+    { name: "Especialidades", path: "/manager/types", icon: <FolderHeartIcon size={20} /> },
+    { name: "Consultórios", path: "/manager/offices", icon: <HeartHandshakeIcon size={20} /> },
+    { name: "Fichas", path: "/manager/notetypes", icon: <ClipboardPenLine size={20} /> },
+    { name: "Usuários", path: '/manager/users', icon: <UserIcon size={20} /> },
   ];
 
 

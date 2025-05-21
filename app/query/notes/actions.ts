@@ -3,32 +3,30 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { sql } from '@vercel/postgres';
-import { Weight } from 'lucide-react';
+import { toPgArray } from '@/app/lib/utils';
 
 const FormSchema = z.object({
   id: z.string(),
   iduser: z.string(),
   idclient: z.string(),
+  idnotetype: z.string(),
+  fields: z.array(z.string()),
+  checks: z.array(z.string()),
   date: z.string(),
-  weight: z.string(),
-  height: z.string().optional(),
-  fat: z.string().optional(),
-  note: z.string().optional(),
 });
 
 const CreateNote = FormSchema.omit({ id: true });
 const UpdateNote = FormSchema.omit({ id: true });
 
 export type State = {
-  message?: string;
+  message?: string | null;
   errors?: {
     iduser?: string[];
     idclient?: string[];
+    idnotetype?: string[];
+    fields?: string[];
+    checks?: string[];
     date?: string[];
-    note?: string[];
-    fat?: string[];
-    height?: string[];
-    weight?: string[];
   };
 };
 
@@ -37,30 +35,30 @@ export async function createNote(prevState: State, formData: FormData) {
   const validatedFields = CreateNote.safeParse({
     iduser: formData.get('iduser'),
     idclient: formData.get('idclient'),
+    idnotetype: formData.get('idnotetype'),
+    fields: formData.getAll('fields[]'),
+    checks: formData.getAll('checks[]'),
     date: formData.get('date'),
-    note: formData.get('note'),
-    fat: formData.get('fat'),
-    height: formData.get('height'),
-    weight: formData.get('weight')
   });
 
   console.log('Validated Fields: ', validatedFields.success);
 
-  if (!validatedFields.success) {
+  if (!validatedFields.success) {      
+    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create.',
     };
   }
 
-  const { iduser, idclient, date, note, fat, height, weight } = validatedFields.data;
+  const { iduser, idclient, date, idnotetype, fields, checks } = validatedFields.data;
 
   try {
     await sql`
         INSERT INTO smarthealth.notes ( 
-          iduser, idclient, date, note, fat, height, weight
+          iduser, idclient, date, idnotetype, fields, checks
         )
-        VALUES (${iduser}, ${idclient}, ${date}, ${note}, ${fat}, ${height}, ${weight})
+        VALUES (${iduser}, ${idclient}, ${date}, ${idnotetype}, ${toPgArray(fields)}, ${toPgArray(checks)})
         `;
   } catch (error) {
     console.error('Database Error:', error);
@@ -81,11 +79,11 @@ export async function updateNote(
   const validatedFields = UpdateNote.safeParse({
     iduser: formData.get('iduser'),
     idclient: formData.get('idclient'),
+    idnotetype: formData.get('idnotetype'),
+    fields: formData.getAll('fields[]'),
+    checks: formData.getAll('checks[]'),
     date: formData.get('date'),
-    note: formData.get('note'),
-    fat: formData.get('fat'),
-    height: formData.get('height'),
-    weight: formData.get('weight')
+  
   });
 
 
@@ -97,7 +95,7 @@ export async function updateNote(
     };
   }
 
-  const { iduser, idclient, date, note, fat, height, weight } = validatedFields.data;
+  const { iduser, idclient, date, idnotetype, fields, checks } = validatedFields.data;
   const sanitizedEndDate = date || null;
 
   try {
@@ -107,10 +105,9 @@ export async function updateNote(
       iduser = ${iduser},
       idclient = ${idclient},
       date = ${date}, 
-      note = ${note},
-      fat = ${fat},
-      height = ${height},
-      weight = ${weight}
+      idnotetype = ${idnotetype},
+      fields = ${toPgArray(fields)},
+      checks = ${toPgArray(checks)}
     WHERE id = ${id}
   `;
   } catch (error) {

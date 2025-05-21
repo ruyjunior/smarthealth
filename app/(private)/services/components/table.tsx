@@ -44,7 +44,7 @@ export default async function ServicesTable({
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden rounded-lg bg-gray-50 shadow-md p-4 md:pt-0">
+            <div className="overflow-hidden rounded-lg bg-blue-200 shadow-md p-4 md:pt-0">
               {/* Mobile View */}
               <div className="md:hidden">
                 {services?.map((service) => {
@@ -76,8 +76,8 @@ export default async function ServicesTable({
               </div>
 
               {/* Desktop View */}
-              <table className="hidden min-w-full text-gray-900 md:table">
-                <thead className="bg-green-100 text-left text-xs font-medium">
+              <table className="hidden min-w-full text-center text-gray-900 md:table">
+                <thead className="bg-blue-300 text-xs font-medium">
                   <tr>
                     <th className="px-2 py-2">Editar</th>
                     <th className="px-2 py-2">Data</th>
@@ -100,8 +100,8 @@ export default async function ServicesTable({
                     const type = types.find((t) => t.id === service.idtype);
 
                     return (
-                      <tr key={service.id} className="hover:bg-gray-300">
-                        <td className="py-2 px-2 flex gap-2">
+                      <tr key={service.id} className="hover:bg-blue-300">
+                        <td className="py-2 px-2 flex gap-2 items-center justify-center">
                           <UpdateService id={service.id} />
                         </td>
                         <td className="px-2 py-2 text-xs">{formatDateToLocal(service.date)}</td>
@@ -112,7 +112,7 @@ export default async function ServicesTable({
                         <td className="px-2 py-2 text-xs">{office?.title}</td>
                         <td className="px-2 py-2 text-xs">{type?.title}</td>
                         <td className="px-2 py-2 text-xs">{user?.name}</td>
-                        <td className="py-2 px-2 flex justify-end">
+                        <td className="py-2 px-2 flex justify-center items-center">
                           <DeleteService id={service.id} />
                         </td>
                       </tr>

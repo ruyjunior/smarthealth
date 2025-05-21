@@ -1,4 +1,7 @@
 import { Metadata } from "next";
+import Resume from "./components/Resume";
+import ScheduleDay from "./components/SheduleDay";
+import Charts from "./components/ChartsWeek";
 
 export const metadata: Metadata = {
   title: 'Dashboard',
@@ -7,10 +10,12 @@ export const metadata: Metadata = {
 export default function Page() {
 
   return (
-    <main className="flex items-center justify-center md:h-screen">
+    <div className="w-full">
       <div className="w-full">
-        <h1>DASHBOARD</h1>
+        <ScheduleDay />          
+        <Resume />
+        <Charts />
       </div>
-    </main>
+    </div>
   );
 }

@@ -2,9 +2,8 @@ export type Note = {
   id: string;
   iduser: string;
   idclient: string;
+  idnotetype: string;
   date: string;
-  weight: number;
-  height: number;
-  fat: number;
-  note: string;
+  fields: string[];
+  checks: boolean[];
 };

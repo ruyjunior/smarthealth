@@ -1,3 +1,7 @@
+import { auth } from '@/app/lib/auth';
+import { fetchUserById } from '@/app/query/users/data';
+
+
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('pt-BR', {
     style: 'currency',
@@ -5,6 +9,22 @@ export const formatCurrency = (amount: number) => {
   });
 };
 
+export async function CurrentClinicId() {
+  const session = await auth();
+  if (!session || !session.user || !session.user.id) {
+    throw new Error('User session is not available.');
+  }
+  const user = await fetchUserById(session.user.id);
+  const idclinic = user.idclinic;
+  if (!idclinic) {
+    throw new Error('User clinic ID is not available.');
+  }
+  return idclinic;
+}
+
+export function toPgArray(arr: (string | boolean)[]): string {
+  return '{' + arr.map(v => typeof v === 'boolean' ? v : `"${String(v).replace(/"/g, '\\"')}"`).join(',') + '}';
+}
 export function cn(...classes: (string | undefined | null | false)[]) {
   return classes.filter(Boolean).join(" ");
 }

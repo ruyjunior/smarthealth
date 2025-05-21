@@ -5,7 +5,7 @@ import { TagIcon, AtSymbolIcon, KeyIcon, UserCircleIcon } from '@heroicons/react
 import { Button } from '@/app/components/ui/button';
 import { createUser, State } from '@/app/query/users/actions';
 
-export default function Form({id }: { id: string | undefined }) {
+export default function Form({ id }: { id: string | undefined }) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createUser, initialState);
   return (
@@ -99,38 +99,40 @@ export default function Form({id }: { id: string | undefined }) {
           </div>
         </div>
 
-        {/* Role */}
-        <input type="hidden" name="role" value="Funcionário" />
-        {/*}
+        {/* Categoria */}
         <div className="mb-4">
-          <label htmlFor="role" className="mb-2 block text-sm font-medium">
-            Cargo
+          <label htmlFor="category" className="mb-2 block text-sm font-medium">
+            Categoria
           </label>
-          <div className="relative">
-            <select
-              id="role"
-              name="role"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue="Funcionário"
-              aria-describedby="role-error"
-            >
-              <option value="Funcionário"> Funcionário</option>
-              <option value="Gerente"> Gerente</option>
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="role-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.role &&
-              state.errors.role.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="category"
+                name="category"
+                type="text"
+                placeholder="Insira categoria da classe"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="category-error"
+              />
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+            <div id="category-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.category &&
+                state.errors.category.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
         </div>
-        */}
+
+        {/* Role */}
+        <input type="hidden" name="role" value="Funcionário" />
 
       </div>
+
+      {/* Botões de Ação */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/manager/users"
