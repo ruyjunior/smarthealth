@@ -22,8 +22,6 @@ export default async function NoteTypesTable({
                   <div key={notetype.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
                     <div className="border-b pb-4">
                       <h3 className="text-xl font-semibold text-gray-900">{notetype.title}</h3>
-                      <p className="text-sm text-gray-600">Número de Campos: {notetype.fieldsnumber}</p>
-                      <p className="text-sm text-gray-600">Número de Caixas: {notetype.checksnumber}</p>
                       <p className="text-sm text-gray-600">Etiquetas dos Campos: {notetype.fieldslabels.join(', ')}</p>
                       <p className="text-sm text-gray-600">Etiquetas das Caixas: {notetype.checkslabels.join(', ')}</p>
                     </div>
@@ -55,8 +53,6 @@ export default async function NoteTypesTable({
                         <UpdateNoteType id={notetype.id} />
                       </td>
                       <td className="px-2 py-2 text-xs">{notetype.title}</td>
-                      <td className="px-2 py-2 text-xs">{notetype.fieldsnumber}</td>
-                      <td className="px-2 py-2 text-xs">{notetype.checksnumber}</td>
                       <td className="px-2 py-2 text-xs">{notetype.fieldslabels.join(', ')}</td>
                       <td className="px-2 py-2 text-xs">{notetype.checkslabels.join(', ')}</td>
                       <td className="py-2 px-2 flex justify-center">

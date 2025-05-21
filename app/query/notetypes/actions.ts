@@ -9,8 +9,6 @@ const FormSchema = z.object({
   id: z.string(),
   idclinic: z.string(),
   title: z.string(),
-  fieldsnumber: z.string(),
-  checksnumber: z.string(),
   fieldslabels: z.array(z.string()),
   checkslabels: z.array(z.string()),
 });
@@ -22,8 +20,6 @@ export type State = {
   message?: string | null;
   errors?: {
     title?: string[];
-    fieldsnumber?: string[];
-    checksnumber?: string[];
     fieldslabels?: string[];
     checkslabels?: string[];
   };
@@ -34,8 +30,6 @@ export async function createNoteType(prevState: State, formData: FormData) {
   const validatedFields = CreateNoteType.safeParse({
     idclinic: formData.get('idclinic'),
     title: formData.get('title'),
-    fieldsnumber: formData.get('fieldsnumber'),
-    checksnumber: formData.get('checksnumber'),
     fieldslabels: (formData.get('fieldslabels') as string || '')
       .split(',')
       .map(s => s.trim())
@@ -54,14 +48,14 @@ export async function createNoteType(prevState: State, formData: FormData) {
     };
   }
 
-  const { idclinic, title, fieldsnumber, checksnumber, fieldslabels, checkslabels } = validatedFields.data;
+  const { idclinic, title, fieldslabels, checkslabels } = validatedFields.data;
 
   try {
     await sql`
         INSERT INTO smarthealth.notetypes ( 
-          idclinic, title, fieldsnumber, checksnumber, fieldslabels, checkslabels
+          idclinic, title, fieldslabels, checkslabels
         )
-        VALUES (${idclinic}, ${title}, ${fieldsnumber}, ${checksnumber}, ${toPgArray(fieldslabels)}, ${toPgArray(checkslabels)})
+        VALUES (${idclinic}, ${title}, ${toPgArray(fieldslabels)}, ${toPgArray(checkslabels)})
         `;
   } catch (error) {
     console.error('Database Error:', error);
@@ -82,8 +76,6 @@ export async function updateNoteType(
   const validatedFields = UpdateNoteType.safeParse({
     idclinic: formData.get('idclinic'),
     title: formData.get('title'),
-    fieldsnumber: formData.get('fieldsnumber'),
-    checksnumber: formData.get('checksnumber'),
     fieldslabels: (formData.get('fieldslabels') as string || '')
       .split(',')
       .map(s => s.trim())
@@ -103,15 +95,13 @@ export async function updateNoteType(
     };
   }
 
-  const { title, fieldsnumber, checksnumber, fieldslabels, checkslabels } = validatedFields.data;
+  const { title, fieldslabels, checkslabels } = validatedFields.data;
 
   try {
     await sql`
     UPDATE smarthealth.notetypes
     SET 
       title = ${title},
-      fieldsnumber = ${fieldsnumber},
-      checksnumber = ${checksnumber},
       fieldslabels = ${toPgArray(fieldslabels)},
       checkslabels = ${toPgArray(checkslabels)}
     WHERE id = ${id}

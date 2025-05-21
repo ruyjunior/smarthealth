@@ -8,7 +8,7 @@ export async function fetchNoteTypes() {
   try {
     const data = await sql<NoteType>`
     SELECT 
-      notetypes.id, idclinic, title, fieldsnumber, checksnumber, fieldslabels, checkslabels
+      notetypes.id, idclinic, title, fieldslabels, checkslabels
     FROM smarthealth.notetypes
     WHERE notetypes.idclinic = ${idclinic}
     ORDER BY title ASC
@@ -31,7 +31,7 @@ export async function fetchFilteredNoteTypes(
   try {
     const data = await sql<NoteType>`
     SELECT 
-      notetypes.id, idclinic, title, fieldsnumber, checksnumber, fieldslabels, checkslabels
+      notetypes.id, idclinic, title, fieldslabels, checkslabels
     FROM smarthealth.notetypes
     WHERE notetypes.title::text ILIKE ${`%${query ?? ''}%`} AND 
     notetypes.idclinic = ${idclinic}
@@ -72,7 +72,7 @@ export async function fetchNoteTypeById(id: string) {
   try {
     const data = await sql<NoteType>`
     SELECT 
-      notetypes.id, idclinic, title, fieldsnumber, checksnumber, fieldslabels, checkslabels
+      notetypes.id, idclinic, title, fieldslabels, checkslabels
     FROM smarthealth.notetypes
     WHERE notetypes.id = ${id} 
     `;

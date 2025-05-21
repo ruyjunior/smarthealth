@@ -44,64 +44,10 @@ export default function Form({ id }: { id: string | undefined }) {
           </div>
         </div>
 
-        {/* Número de Campos */}
-        <div className="mb-4">
-          <label htmlFor="fieldsnumber" className="mb-2 block text-sm font-medium">
-            Número de Campos
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="fieldsnumber"
-                name="fieldsnumber"
-                type="number"
-                placeholder="Insira o número de campos"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="fieldsnumber-error"
-              />
-            </div>
-            <div id="fieldsnumber-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.fieldsnumber &&
-                state.errors.fieldsnumber.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Número de Checks */}
-        <div className="mb-4">
-          <label htmlFor="checksnumber" className="mb-2 block text-sm font-medium">
-            Número de Checks
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="checksnumber"
-                name="checksnumber"
-                type="number"
-                placeholder="Insira o número de checks"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="checksnumber-error"
-              />
-            </div>
-            <div id="checksnumber-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.checksnumber &&
-                state.errors.checksnumber.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div>
-        </div>
-
         {/* Labels dos Campos */}
         <div className="mb-4">
           <label htmlFor="fieldslabels" className="mb-2 block text-sm font-medium">
-            Labels dos Campos
+            Labels dos Campos (Máximo 20)
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -121,7 +67,7 @@ export default function Form({ id }: { id: string | undefined }) {
         {/* Labels dos Checks */}
         <div className="mb-4">
           <label htmlFor="checkslabels" className="mb-2 block text-sm font-medium">
-            Labels dos Checks
+            Labels dos Checks (Máximo 20)
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
