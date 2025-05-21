@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     default: 'SMART HEALTH',
   },
   description: 'Sua Clínica Online.',
-  metadataBase: new URL('https://smarthealth-one.vercel.app/'),
+  metadataBase: new URL('https://smarthealth.app.br/'),
   robots: {
     follow: true,
     index: true,
