@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
     title: 'SMART HEALTH',
     description: 'Sua Clínica Online.',
-    url: 'https://smarthealth-one.vercel.app/',
+    url: 'https://smarthealth.app.br/',
     images: [
       {
         url: '/images/logo.png',
