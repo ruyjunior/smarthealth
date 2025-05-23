@@ -29,21 +29,21 @@ export default async function UsersTable({
                   }
                   return (
                     <div key={user.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
-                      <div className="flex border-b pb-4">
-                        <div>
-                          <h3 className="text-xl font-semibold text-gray-900">{user.name}</h3>
+                      <div className="flex border-b pb-4 items-center">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-sm font-semibold text-gray-900">{user.name}</h3>
                           <p className="text-sm text-gray-600">{user.email}</p>
                           <p className="text-sm text-gray-600">Cargo: {user.role}</p>
                           <p className="text-sm text-gray-600">Categoria: {user.category}</p>
                           <p className="text-sm text-gray-600">Gerente: {managerName}</p>
                         </div>
-                        <div className="ml-auto">
+                        <div className="flex-shrink-0 ml-1">
                           <Image
                             src={user.avatarurl}
                             alt="Avatar"
-                            width={200}
-                            height={200}
-                            className="h-15 w-15 rounded-full"
+                            width={64}
+                            height={64}
+                            className="h-16 w-16 rounded-full object-cover"
                           />
                         </div>
                       </div>

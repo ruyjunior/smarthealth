@@ -80,6 +80,10 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
                 onChange={handleLogoChange}
                 disabled={uploading}
               />
+              <span className='text-sm '>
+                Imagens jpg, jpeg, png com tamanho de no máximo 1MB - 200x200
+              </span>
+
             </div>
             <div>
               {uploading && <p className="text-xs text-blue-600 mt-1">Enviando logo...</p>}

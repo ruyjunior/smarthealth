@@ -51,7 +51,7 @@ export default function EditClientForm({
         {/* NAME */}
         <div className="mb-4">
           <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Insira um nome
+            Nome
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -80,7 +80,7 @@ export default function EditClientForm({
         {/* EMAIL */}
         <div className="mb-4">
           <label htmlFor="email" className="mb-2 block text-sm font-medium">
-            Insira um email
+            Email
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -109,7 +109,7 @@ export default function EditClientForm({
         {/* CPF */}
         <div className="mb-4">
           <label htmlFor="cpf" className="mb-2 block text-sm font-medium">
-            Insira um CPF
+            CPF
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -132,7 +132,7 @@ export default function EditClientForm({
         {/* BIRTH */}
         <div className="mb-4">
           <label htmlFor="birth" className="mb-2 block text-sm font-medium">
-            Insira o nascimento
+            Data de Nascimento
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -155,7 +155,7 @@ export default function EditClientForm({
         {/* PHONE */}
         <div className="mb-4">
           <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-            Insira o telefone
+            Telefone
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -178,7 +178,7 @@ export default function EditClientForm({
         {/* CEP */}
         <div className="mb-4">
           <label htmlFor="cep" className="mb-2 block text-sm font-medium">
-            Insira o CEP
+            CEP
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -199,6 +199,7 @@ export default function EditClientForm({
         </div>
       </div>
 
+      {/*Botões de ações */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/clients"

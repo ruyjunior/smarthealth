@@ -1,7 +1,7 @@
 'use client';
 import { useActionState, useState } from 'react';
 import { User } from '@/app/query/users/definitions';
-import { TagIcon, AtSymbolIcon, KeyIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { TagIcon, AtSymbolIcon, KeyIcon, IdentificationIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { updateUser, State } from '@/app/query/users/actions';
@@ -133,7 +133,7 @@ export default function EditUserForm({
         {/* Categoria */}
         <div className="mb-4">
           <label htmlFor="category" className="mb-2 block text-sm font-medium">
-            Categoria
+            Identificação profissional
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
@@ -146,7 +146,7 @@ export default function EditUserForm({
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="category-error"
               />
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
             <div id="category-error" aria-live="polite" aria-atomic="true">
               {state.errors?.category &&
@@ -178,6 +178,9 @@ export default function EditUserForm({
                 onChange={handleAvatarChange}
                 disabled={uploading}
               />
+              <span className='text-sm '>
+                Imagens jpg, jpeg, png com tamanho de no máximo 1MB - 200x200
+              </span>
             </div>
             <div>
               {uploading && <p className="text-xs text-blue-600 mt-1">Enviando avatar...</p>}

@@ -105,9 +105,9 @@ export default function Form({ client, user, types }: { client: Client; user: Us
               {type.fieldslabels.map((label, idx) => (
                 <div key={idx} className="relative mt-2 rounded-md">
                   <p className='text-xs'>{label}</p>
-                  <input
+                  <textarea
                     name="fields[]"
-                    type="text"
+                    //type="text"
                     placeholder={label}
                     className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   />

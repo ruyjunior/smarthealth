@@ -40,37 +40,47 @@ export const DocPDF = ({ note, type, user, client, clinic }:
         <View style={styles.headerSection}>
           <Image src={clinic.logourl} style={styles.logo} />
           <View style={styles.headerTextContainer}>
-            <Text style={styles.subtitle}>Ficha</Text>
-            <Text style={styles.title}>{type.title}</Text>
-            <Text style={styles.reportDate}>Data de criação: {formatDateToLocal(note.date)}</Text>
+            <Text style={styles.title}>{clinic.title}</Text>
+            <Text style={styles.subtitle}>Endereço aqui</Text>
+            <Text style={styles.reportDate}>Emitido em: {formatDateToLocal(note.date)}</Text>
+          </View>
+          <Image src={logo.src} style={styles.logoApp} />
+        </View>
+
+        {/* Linha divisória */}
+        <View style={{ borderBottomWidth: 2, borderBottomColor: '#0077b6', marginBottom: 12 }} />
+
+        {/* Profissional e Paciente */}
+        <View style={{ flexDirection: 'row', marginBottom: 12 }}>
+          {/* Profissional */}
+          <View style={{ flex: 1, paddingRight: 8 }}>
+            <Text style={styles.sectionTitle}>Profissional</Text>
+            <Text style={styles.field}><Text style={styles.label}>Nome:</Text> {user.name}</Text>
+            <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
+          </View>
+          {/* Paciente */}
+          <View style={{ flex: 1, paddingLeft: 8 }}>
+            <Text style={styles.sectionTitle}>Paciente</Text>
+            <Text style={styles.field}><Text style={styles.label}>Nome:</Text> {client.name}</Text>
+            <Text style={styles.field}><Text style={styles.label}>Telefone:</Text> {formatPhone(client.phone)}</Text>
+            <Text style={styles.field}><Text style={styles.label}>Email:</Text> {client.email}</Text>
           </View>
         </View>
 
-        {/* Clínica */}
-        <View style={styles.section}>
-          <Text style={styles.chapter}>{clinic.title}</Text>
-          <Text style={styles.field}><Text style={styles.label}>Dr.(a):</Text> {user.name}</Text>
-          <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
-        </View>
-
-        {/* Paciente */}
-        <View style={styles.section}>
-          <Text style={styles.chapter}>Paciente</Text>
-          <Text style={styles.field}><Text style={styles.label}>Nome:</Text> {client.name}</Text>
-          <Text style={styles.field}><Text style={styles.label}>Telefone:</Text> {formatPhone(client.phone)}</Text>
-          <Text style={styles.field}><Text style={styles.label}>Email:</Text> {client.email}</Text>
-        </View>
+        {/* Linha divisória */}
+        <View style={{ borderBottomWidth: 1, borderBottomColor: '#bbb', marginBottom: 12 }} />
 
         {/* Ficha - Campos/Checks */}
-        <View style={styles.section}>
+        <View style={{ marginBottom: 8 }}>
           <Text style={styles.chapter}>{type.title}</Text>
         </View>
 
         {type.fieldslabels.length > 0 && type.checkslabels.length > 0 ? (
           // Ambos existem: lado a lado
-          <View style={[styles.table, { flexDirection: 'row' }]}>
+          <View style={[styles.table, { flexDirection: 'row', gap: 12 }]}>
             {/* Coluna dos Campos */}
             <View style={{ flex: 1 }}>
+              <Text style={styles.tableSectionTitle}>Campos</Text>
               {type.fieldslabels.map((label, idx) => (
                 <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
                   <Text style={styles.tableCellHeader}>{label}</Text>
@@ -80,10 +90,13 @@ export const DocPDF = ({ note, type, user, client, clinic }:
             </View>
             {/* Coluna dos Checks */}
             <View style={{ flex: 1 }}>
+              <Text style={styles.tableSectionTitle}>Checks</Text>
               {type.checkslabels.map((label, idx) => (
                 <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
                   <Text style={styles.tableCellHeader}>{label}</Text>
-                  <Text style={styles.tableCell}>{note.checks?.[idx] ? 'Sim' : 'Não'}</Text>
+                  <Text style={styles.tableCell}>
+                    {note.checks?.[idx] ? 'Sim' : '-'}
+                  </Text>
                 </View>
               ))}
             </View>
@@ -91,6 +104,7 @@ export const DocPDF = ({ note, type, user, client, clinic }:
         ) : type.fieldslabels.length > 0 ? (
           // Só fields
           <View style={styles.table}>
+            <Text style={styles.tableSectionTitle}>Campos</Text>
             {type.fieldslabels.map((label, idx) => (
               <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
                 <Text style={styles.tableCellHeader}>{label}</Text>
@@ -101,10 +115,13 @@ export const DocPDF = ({ note, type, user, client, clinic }:
         ) : type.checkslabels.length > 0 ? (
           // Só checks
           <View style={styles.table}>
+            <Text style={styles.tableSectionTitle}>Checks</Text>
             {type.checkslabels.map((label, idx) => (
               <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
                 <Text style={styles.tableCellHeader}>{label}</Text>
-                <Text style={styles.tableCell}>{note.checks?.[idx] ? 'Sim' : 'Não'}</Text>
+                <Text style={styles.tableCell}>
+                  {note.checks?.[idx] ? 'Sim' : '-'}
+                </Text>
               </View>
             ))}
           </View>
@@ -112,6 +129,8 @@ export const DocPDF = ({ note, type, user, client, clinic }:
           // Nenhum campo/check
           <Text style={styles.tableCell}>Nenhum campo preenchido.</Text>
         )}
+
+        {/* Footer */}
         <View
           style={[
             styles.footer,
@@ -149,6 +168,6 @@ export const DocPDF = ({ note, type, user, client, clinic }:
           </View>
         </View>
       </Page>
-    </Document >
+    </Document>
   );
 };

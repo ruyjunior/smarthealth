@@ -3,14 +3,14 @@ import { useActionState } from 'react';
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  IdentificationIcon, PhoneIcon, TagIcon, TruckIcon, AtSymbolIcon, CalendarDateRangeIcon, 
+  IdentificationIcon, PhoneIcon, TagIcon, TruckIcon, AtSymbolIcon, CalendarDateRangeIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
 import { createClient, State } from '@/app/query/clients/actions';
-import { formatCPF, formatCEP, formatPhone, formatDateBr} from '@/app/lib/utils';
+import { formatCPF, formatCEP, formatPhone, formatDateBr } from '@/app/lib/utils';
 
 
-export default function Form({id} : {id: string | undefined}) {
+export default function Form({ id }: { id: string | undefined }) {
   const initialState: State = { message: null, errors: {} };
   const [state, formAction] = useActionState(createClient, initialState);
 
@@ -145,6 +145,7 @@ export default function Form({id} : {id: string | undefined}) {
             </div>
           </div>
         </div>
+
         {/* PHONE */}
         <div className="mb-4">
           <label htmlFor="phone" className="mb-2 block text-sm font-medium">
@@ -192,6 +193,8 @@ export default function Form({id} : {id: string | undefined}) {
         </div>
 
       </div>
+
+      {/*Botões de ações */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/clients"
@@ -201,6 +204,7 @@ export default function Form({id} : {id: string | undefined}) {
         </Link>
         <Button type="submit">Criar</Button>
       </div>
+      
     </form>
   );
 }

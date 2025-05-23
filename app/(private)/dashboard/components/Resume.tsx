@@ -1,10 +1,5 @@
 'use client';
-import {
-    ChartBarIcon,
-    UserGroupIcon,
-    CalendarIcon,
-    CurrencyDollarIcon,
-} from '@heroicons/react/24/outline';
+import { UserGroupIcon, CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/components/ui/fonts';
 
 

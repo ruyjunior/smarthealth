@@ -39,8 +39,6 @@ export default async function NoteTypesTable({
                   <tr>
                     <th className="px-2 py-2">Editar</th>
                     <th className="px-2 py-2">Título</th>  
-                    <th className="px-2 py-2">Número de campos</th>
-                    <th className="px-2 py-2">Número de Checks</th>
                     <th className="px-2 py-2">Etiqueta dos Campos</th>
                     <th className="px-2 py-2">Etiqueta dos Checks</th>
                     <th className="px-2 py-2">Deletar</th>

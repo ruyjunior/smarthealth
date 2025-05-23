@@ -1,6 +1,7 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
+
   page: { padding: 10, backgroundColor: '#F8F9FA' },
   headerSection: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   logo: {
@@ -11,12 +12,12 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 8,
-  }, 
+  },
   logoApp: {
     width: 40,
     height: 40,
     borderRadius: 8,
-  }, 
+  },
   headerTextContainer: { flex: 1, alignItems: 'center' },
   title: { fontSize: 18, fontWeight: 'bold', marginBottom: 5 },
   subtitle: { fontSize: 14, color: '#555' },
@@ -35,7 +36,8 @@ const styles = StyleSheet.create({
   tableCellWide: { flex: 3, fontSize: 7, textAlign: 'center' },
   tableCell: { flex: 1, fontSize: 7, textAlign: 'center' },
   tableSprints: { flex: 1, fontSize: 6, textAlign: 'center' },
-
+  sectionTitle: { fontSize: 12, fontWeight: 'bold', color: '#0077b6', marginBottom: 4 },
+  tableSectionTitle: { fontSize: 10, fontWeight: 'bold', color: '#0077b6', marginBottom: 4, textAlign: 'center' },
   footer: {
     position: 'absolute',
     left: 0,

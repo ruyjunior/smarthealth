@@ -1,8 +1,9 @@
 import { sql } from '@vercel/postgres';
 import { Service } from './definitions';
-import { formatTime } from '@/app/lib/utils';
+import { CurrentClinicId, formatTime } from '@/app/lib/utils';
 import { auth } from '@/app/lib/auth';
 import { fetchUserById } from '@/app/query/users/data';
+import { error } from 'console';
 
 
 export async function fetchServices() {
@@ -129,5 +130,25 @@ export async function fetchServicesByUser(id: string) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch services by Id Project.');
+  }
+}
+
+export async function fetchTodayServices() {
+  const idclinic = await CurrentClinicId();
+
+  try {
+    const data = await sql<Service>`
+      SELECT 
+        id, iduser, idoffice, idclient, idtype, status, date, starttime, endtime
+      FROM smarthealth.services
+      WHERE services.idclinic = ${idclinic}
+        AND services.date = CURRENT_DATE
+      ORDER BY starttime ASC
+    `;
+    return data.rows;
+  } catch (err) {
+    console.log(err);
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch today\'s services.');
   }
 }
