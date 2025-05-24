@@ -3,7 +3,6 @@ import UserCard from "../ui/userCard";
 import Logout from "../ui/logout";
 import ClinicCard from "../ui/clinicCard";
 
-
 export default async function Sidebar() {
 
   return (

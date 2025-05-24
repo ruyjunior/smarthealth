@@ -13,26 +13,34 @@ export default function Nav() {
   ];
 
   return (
-    <div className='flex flex-row items-left justify-center md:justify-center leading-none text-white m-5'>
-
-      <nav>
-        <ul>
-          {menuItems.map(({ name, path, icon }) => (
-            <li
-              key={path}
-              className={`mb-2 ${pathname === path ? "bg-gray-700" : ""} rounded-lg`}
-            >
+    <nav className="w-full max-w-xs mx-auto mt-6">
+      <ul className="flex flex-col gap-2">
+        {menuItems.map(({ name, path, icon }) => {
+          const active = pathname === path;
+          return (
+            <li key={path}>
               <Link
                 href={path}
-                className="flex items-center p-3 hover:bg-gray-700 rounded-lg"
+                className={`
+                  flex items-center gap-3 w-full px-4 py-3 rounded-lg transition
+                  ${active
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                    : "bg-white text-blue-900 hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200"}
+                  font-semibold
+                  text-base
+                  sm:text-base
+                  md:text-base
+                  lg:text-base
+                `}
+                aria-current={active ? "page" : undefined}
               >
-                {icon}
-                <span className="ml-3 hidden md:inline">{name}</span>
+                <span className={`transition ${active ? "text-white" : "text-blue-500"}`}>{icon}</span>
+                <span className="ml-1 truncate">{name}</span>
               </Link>
             </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }

@@ -1,7 +1,5 @@
 import { Metadata } from "next";
-import Resume from "./components/Resume";
-import Charts from "./components/ChartsWeek";
-import { fetchTodayServices } from '@/app/query/services/data';
+import { fetchTodayServices, fetchCurrentWeekServices, fetchCurrentMonthServices } from '@/app/query/services/data';
 import { fetchTypes } from "@/app/query/types/data";
 import { fetchUserById, fetchUsers } from "@/app/query/users/data";
 import { fetchClients } from "@/app/query/clients/data";
@@ -21,6 +19,8 @@ export default async function Page() {
   const user = await fetchUserById(session.user.id);
 
   const todayServices = await fetchTodayServices();
+  const weekServices = await fetchCurrentWeekServices();
+  const monthServices = await fetchCurrentMonthServices();
   const users = await fetchUsers();
   const clients = await fetchClients();
   const types = await fetchTypes();
@@ -32,13 +32,13 @@ export default async function Page() {
         <ServiceSwitcher
           user={user}
           todayServices={todayServices}
+          weekServices={weekServices}
+          monthServices={monthServices}
           users={users}
           clients={clients}
           types={types}
           offices={offices}
         />
-        <Resume />
-        <Charts />
       </div>
     </div>
   );

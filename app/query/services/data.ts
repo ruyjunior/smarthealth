@@ -41,7 +41,7 @@ export async function fetchFilteredServices(
   }
   const user = await fetchUserById(session.user.id);
 
- try {
+  try {
     const data = await sql<Service>`
     SELECT 
       services.id, services.iduser, services.idoffice, services.idclient, services.idtype, 
@@ -113,7 +113,7 @@ export async function fetchServiceById(id: string) {
 }
 
 export async function fetchServicesByUser(id: string) {
-  
+
   try {
     const data = await sql<Service>`
       SELECT 
@@ -150,5 +150,52 @@ export async function fetchTodayServices() {
     console.log(err);
     console.error('Database Error:', err);
     throw new Error('Failed to fetch today\'s services.');
+  }
+}
+
+export async function fetchCurrentMonthServices() {
+  const idclinic = await CurrentClinicId();
+  const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+  try {
+    const data = await sql<Service>`
+      SELECT 
+        id, iduser, idoffice, idclient, idtype, status, date, starttime, endtime
+      FROM smarthealth.services
+      WHERE services.idclinic = ${idclinic}
+        AND services.date >= ${firstDayOfMonth.toISOString().split('T')[0]}
+        AND services.date <= ${lastDayOfMonth.toISOString().split('T')[0]}
+      ORDER BY date ASC
+    `;
+    return data.rows;
+  } catch (err) {
+    console.log(err);
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch current month services.');
+  }
+}
+
+export async function fetchCurrentWeekServices() {
+  const idclinic = await CurrentClinicId();
+  const today = new Date();
+  const firstDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() + 1);
+  const lastDayOfWeek = new Date(firstDayOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000);
+
+  try {
+    const data = await sql<Service>`
+      SELECT 
+        id, iduser, idoffice, idclient, idtype, status, date, starttime, endtime
+      FROM smarthealth.services
+      WHERE services.idclinic = ${idclinic}
+        AND services.date >= ${firstDayOfWeek.toISOString().split('T')[0]}
+        AND services.date <= ${lastDayOfWeek.toISOString().split('T')[0]}
+      ORDER BY date ASC
+    `;
+    return data.rows;
+  } catch (err) {
+    console.log(err);
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch current week services.');
   }
 }
