@@ -10,4 +10,5 @@ export type User = {
   idclinic: string;
   avatarurl: string;
   category: string;
+  pronoun: string;
 }

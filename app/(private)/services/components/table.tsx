@@ -25,7 +25,7 @@ export default async function ServicesTable({
 
   const ServicesData: ServiceWithDetails[] = services.map((service) => {
     const user = users.find((u) => u.id === service.iduser) || { name: 'Unknown User' };
-    const client = clients.find((c) => c.id === service.idclient) || { name: 'Unknown Client' };
+    const client = clients.find((c) => c.id === service.idclient) || { name: 'Unknown Client', pronoun: 'Unknown Pronoun' };
     const office = offices.find((o) => o.id === service.idoffice) || { title: 'Unknown Office' };
     const type = types.find((t) => t.id === service.idtype) || { title: 'Unknown Type' };
   
@@ -61,7 +61,7 @@ export default async function ServicesTable({
                         <p className="text-sm text-gray-600">Situação: {service.status}</p>
                         <p className="text-sm text-gray-600">Início: {formatTime(service.starttime)}</p>
                         <p className="text-sm text-gray-600">Fim: {formatTime(service.endtime)}</p>
-                        <p className="text-sm text-gray-600">Paciente: {client?.name}</p>
+                        <p className="text-sm text-gray-600">Paciente: {client?.pronoun} {client?.name}</p>
                         <p className="text-sm text-gray-600">Consultório: {office?.title}</p>
                         <p className="text-sm text-gray-600">Atendimento: {type?.title}</p>
                         <p className="text-sm text-gray-600"> Profissional: {user?.name}</p>
@@ -108,10 +108,10 @@ export default async function ServicesTable({
                         <td className="px-2 py-2 text-xs">{service.status}</td>
                         <td className="px-2 py-2 text-xs">{formatTime(service.starttime)}</td>
                         <td className="px-2 py-2 text-xs">{formatTime(service.endtime)}</td>
-                        <td className="px-2 py-2 text-xs">{client?.name}</td>
+                        <td className="px-2 py-2 text-xs">{}{client?.pronoun} {client?.name}</td>
                         <td className="px-2 py-2 text-xs">{office?.title}</td>
                         <td className="px-2 py-2 text-xs">{type?.title}</td>
-                        <td className="px-2 py-2 text-xs">{user?.name}</td>
+                        <td className="px-2 py-2 text-xs">{user?.pronoun} {user?.name}</td>
                         <td className="py-2 px-2 flex justify-center items-center">
                           <DeleteService id={service.id} />
                         </td>

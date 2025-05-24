@@ -1,19 +1,16 @@
 import { sql } from '@vercel/postgres';
 import { User } from './definitions';
 import { auth } from '@/app/lib/auth';
+import { CurrentClinicId } from '@/app/lib/utils';
 
 export async function fetchUsers() {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
+  const idclinic = await CurrentClinicId();
 
   try {
     const data = await sql<User>`
-      SELECT id, name, email, role, avatarurl, category
+      SELECT id, name, email, role, avatarurl, category, pronoun
       FROM smarthealth.users
-      WHERE users.idclinic = ${user.idclinic}
+      WHERE users.idclinic = ${idclinic}
       ORDER BY name ASC
     `;
     const users = data.rows;
@@ -29,21 +26,18 @@ export async function fetchFilteredUsers(
   currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
+  const idclinic = await CurrentClinicId();
 
   try {
     const data = await sql<User>`
-      SELECT id, name, email, role, avatarurl, category
+      SELECT id, name, email, role, avatarurl, category, pronoun
       FROM smarthealth.users
       WHERE
         (users.name ILIKE ${`%${query}%`} OR
         users.role ILIKE ${`%${query}%`} OR
+        users.id::text ILIKE ${`%${query}%`} OR
         users.email ILIKE ${`%${query}%`} ) AND
-        users.idclinic = ${user.idclinic}
+        users.idclinic = ${idclinic}
       ORDER BY name ASC
     `;
     const users = data.rows;
@@ -56,17 +50,13 @@ export async function fetchFilteredUsers(
 const ITEMS_PER_PAGE = 6;
 
 export async function fetchUsersPages(query: string) {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
+  const idclinic = await CurrentClinicId();
 
   try {
     const count = await sql`
     SELECT COUNT(*) 
     FROM smarthealth.users
-    WHERE users.idclinic = ${user.idclinic}
+    WHERE users.idclinic = ${idclinic}
     `;
 
     const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
@@ -81,7 +71,7 @@ export async function fetchUserById(id: string) {
   try {
     const data = await sql<User>`
       SELECT
-        id, name, email, role, idclinic, avatarurl, category
+        id, name, email, role, idclinic, avatarurl, category, pronoun
         FROM smarthealth.users
         WHERE users.id = ${id} 
         `;

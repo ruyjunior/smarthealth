@@ -120,8 +120,8 @@ export default function EditUserForm({
             </div>
           </div>
         </div>
-
-        {/* PASSWORD 
+ 
+        {/* PASSWORD  */}
         <div className="mb-4">
           <label htmlFor="password" className="mb-2 block text-sm font-medium">
             Senha
@@ -148,7 +148,7 @@ export default function EditUserForm({
                 ))}
             </div>
           </div>
-        </div> */}
+        </div> 
 
         {/* Categoria */}
         <div className="mb-4">

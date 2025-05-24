@@ -13,6 +13,7 @@ const FormSchema = z.object({
   phone: z.string(),
   cep: z.string(),
   idclinic: z.string(),
+  pronoun: z.string(),
 });
 
 const CreateClient = FormSchema.omit({ id: true });
@@ -26,6 +27,7 @@ export type State = {
     email?: string[];
     phone?: string[];
     cep?: string[];
+    pronoun?: string[];
   };
   message?: string | null;
 };
@@ -39,7 +41,8 @@ export async function createClient(prevState: State, formData: FormData) {
     email: formData.get('email'),
     phone: formData.get('phone'),
     cep: formData.get('cep'),
-    idclinic: formData.get('idclinic')
+    idclinic: formData.get('idclinic'),
+    pronoun: formData.get('pronoun'),
   });
 
   if (!validatedFields.success) {
@@ -49,7 +52,8 @@ export async function createClient(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create.',
     };
   }
-  const { cpf, name, birth, email, phone, cep, idclinic } = validatedFields.data;
+  const { cpf, name, birth, email, phone, cep, idclinic, pronoun } = validatedFields.data;
+
   const sanetizedCPF = cpf || null;
   const sanetizedEmail = email || null;
   const sanetizedPhone = phone || null;
@@ -59,13 +63,14 @@ export async function createClient(prevState: State, formData: FormData) {
   try {
     await sql`
         INSERT INTO smarthealth.clients ( cpf, name, birth, 
-        email, phone, cep, idclinic)
+        email, phone, cep, idclinic, pronoun)
         VALUES ( ${sanetizedCPF}, ${name}, ${sanetizedBirth}, ${sanetizedEmail}, ${sanetizedPhone}, 
-        ${sanetizedCEP}, ${idclinic})
+        ${sanetizedCEP}, ${idclinic}, ${pronoun})
         `;
   } catch (error) {
+    console.log(error);
     console.error('Database Error:', error);
-    
+
     return {
       message: 'Database Error: Failed to Create Client.',
     };
@@ -87,6 +92,7 @@ export async function updateClient(
     email: formData.get('email'),
     phone: formData.get('phone'),
     cep: formData.get('cep'),
+    pronoun: formData.get('pronoun'),
   });
 
   if (!validatedFields.success) {
@@ -96,13 +102,18 @@ export async function updateClient(
     };
   }
 
-  const { cpf, name, birth, email, phone, cep } = validatedFields.data;
+  const { cpf, name, birth, email, phone, cep, pronoun } = validatedFields.data;
+  const sanetizedCPF = cpf || null;
+  const sanetizedEmail = email || null;
+  const sanetizedPhone = phone || null;
+  const sanetizedCEP = cep || null;
+  const sanetizedBirth = birth || null;
 
   try {
     await sql`
     UPDATE smarthealth.clients
-    SET cpf = ${cpf}, name = ${name}, birth = ${birth},
-        email = ${email}, phone = ${phone}, cep = ${cep}
+    SET cpf = ${sanetizedCPF}, name = ${name}, birth = ${sanetizedBirth},
+        email = ${sanetizedEmail}, phone = ${sanetizedPhone}, cep = ${sanetizedCEP}, pronoun = ${pronoun}
     WHERE id = ${id}
   `;
   } catch (error) {

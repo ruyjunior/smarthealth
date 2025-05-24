@@ -29,7 +29,7 @@ export default function CalendarView({ services }: { services: ServiceWithDetail
   const events = useMemo(() => {
     return services.map(service => ({
       id: service.id,
-      title: `${service.type.title} - ${service.client.name}`,
+      title: `${service.type.title} -  ${service.client.pronoun} ${service.client.name}`,
       start: new Date(`${service.date}T${service.starttime}`),
       end: new Date(`${service.date}T${service.endtime}`),
       resource: service,
@@ -81,7 +81,7 @@ export default function CalendarView({ services }: { services: ServiceWithDetail
           ) : (
             selectedServices.map(service => (
               <div key={service.id} className="mb-4 border-b pb-2">
-                <p className="text-sm font-bold">{service.client.name}</p>
+                <p className="text-sm font-bold">{service.client.pronoun} {service.client.name}</p>
                 <p className="text-sm">Tipo: {service.type.title}</p>
                 <p className="text-sm">Horário: {formatTime(service.starttime)} - {formatTime(service.endtime)}</p>
                 <p className="text-sm">Consultório: {service.office.title}</p>

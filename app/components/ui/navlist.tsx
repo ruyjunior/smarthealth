@@ -1,15 +1,20 @@
 'use client'
+import { User } from "@/app/query/users/definitions";
 import { CalendarDays, ChartPieIcon, ContactIcon, UserCog2Icon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Nav() {
+
+export default function Nav({ user } : { user: User}) {
   const pathname = usePathname();
+
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: <ChartPieIcon size={20} /> },
     { name: "Agenda", path: "/services", icon: <CalendarDays size={20} /> },
     { name: "Pacientes", path: "/clients", icon: <ContactIcon size={20} /> },
-    { name: "Gerência", path: "/manager", icon: <UserCog2Icon size={20} /> },
+    ...(user.role === "Gerente"
+      ? [{ name: "Gerência", path: "/manager", icon: <UserCog2Icon size={20} /> }]
+      : [{name: "Perfil", path: "/user", icon: <UserCog2Icon size={20} />}]),
   ];
 
   return (

@@ -17,7 +17,7 @@ export interface ServiceWithDetails {
   starttime: string;
   endtime: string;
   status: string;
-  client: { name: string };
+  client: { name: string, pronoun: string };
   office: { title: string };
   type: { title: string };
   user: { name: string };

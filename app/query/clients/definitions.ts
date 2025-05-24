@@ -7,5 +7,6 @@ export type Client = {
   phone: string;
   cep: string;
   idclinic: string;
+  pronoun: string;
 };
 

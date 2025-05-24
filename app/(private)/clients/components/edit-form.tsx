@@ -48,31 +48,96 @@ export default function EditClientForm({
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
-        {/* NAME */}
+        {/* NAME and Pronoun */}
         <div className="mb-4">
-          <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Nome
+          <label className="mb-2 block text-sm font-medium">
+            Pronome e Nome
           </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
+          <div className="flex flex-col md:flex-row gap-2">
+            {/* Pronome */}
+            <div className="relative flex-1 md:max-w-[140px]">
+              <select
+                id="pronoun"
+                name="pronoun"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue={client.pronoun}
+              >
+                <option value="" disabled>
+                  Selecione um Pronome
+                </option>
+                <option value="Sr.">Sr.</option>
+                <option value="Sra.">Sra.</option>
+                <option value="Srta.">Srta.</option>
+              </select>
+              <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+            {/* Nome */}
+            <div className="relative flex-1">
               <input
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Insira um nome"
+                required
                 defaultValue={client.name}
+                placeholder="Insira um nome"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="name-error"
               />
               <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <div id="name-error" aria-live="polite" aria-atomic="true">
+                {state.errors?.name &&
+                  state.errors.name.map((error: string) => (
+                    <p className="mt-2 text-sm text-red-500" key={error}>
+                      {error}
+                    </p>
+                  ))}
+              </div>
             </div>
-            <div id="name-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.name &&
-                state.errors.name.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
+          </div>
+        </div>
+
+        {/* CPF */}
+        <div className="mb-4">
+          <label htmlFor="cpf" className="mb-2 block text-sm font-medium">
+            CPF
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="cpf"
+                name="cpf"
+                type="text"
+                value={cpf}
+                maxLength={14}
+                onChange={handleChangeCPF}
+                placeholder="Insira um CPF"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="cpf-error"
+              />
+              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
+        {/* PHONE */}
+        <div className="mb-4">
+          <label htmlFor="phone" className="mb-2 block text-sm font-medium">
+            Telefone
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="phone"
+                name="phone"
+                type="text"
+                value={phone}
+                maxLength={15}
+                onChange={handleChangePhone}
+                placeholder="Insira o telefone"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="phone-error"
+              />
+              <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
@@ -106,29 +171,6 @@ export default function EditClientForm({
           </div>
         </div>
 
-        {/* CPF */}
-        <div className="mb-4">
-          <label htmlFor="cpf" className="mb-2 block text-sm font-medium">
-            CPF
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="cpf"
-                name="cpf"
-                type="text"
-                value={cpf}
-                maxLength={14}
-                onChange={handleChangeCPF}
-                placeholder="Insira um CPF"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="cpf-error"
-              />
-              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
         {/* BIRTH */}
         <div className="mb-4">
           <label htmlFor="birth" className="mb-2 block text-sm font-medium">
@@ -148,29 +190,6 @@ export default function EditClientForm({
                 aria-describedby="birth-error"
               />
               <CalendarDateRangeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-
-        {/* PHONE */}
-        <div className="mb-4">
-          <label htmlFor="phone" className="mb-2 block text-sm font-medium">
-            Telefone
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="phone"
-                name="phone"
-                type="text"
-                value={phone}
-                maxLength={15}
-                onChange={handleChangePhone}
-                placeholder="Insira o telefone"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="phone-error"
-              />
-              <PhoneIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>

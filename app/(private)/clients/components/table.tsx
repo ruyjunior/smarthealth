@@ -26,7 +26,7 @@ export default async function ClientsTable({
                   return (
                     <div key={client.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
                       <div className="border-b pb-4">
-                        <h3 className="text-xl font-semibold text-gray-900">{client.name}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{client.pronoun} {client.name}</h3>
                         <p className="text-sm text-gray-600">Email: {client.email}</p>
                         <p className="text-sm text-gray-600">Phone: {formatPhone(client.phone)}</p>
                       </div>
@@ -63,7 +63,7 @@ export default async function ClientsTable({
                           <ViewClient id={client.id} />
                           <UpdateClient id={client.id} />
                         </td>
-                        <td className="px-2 py-2 text-xs">{client.name}</td>
+                        <td className="px-2 py-2 text-xs">{client.pronoun} {client.name}</td>
                         <td className="px-2 py-2 text-xs">{formatCPF(client.cpf)}</td>
                         <td className="px-2 py-2 text-xs">{client.birth ? formatDateToLocal(client.birth) : ''}</td>
                         <td className="px-2 py-2 text-xs">{client.email}</td>

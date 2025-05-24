@@ -13,7 +13,7 @@ export async function fetchClients() {
 
   try {
     const data = await sql<Client>`
-      SELECT id, cpf, name, birth, email, phone, cep
+      SELECT id, cpf, name, birth, email, phone, cep, pronoun
       FROM smarthealth.clients
       WHERE clients.idclinic = ${user.idclinic}
       ORDER BY name ASC
@@ -40,7 +40,7 @@ export async function fetchFilteredClients(
 
   try {
     const data = await sql<Client>`
-      SELECT id, cpf, name, birth, email, phone, cep
+      SELECT id, cpf, name, birth, email, phone, cep, pronoun
       FROM smarthealth.clients
       WHERE
         (clients.id::text ILIKE ${`%${query}%`} OR
@@ -92,7 +92,7 @@ export async function fetchClientById(id: string) {
   try {
     const data = await sql<Client>`
       SELECT
-        id, cpf, name, birth, email, phone, cep
+        id, cpf, name, birth, email, phone, cep, pronoun
       FROM smarthealth.clients
       WHERE id = ${id} AND idclinic = ${user.idclinic}
     `;

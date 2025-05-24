@@ -38,7 +38,7 @@ export default async function Page(props: {
 
   const ServicesData: ServiceWithDetails[] = services.map((service) => {
     const user = users.find((u) => u.id === service.iduser) || { name: 'Unknown User' };
-    const client = clients.find((c) => c.id === service.idclient) || { name: 'Unknown Client' };
+    const client = clients.find((c) => c.id === service.idclient) || { name: 'Unknown Client', pronoun: 'Unknown Pronoun' };
     const office = offices.find((o) => o.id === service.idoffice) || { title: 'Unknown Office' };
     const type = types.find((t) => t.id === service.idtype) || { title: 'Unknown Type' };
 
