@@ -1,11 +1,12 @@
 import Image from 'next/image';
-import logo from '@/public/images/logos/logoClinic.png';
+import logo from '@/public/images/logo.png';
+
 
 export default async function Logo({ w, h, dw, dh, logourl }: { w: number; h: number; dw?: number; dh?: number; logourl: string }) {
   return (
     <div className='flex flex-row items-center justify-center leading-none text-white'>
       <Image
-        src={logourl}
+        src={logourl ? logourl : logo.src}
         alt="logo App"
         width={200}
         height={200}

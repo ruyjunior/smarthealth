@@ -1,5 +1,5 @@
 'use client';
-import { useActionState } from 'react';
+import { useActionState, useTransition } from 'react';
 import { Service } from '@/app/query/services/definitions';
 import { UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon, BuildingOffice2Icon, QueueListIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -10,6 +10,7 @@ import { User } from '@/app/query/users/definitions';
 import { Office } from '@/app/query/offices/definitions';
 import { Client } from '@/app/query/clients/definitions';
 import { formatDateDb } from '@/app/lib/utils';
+import Image from 'next/image';
 
 export default function EditServiceForm({
   service, data
@@ -21,246 +22,271 @@ export default function EditServiceForm({
   const initialState: State = { message: '', errors: {} };
   const updateServiceWithId = updateService.bind(null, service.id);
   const [state, formAction] = useActionState(updateServiceWithId, initialState);
+  const [isPending, startTransition] = useTransition();
 
   const date = formatDateDb(service.date);
 
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    startTransition(() => {
+      formAction(new FormData(e.currentTarget));
+    });
+  }
 
   return (
-    <form action={formAction}>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+    <form onSubmit={handleSubmit}>
 
-        {/* Status */}
-        <div className="mb-4">
-          <label htmlFor="status" className="mb-2 block text-sm font-medium">
-            Situação
-          </label>
-          <div className="relative">
-            <select
-              id="status"
-              name="status"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="status-error"
-              defaultValue={service.status}
-            >
-              <option value="" disabled> Selecione a situação </option>
-              <option value="Vazia"> Vazia </option>
-              <option value="Marcada"> Marcada </option>
-              <option value="Feito"> Feito </option>
-            </select>
-            <QuestionMarkCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="status-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.status &&
-              state.errors.status.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
+      {/* Mensagem Carregando */}
+      {isPending ? (
+        <div className="flex flex-col items-center justify-center min-h-[200px] gap-2 text-blue-700">
+          <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          Processando...
+          <Image src='/ecg.gif' alt="logo App" width={200} height={200} />
         </div>
 
-        {/* Especialidade */}
-        <div className="mb-4">
-          <label htmlFor="idtype" className="mb-2 block text-sm font-medium">
-            Especialidade
-          </label>
-          <div className="relative">
-            <select
-              id="idtype"
-              name="idtype"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={service.idtype}
-              aria-describedby="provider-error"
-            >
-              <option value="" disabled>
-                Selecione uma especialidade
-              </option>
-              {types.map((type: Type) => (
-                <option key={type.id} value={type.id}>
-                  {type.title}
-                </option>
-              ))}
-            </select>
-            <QueueListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="base-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.idtype &&
-              state.errors.idtype.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
+      ) : (
 
-        {/* User */}
-        <div className="mb-4">
-          <label htmlFor="iduser" className="mb-2 block text-sm font-medium">
-            Profissional
-          </label>
-          <div className="relative">
-            <select
-              id="iduser"
-              name="iduser"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={service.iduser}
-              aria-describedby="iduser-error"
-            >
-              <option value="" disabled>
-                Selecione um Profissional
-              </option>
-              {users.map((user: User) => (
-                <option key={user.id} value={user.id}>
-                  {user.pronoun} {user.name}
-                </option>
-              ))}
-            </select>
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="iduser-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.iduser &&
-              state.errors.iduser.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
+        <div className="rounded-md bg-gray-50 p-4 md:p-6">
 
-        {/* Consultório */}
-        <div className="mb-4">
-          <label htmlFor="idprovider" className="mb-2 block text-sm font-medium">
-            Consultório
-          </label>
-          <div className="relative">
-            <select
-              id="idoffice"
-              name="idoffice"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={service.idoffice}
-              aria-describedby="provider-error"
-            >
-              <option value="" disabled>
-                Selecione um consultório
-              </option>
-              {offices.map((office: Office) => (
-                <option key={office.id} value={office.id}>
-                  {office.title}
-                </option>
-              ))}
-            </select>
-            <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="base-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.idoffice &&
-              state.errors.idoffice.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Paciente */}
-        <div className="mb-4">
-          <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
-            Paciente
-          </label>
-          <div className="relative">
-            <select
-              id="idclient"
-              name="idclient"
-              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue={service.idclient}
-              aria-describedby="provider-error"
-            >
-              <option value="" disabled>
-                Selecione um cliente
-              </option>
-              {clients.map((client: Client) => (
-                <option key={client.id} value={client.id}>
-                  {client.name}
-                </option>
-              ))}
-            </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-          </div>
-          <div id="base-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.idclient &&
-              state.errors.idclient.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
-
-        {/* Data */}
-        <div className="mb-4">
-          <label htmlFor="date" className="mb-2 block text-sm font-medium">
-            Data
-          </label>
-          <div className="relative mt-2 rounded-md">
+          {/* Status */}
+          <div className="mb-4">
+            <label htmlFor="status" className="mb-2 block text-sm font-medium">
+              Situação
+            </label>
             <div className="relative">
-              <input
-                id="date"
-                name="date"
-                type="date"
-                defaultValue={date}
-                maxLength={10}
-                //nChange={handleChangeDate}
-                placeholder="Insira o nascimento"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="birth-error"
-              />
-              <CalendarDateRangeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <select
+                id="status"
+                name="status"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="status-error"
+                defaultValue={service.status}
+              >
+                <option value="" disabled> Selecione a situação </option>
+                <option value="Vazia"> Vazia </option>
+                <option value="Marcada"> Marcada </option>
+                <option value="Feito"> Feito </option>
+              </select>
+              <QuestionMarkCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="status-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.status &&
+                state.errors.status.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
             </div>
           </div>
-        </div>
 
-        {/* Start Time */}
-        <div className="mb-4">
-          <label htmlFor="starttime" className="mb-2 block text-sm font-medium">
-            Horário de Início
-          </label>
-          <div className="relative mt-2 rounded-md">
+          {/* Especialidade */}
+          <div className="mb-4">
+            <label htmlFor="idtype" className="mb-2 block text-sm font-medium">
+              Especialidade
+            </label>
             <div className="relative">
-              <input
-                id="starttime"
-                name="starttime"
-                type="time"
-                defaultValue={service.starttime}
-                placeholder="Insira um horário de início"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="enddate-error"
-              />
-              <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <select
+                id="idtype"
+                name="idtype"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue={service.idtype}
+                aria-describedby="provider-error"
+              >
+                <option value="" disabled>
+                  Selecione uma especialidade
+                </option>
+                {types.map((type: Type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.title}
+                  </option>
+                ))}
+              </select>
+              <QueueListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="base-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.idtype &&
+                state.errors.idtype.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
             </div>
           </div>
-        </div>
 
-        {/* End Time */}
-        <div className="mb-4">
-          <label htmlFor="endtime" className="mb-2 block text-sm font-medium">
-            Horário de Fim
-          </label>
-          <div className="relative mt-2 rounded-md">
+          {/* User */}
+          <div className="mb-4">
+            <label htmlFor="iduser" className="mb-2 block text-sm font-medium">
+              Profissional
+            </label>
             <div className="relative">
-              <input
-                id="endtime"
-                name="endtime"
-                type="time"
-                defaultValue={service.endtime}
-                placeholder="Insira um horário de fim"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="enddate-error"
-              />
-              <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <select
+                id="iduser"
+                name="iduser"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue={service.iduser}
+                aria-describedby="iduser-error"
+              >
+                <option value="" disabled>
+                  Selecione um Profissional
+                </option>
+                {users.map((user: User) => (
+                  <option key={user.id} value={user.id}>
+                    {user.pronoun} {user.name}
+                  </option>
+                ))}
+              </select>
+              <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="iduser-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.iduser &&
+                state.errors.iduser.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
             </div>
           </div>
+
+          {/* Consultório */}
+          <div className="mb-4">
+            <label htmlFor="idprovider" className="mb-2 block text-sm font-medium">
+              Consultório
+            </label>
+            <div className="relative">
+              <select
+                id="idoffice"
+                name="idoffice"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue={service.idoffice}
+                aria-describedby="provider-error"
+              >
+                <option value="" disabled>
+                  Selecione um consultório
+                </option>
+                {offices.map((office: Office) => (
+                  <option key={office.id} value={office.id}>
+                    {office.title}
+                  </option>
+                ))}
+              </select>
+              <BuildingOffice2Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="base-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.idoffice &&
+                state.errors.idoffice.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+
+          {/* Paciente */}
+          <div className="mb-4">
+            <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
+              Paciente
+            </label>
+            <div className="relative">
+              <select
+                id="idclient"
+                name="idclient"
+                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                defaultValue={service.idclient}
+                aria-describedby="provider-error"
+              >
+                <option value="" disabled>
+                  Selecione um cliente
+                </option>
+                {clients.map((client: Client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.name}
+                  </option>
+                ))}
+              </select>
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="base-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.idclient &&
+                state.errors.idclient.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+
+          {/* Data */}
+          <div className="mb-4">
+            <label htmlFor="date" className="mb-2 block text-sm font-medium">
+              Data
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="date"
+                  name="date"
+                  type="date"
+                  defaultValue={date}
+                  maxLength={10}
+                  //nChange={handleChangeDate}
+                  placeholder="Insira o nascimento"
+                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  aria-describedby="birth-error"
+                />
+                <CalendarDateRangeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+          </div>
+
+          {/* Start Time */}
+          <div className="mb-4">
+            <label htmlFor="starttime" className="mb-2 block text-sm font-medium">
+              Horário de Início
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="starttime"
+                  name="starttime"
+                  type="time"
+                  defaultValue={service.starttime}
+                  placeholder="Insira um horário de início"
+                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  aria-describedby="enddate-error"
+                />
+                <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+          </div>
+
+          {/* End Time */}
+          <div className="mb-4">
+            <label htmlFor="endtime" className="mb-2 block text-sm font-medium">
+              Horário de Fim
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="endtime"
+                  name="endtime"
+                  type="time"
+                  defaultValue={service.endtime}
+                  placeholder="Insira um horário de fim"
+                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  aria-describedby="enddate-error"
+                />
+                <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+          </div>
+
         </div>
 
-      </div>
+      )}
+
+      {/* Bottons */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/services"
@@ -268,7 +294,19 @@ export default function EditServiceForm({
         >
           Cancelar
         </Link>
-        <Button type="submit">Editar</Button>
+        <Button type="submit" disabled={isPending} aria-disabled={isPending}>
+          {isPending ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              Salvando...
+            </span>
+          ) : (
+            "Salvar"
+          )}
+        </Button>
       </div>
     </form>
   );

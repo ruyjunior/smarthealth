@@ -24,35 +24,38 @@ export default function SheduleDay(
         </div>
         {/* Desktop: tabela */}
         <div className="hidden md:block w-full">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="bg-blue-100 text-blue-900">
-                <th className="py-3 px-3 text-left font-semibold">Horário</th>
-                <th className="py-3 px-3 text-left font-semibold">Paciente</th>
-                <th className="py-3 px-3 text-left font-semibold">Tipo</th>
-                <th className="py-3 px-3 text-left font-semibold">Sala</th>
-                <th className="py-3 px-3 text-left font-semibold">Profissional</th>
-              </tr>
-            </thead>
-            <tbody>
-              {services.map((s, index) => {
-                const client = clients.find(c => c.id === s.idclient);
-                const type = types.find(t => t.id === s.idtype);
-                const user = users.find(u => u.id === s.iduser);
-                const office = offices.find(o => o.id === s.idoffice);
+          {services.length > 0 ? (
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="bg-blue-100 text-blue-900">
+                  <th className="py-3 px-3 text-left font-semibold">Horário</th>
+                  <th className="py-3 px-3 text-left font-semibold">Paciente</th>
+                  <th className="py-3 px-3 text-left font-semibold">Tipo</th>
+                  <th className="py-3 px-3 text-left font-semibold">Sala</th>
+                  <th className="py-3 px-3 text-left font-semibold">Profissional</th>
+                </tr>
+              </thead>
+              <tbody>
+                {services.map((s, index) => {
+                  const client = clients.find(c => c.id === s.idclient);
+                  const type = types.find(t => t.id === s.idtype);
+                  const user = users.find(u => u.id === s.iduser);
+                  const office = offices.find(o => o.id === s.idoffice);
 
-                return (
-                  <tr key={index} className="border-b last:border-b-0 hover:bg-blue-50 transition">
-                    <td className="py-2 px-3 font-semibold text-blue-800">{s.starttime}</td>
-                    <td className="py-2 px-3">{client?.pronoun || '-'} {client?.name || '-'}</td>
-                    <td className="py-2 px-3">{type?.title || '-'}</td>
-                    <td className="py-2 px-3">{office?.title || '-'}</td>
-                    <td className="py-2 px-3">Dr.(a) {user?.name || '-'}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                  return (
+                    <tr key={index} className="border-b last:border-b-0 hover:bg-blue-50 transition">
+                      <td className="py-2 px-3 font-semibold text-blue-800">{s.starttime}</td>
+                      <td className="py-2 px-3">{client?.pronoun || '-'} {client?.name || '-'}</td>
+                      <td className="py-2 px-3">{type?.title || '-'}</td>
+                      <td className="py-2 px-3">{office?.title || '-'}</td>
+                      <td className="py-2 px-3">{user?.pronoun} {user?.name || '-'}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+          ) : "Sem agendamentos para hoje."}
         </div>
         {/* Mobile: cards */}
         <div className="md:hidden w-full space-y-4">
