@@ -1,19 +1,28 @@
 'use client'
 import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { authenticate } from '@/app/lib/authenticate';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/app/components/ui/button';
 import Link from 'next/link';
 
 export default function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
-    undefined,
+    undefined as string | undefined
   );
+
+  // Redireciona após sucesso
+  useEffect(() => {
+    if (errorMessage === undefined) {
+      router.push(callbackUrl);
+    }
+  }, [errorMessage]);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center ">
@@ -80,7 +89,7 @@ export default function LoginForm() {
               Logando...
             </span>
           ) : (
-            "Login" 
+            "Login"
           )}
 
         </Button>

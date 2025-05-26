@@ -9,7 +9,7 @@ export async function middleware(request: Request) {
   const { pathname } = new URL(request.url);
   const isPublicRoute = pathname === "/" || pathname === "/plans" ||
     pathname === "/login" || pathname === "/register" ||
-    pathname === "/forgot-password" || pathname === "/reset-password";
+    pathname === "/forgot-password" || pathname === "/reset-password" || pathname === "/confirm" ;
   
   const managerRoute = pathname === "/manager";
 

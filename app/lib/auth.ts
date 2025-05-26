@@ -5,20 +5,20 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { JWT } from "next-auth/jwt";
 import { AdapterUser } from "next-auth/adapters";
-import  { DefaultSession, User, CustomUser } from "next-auth";
+import { DefaultSession, User, CustomUser } from "next-auth";
 
 declare module "next-auth" {
   interface CustomUser extends AdapterUser {
-    role: string; 
+    role: string;
     password: string;
   }
   interface Session {
-    user: CustomUser & DefaultSession["user"]; 
+    user: CustomUser & DefaultSession["user"];
   }
 }
 declare module "next-auth/jwt" {
   interface JWT {
-    role: string; 
+    role: string;
   }
 }
 
@@ -88,7 +88,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.name,
           email: user.email,
-          role : (user as CustomUser).role
+          role: (user as CustomUser).role
         };
       }
       //console.log("Token final com role:", token); // Debug
@@ -104,12 +104,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }: { url: string, baseUrl: string }) {
-      // Redireciona para /dashboard após login
-      if (url === '/') {
-        return `${baseUrl}/dashboard`;
-      }
-      return baseUrl;
-    },
+      console.log("Redirecionando para url:", url); // Debug
+      return `${baseUrl}/dashboard`;
+    }
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
