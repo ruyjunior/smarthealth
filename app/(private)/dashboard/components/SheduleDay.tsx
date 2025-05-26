@@ -76,7 +76,7 @@ export default function SheduleDay(
                   <span className="block text-xs text-gray-600">{office?.title || '-'}</span>
                 </div>
                 <div className="text-xs text-blue-800">
-                  Dr.(a) {user?.name || '-'}
+                  {user?.pronoun} {user?.name || '-'}
                 </div>
               </div>
             );

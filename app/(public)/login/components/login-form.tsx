@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 import { authenticate } from '@/app/lib/authenticate';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/app/components/ui/button';
+import Link from 'next/link';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -17,9 +18,11 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen flex items-center justify-center ">
       <form action={formAction} className="w-full max-w-md rounded-xl shadow-lg px-8 py-10 bg-white">
+
         <h1 className="mb-1 text-3xl font-bold text-blue-700 text-center">
           Acesse sua conta
         </h1>
+
         <div className="w-full">
           <div>
             <label
@@ -61,13 +64,40 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
+
         <input type="hidden" name="redirectTo" value={callbackUrl} />
+
         <Button
           className="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200"
           aria-disabled={isPending}
         >
-          Log in <ArrowRightIcon className="h-5 w-5 text-white" />
+          {isPending ? (
+            <span className="flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+              Logando...
+            </span>
+          ) : (
+            "Login" 
+          )}
+
         </Button>
+
+        {/* Link to register page */}
+        <div className='mt-10'>
+          <Link
+            href="/auth/register"
+            className="flex h-10 items-center justify-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          >
+            Esqueci a senha
+          </Link>
+
+        </div>
+
+
+        {/* Error message */}
         <div
           className="flex h-8 items-end space-x-2 justify-center mt-2"
           aria-live="polite"

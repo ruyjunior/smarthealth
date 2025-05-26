@@ -87,3 +87,15 @@ export async function fetchUserById(id: string) {
     throw new Error('Failed to fetch user.');
   }
 }
+
+export async function fetchUserByEmail(email: string): Promise<boolean> {
+  try {
+    const data = await sql`
+      SELECT 1 FROM smarthealth.users WHERE users.email = ${email} LIMIT 1
+    `;
+    return data.rows.length > 0;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to check user by email.');
+  }
+}
