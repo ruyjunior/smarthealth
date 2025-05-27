@@ -59,7 +59,6 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
-          <TopButton />
         </SessionProvider>
       </main>
     </div>

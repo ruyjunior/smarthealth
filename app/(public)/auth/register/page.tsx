@@ -30,6 +30,7 @@ export default function LoginPage() {
       <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
         <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-4 text-center">Redefinir Senha</h2>
+          {!message && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="email"
@@ -57,6 +58,7 @@ export default function LoginPage() {
               )}
             </button>
           </form>
+          )}
           {message && <p className="mt-4 text-center text-green-600">{message}</p>}
         </div>
       </div>

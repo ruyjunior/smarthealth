@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: NextRequest) {
-  //console.log("🔹 Webhook recebido!");
+  console.log("🔹 Webhook recebido!");
   const signature = req.headers.get("stripe-signature");
   if (!signature) {
     console.error("❌ Nenhuma assinatura Stripe recebida!");
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   const payload = await req.text();
-  //console.log("📩 Payload recebido:", payload);
+  console.log("📩 Payload recebido:", payload);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ error: "Erro na validação do webhook" }), { status: 400 });
   }
 
-  //console.log("🎉 Evento Stripe recebido:", event.type);
+  console.log("🎉 Evento Stripe recebido:", event.type);
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;

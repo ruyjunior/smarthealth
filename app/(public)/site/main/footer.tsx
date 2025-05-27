@@ -14,7 +14,7 @@ const Footer = () => {
         <p>
           Developed by <a href="https://www.autoric.com.br" className="underline">Autoric Automation</a>
         </p>
-        <Logo w={10} h={10} dw={20} dh={20} />
+        <Logo w={10} h={10} dw={10} dh={10} />
       </div>
     </footer>
   );

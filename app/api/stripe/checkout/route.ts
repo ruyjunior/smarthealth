@@ -10,15 +10,16 @@ export async function POST(req: NextRequest) {
     const { priceId } = await req.json(); // O ID do preço do plano no Stripe
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'pix'], // Cartão e PIX
+      payment_method_types: ['card'], // Cartão
       mode: 'subscription', // Para planos recorrentes
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/sucesso`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancelado`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/sucesso`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancelado`,
     });
 
     return NextResponse.json({ sessionId: session.id });
   } catch (error) {
+    console.log('Erro ao criar sessão de checkout:', error);
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }

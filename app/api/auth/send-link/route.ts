@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     const userResult = await sql`SELECT * FROM smarthealth.users WHERE email = ${email}`;
     let user = userResult.rows[0];
-    
+
     if (!user) {
       const insertedUser = await sql`INSERT INTO smarthealth.users (email) VALUES (${email}) RETURNING id, email`;
       user = insertedUser.rows[0];
@@ -49,9 +49,18 @@ export async function POST(req: Request) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Link de acesso Smart Health",
-      html: `<p>Clique no link abaixo para acessar sua conta na Smart Health:</p>
-             <a href="${link}">${link}</a>
-             <p>O link expira em 30 minutos.</p>`,
+      html: `
+        <h2>Smart Health</h2>
+        <p>Olá,</p>
+        <p>Recebemos uma solicitação para mudança de senha para sua conta.</p>
+        <p>
+          <a href="${link}">Clique aqui para mudar sua senha e acessar sua conta</a>
+        </p>
+        <p>Ou copie e cole este link no seu navegador:<br>${link}</p>
+        <p>O link expira em 30 minutos.<br>Se você não solicitou, ignore este e-mail.</p>
+        <hr>
+        <small>Smart Health &copy; ${new Date().getFullYear()}</small>
+      `,
     });
 
     return NextResponse.json({ message: "E-mail enviado! Verifique sua caixa de entrada." });

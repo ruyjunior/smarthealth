@@ -40,13 +40,18 @@ const styles = StyleSheet.create({
   tableSectionTitle: { fontSize: 10, fontWeight: 'bold', color: '#0077b6', marginBottom: 4, textAlign: 'center' },
   footer: {
     position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     height: 60,
     paddingLeft: 30,
     paddingRight: 30,
     backgroundColor: '#f7f7f7', // opcional
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    bottom: 10,
+    left: 30,
+    right: 30,
+    paddingTop: 8,
+    paddingBottom: 8,
     borderTopWidth: 1,
     borderTopColor: '#bbb',
   },
@@ -58,7 +63,9 @@ const styles = StyleSheet.create({
   footerTextDev: {
     fontSize: 7,
     color: '#666',
-  }, sprintRow: {
+  }, 
+  
+  sprintRow: {
     backgroundColor: 'rgba(231, 228, 228, 0.53)',
   },
 });

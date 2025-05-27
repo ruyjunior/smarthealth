@@ -131,23 +131,7 @@ export const DocPDF = ({ note, type, user, client, clinic }:
         )}
 
         {/* Footer */}
-        <View
-          style={[
-            styles.footer,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              position: 'absolute',
-              bottom: 10,
-              left: 30,
-              right: 30,
-              paddingTop: 8,
-              paddingBottom: 8,
-              borderTopWidth: 1,
-              borderTopColor: '#bbb',
-            },
-          ]}
+        <View style={styles.footer}
           fixed
         >
           {/* Esquerda */}
