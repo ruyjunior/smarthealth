@@ -39,7 +39,6 @@ export default function EditUserForm({
         handleUploadUrl: '/api/upload',
       });
       setAvatarUrl(newBlob.url);
-      console.log('UrlBlob' + newBlob.url);
     } finally {
       setUploading(false);
     }

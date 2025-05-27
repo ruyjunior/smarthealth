@@ -18,7 +18,6 @@ const generateToken = () => crypto.randomBytes(32).toString("hex");
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
-    //console.log("E-mail recebido:", email);
     if (!email) {
       return NextResponse.json({ message: "E-mail obrigatório!" }, { status: 400 });
     }
@@ -51,8 +50,8 @@ export async function POST(req: Request) {
       subject: "Link de acesso Smart Health",
       html: `
         <h2>Smart Health</h2>
-        <p>Olá,</p>
-        <p>Recebemos uma solicitação para mudança de senha para sua conta.</p>
+        <p>Olá ${user.pronoun} ${user.name},</p>
+        <p>Você está recebendo este e-mail para mudança ou primeiro cadastro de senha para sua conta.</p>
         <p>
           <a href="${link}">Clique aqui para mudar sua senha e acessar sua conta</a>
         </p>

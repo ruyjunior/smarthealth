@@ -51,20 +51,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .safeParse(credentials);
 
         if (!parsedCredentials.success) {
-          console.log("Credenciais inválidas");
           return null;
         }
 
         const { email, password } = parsedCredentials.data;
         const user = await getUser(email);
         if (!user) {
-          console.log("Usuário não encontrado.");
           return null;
         }
 
         const passwordsMatch = await bcrypt.compare(password, user.password);
         if (!passwordsMatch) {
-          console.log("Senha incorreta.");
           return null;
         }
         return user;
@@ -81,7 +78,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
-      //console.log("Dados do usuário no JWT antes:", token); // Debug
       if (user) {
         return {
           ...token,
@@ -91,7 +87,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           role: (user as CustomUser).role
         };
       }
-      //console.log("Token final com role:", token); // Debug
       return token;
     },
     async session({ session, token }: { session: any, token: JWT }) {
@@ -104,7 +99,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     async redirect({ url, baseUrl }: { url: string, baseUrl: string }) {
-      console.log("Redirecionando para url:", url); // Debug
       return `${baseUrl}/dashboard`;
     }
   },

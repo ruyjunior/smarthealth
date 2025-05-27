@@ -81,7 +81,6 @@ export async function fetchUserById(id: string) {
     }));
 
     return user[0];
-    console.log('User: ' + user[0]);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch user.');

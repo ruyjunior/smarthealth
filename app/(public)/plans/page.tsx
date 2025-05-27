@@ -6,12 +6,22 @@ import { CheckCircleIcon } from '@heroicons/react/24/solid';
 const idPlanMonth = "price_1R3eqQBTcFRiXn7vvWKKEo4M";
 const idPlanYear = "price_1RTDTBBTcFRiXn7vmd7XzYev";
 
-const benefits = [
+const benefitsPlanMonth = [
   "Agenda online e gestão de pacientes",
   "Receita digital e prontuário eletrônico",
   "Gráficos de evolução e relatórios",
   "Suporte especializado",
   "Acesso seguro e em nuvem",
+  "10 usuários inclusos",
+];
+
+const benefitsPlanYear = [
+  "Agenda online e gestão de pacientes",
+  "Receita digital e prontuário eletrônico",
+  "Gráficos de evolução e relatórios",
+  "Suporte especializado",
+  "Acesso seguro e em nuvem",
+  "Sem limite de usuários",
 ];
 
 export default function PlansPage() {
@@ -40,7 +50,7 @@ export default function PlansPage() {
           <div className="text-4xl font-extrabold text-blue-800 mb-2">R$ 990<span className="text-lg font-normal text-gray-500">/ano</span></div>
           <div className="text-sm text-gray-500 mb-6">Equivalente a R$ 82,50/mês</div>
           <ul className="mb-8 text-left space-y-2">
-            {benefits.map((b, i) => (
+            {benefitsPlanYear.map((b, i) => (
               <li key={i} className="flex items-center gap-2 text-gray-700">
                 <CheckCircleIcon className="h-5 w-5 text-blue-500" />
                 {b}
@@ -77,7 +87,7 @@ export default function PlansPage() {
           <div className="text-4xl font-extrabold text-green-800 mb-2">R$ 119<span className="text-lg font-normal text-gray-500">/mês</span></div>
           <div className="text-sm text-gray-500 mb-6">Sem fidelidade</div>
           <ul className="mb-8 text-left space-y-2">
-            {benefits.map((b, i) => (
+            {benefitsPlanMonth.map((b, i) => (
               <li key={i} className="flex items-center gap-2 text-gray-700">
                 <CheckCircleIcon className="h-5 w-5 text-green-500" />
                 {b}

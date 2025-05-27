@@ -27,7 +27,6 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
         handleUploadUrl: '/api/upload',
       });
       setLogoUrl(newBlob.url);
-      console.log('UrlBlob' + newBlob.url);
     } finally {
       setUploading(false);
     }

@@ -4,7 +4,6 @@ import { auth } from '@/app/lib/auth';
 
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody;
-  console.log('Blob data' + body);
 
   try {
     const jsonResponse = await handleUpload({
@@ -39,7 +38,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 
         try {
           const { userId } = JSON.parse(tokenPayload || '{}');
-          console.log('blob upload completed', blob, tokenPayload);
           // Run any logic after the file upload completed
           // const { userId } = JSON.parse(tokenPayload);
           // await db.update({ avatar: blob.url, userId });
@@ -51,7 +49,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }, // The webhook will retry 5 times waiting for a 200

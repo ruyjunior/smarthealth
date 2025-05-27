@@ -90,7 +90,6 @@ export async function updateService(
 
 
   if (!validatedFields.success) {
-    console.log('Error: ', validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update service.',

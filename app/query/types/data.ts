@@ -95,7 +95,6 @@ export async function fetchTypeById(id: string) {
     }));
 
     return type[0];
-    console.log('Type: ' + type[0]);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch type.');

@@ -13,7 +13,6 @@ import Image from 'next/image';
 
 
 export default function Form({ data }: { data: any }) {
-  console.log('data', data);
 
   const { clients, offices, types, users, idclinic } = data;
 

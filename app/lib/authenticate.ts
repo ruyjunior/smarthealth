@@ -11,10 +11,6 @@ export async function authenticate(
   const password = formData.get('password') as string;
   const redirectTo = formData.get('redirectTo') as string || '/dashboard';
   
-  console. log('E-mail:', email);
-  console.log('Senha:', password);
-  console.log('Redirecionar para:', redirectTo);
-
   const user = await fetchUserByEmail(email);
   if (!user) return 'E-mail não cadastrado.';
 

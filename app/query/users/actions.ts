@@ -63,8 +63,33 @@ export async function createUser(prevState: State, formData: FormData) {
       message: 'Database Error: Failed to Create User.',
     };
   }
-  revalidatePath('/manager/users');
-  redirect('/manager/users');
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/auth/send-link`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) {
+    return {
+      message: 'Erro ao enviar e-mail de autenticação.',
+    };
+  }
+
+  const data = await res.json();
+  if (data.message && res.ok) {
+
+    revalidatePath('/manager/users');
+    redirect('/manager/users?success=Usuário criado com sucesso!');
+
+    return {
+      message: data.message,
+    };
+  }
+
+  //redirect('/manager/users');
 }
 
 export async function updateUser(
@@ -81,36 +106,24 @@ export async function updateUser(
     avatarurl: formData.get('avatarurl'),
     password: formData.get('password'),
   });
-  console.log('formData', {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    role: formData.get('role'),
-    category: formData.get('category'),
-    pronoun: formData.get('pronoun'),
-    avatarurl: formData.get('avatarurl'),
-    password: formData.get('password'),
-  });
-  console.log('validatedFields', validatedFields);
+
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update User.',
     };
   }
-  console.log('validatedFields', validatedFields);
   const { name, email, role, avatarurl, category, pronoun, password } = validatedFields.data;
   const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
   try {
     if (!password) {
-      console.log('Sem senha');
       await sql`
         UPDATE smarthealth.users
         SET name = ${name}, email = ${email}, role = ${role}, avatarurl = ${avatarurl}, category = ${category}, pronoun = ${pronoun}
         WHERE id = ${id}
       `;
     } else {
-      console.log('Com senha');
       await sql`
         UPDATE smarthealth.users
         SET name = ${name}, email = ${email}, role = ${role}, avatarurl = ${avatarurl}, category = ${category}, pronoun = ${pronoun}, password = ${hashedPassword}

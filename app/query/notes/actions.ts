@@ -31,7 +31,6 @@ export type State = {
 };
 
 export async function createNote(prevState: State, formData: FormData) {
-  console.log('Form Data: ', formData);
   const validatedFields = CreateNote.safeParse({
     iduser: formData.get('iduser'),
     idclient: formData.get('idclient'),
@@ -41,10 +40,8 @@ export async function createNote(prevState: State, formData: FormData) {
     date: formData.get('date'),
   });
 
-  console.log('Validated Fields: ', validatedFields.success);
 
   if (!validatedFields.success) {      
-    console.log(validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create.',
@@ -88,7 +85,6 @@ export async function updateNote(
 
 
   if (!validatedFields.success) {
-    console.log('Error: ', validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update note.',

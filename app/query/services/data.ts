@@ -105,7 +105,6 @@ export async function fetchServiceById(id: string) {
       endtime: formatTime(service.endtime),
     }));
     return service[0];
-    //console.log('Service: ' + service[0]);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch service.');
@@ -147,7 +146,6 @@ export async function fetchTodayServices() {
     `;
     return data.rows;
   } catch (err) {
-    console.log(err);
     console.error('Database Error:', err);
     throw new Error('Failed to fetch today\'s services.');
   }
@@ -170,7 +168,6 @@ export async function fetchCurrentMonthServices() {
     `;
     return data.rows;
   } catch (err) {
-    console.log(err);
     console.error('Database Error:', err);
     throw new Error('Failed to fetch current month services.');
   }
@@ -194,7 +191,6 @@ export async function fetchCurrentWeekServices() {
     `;
     return data.rows;
   } catch (err) {
-    console.log(err);
     console.error('Database Error:', err);
     throw new Error('Failed to fetch current week services.');
   }

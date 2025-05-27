@@ -33,7 +33,6 @@ export type State = {
 };
 
 export async function createClient(prevState: State, formData: FormData) {
-  console.log('FormData:', formData);
   const validatedFields = CreateClient.safeParse({
     name: formData.get('name'),
     cpf: formData.get('cpf'),
@@ -46,7 +45,6 @@ export async function createClient(prevState: State, formData: FormData) {
   });
 
   if (!validatedFields.success) {
-    console.log('Validation Error:', validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create.',
@@ -68,7 +66,6 @@ export async function createClient(prevState: State, formData: FormData) {
         ${sanetizedCEP}, ${idclinic}, ${pronoun})
         `;
   } catch (error) {
-    console.log(error);
     console.error('Database Error:', error);
 
     return {

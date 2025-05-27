@@ -79,7 +79,6 @@ export async function fetchNoteTypeById(id: string) {
 
     const note = data.rows;
     return note[0];
-    //console.log('Note: ' + note[0]);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch note.');

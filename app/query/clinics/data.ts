@@ -88,7 +88,6 @@ export async function fetchClinicById(id: string) {
     }));
 
     return clinic[0];
-    console.log('Clinic: ' + clinic[0]);
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch clinic.');

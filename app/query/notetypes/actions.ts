@@ -26,7 +26,6 @@ export type State = {
 };
 
 export async function createNoteType(prevState: State, formData: FormData) {
-  console.log('Form Data: ', formData);
   const validatedFields = CreateNoteType.safeParse({
     idclinic: formData.get('idclinic'),
     title: formData.get('title'),
@@ -39,7 +38,6 @@ export async function createNoteType(prevState: State, formData: FormData) {
       .map(s => s.trim())
       .filter(Boolean),
   });
-  console.log('Validated Fields: ', validatedFields.success);
 
   if (!validatedFields.success) {
     return {
@@ -88,7 +86,6 @@ export async function updateNoteType(
 
 
   if (!validatedFields.success) {
-    console.log('Error: ', validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update Notetypes.',
