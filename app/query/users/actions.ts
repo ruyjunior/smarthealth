@@ -94,7 +94,7 @@ export async function createUser(prevState: State, formData: FormData) {
   
   revalidatePath('/manager/users');
   //redirect('/manager/users');
-  redirect('/manager/users?success=Usuário criado com sucesso!');
+  redirect('/manager/users?success=Usuario criado com sucesso!');
 
 }
 
