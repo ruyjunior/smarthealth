@@ -127,4 +127,6 @@ export async function deleteClient(id: string) {
 
   await sql`DELETE FROM smarthealth.clients WHERE id = ${id}`;
   revalidatePath('/clients');
+  redirect('/clients');
+
 }

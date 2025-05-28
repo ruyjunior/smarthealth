@@ -55,13 +55,13 @@ export const DocPDF = ({ note, type, user, client, clinic }:
           {/* Profissional */}
           <View style={{ flex: 1, paddingRight: 8 }}>
             <Text style={styles.sectionTitle}>Profissional</Text>
-            <Text style={styles.field}><Text style={styles.label}>Nome:</Text> {user.name}</Text>
+            <Text style={styles.field}><Text style={styles.label}></Text>{user.pronoun} {user.name}</Text>
             <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
           </View>
           {/* Paciente */}
           <View style={{ flex: 1, paddingLeft: 8 }}>
             <Text style={styles.sectionTitle}>Paciente</Text>
-            <Text style={styles.field}><Text style={styles.label}>Nome:</Text> {client.name}</Text>
+            <Text style={styles.field}><Text style={styles.label}></Text>{client.pronoun} {client.name}</Text>
             <Text style={styles.field}><Text style={styles.label}>Telefone:</Text> {formatPhone(client.phone)}</Text>
             <Text style={styles.field}><Text style={styles.label}>Email:</Text> {client.email}</Text>
           </View>
