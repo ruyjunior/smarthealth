@@ -7,7 +7,7 @@ import { createOffice, State } from '@/app/query/offices/actions';
 import Image from 'next/image';
 
 export default function Form({ id }: { id: string | undefined }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const [state, formAction] = useActionState(createOffice, initialState);
 
   const [isPending, startTransition] = useTransition();

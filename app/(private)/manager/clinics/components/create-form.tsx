@@ -7,7 +7,7 @@ import { createClinic, State } from '@/app/query/clinics/actions';
 import Image from 'next/image';
 
 export default function Form() {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const [state, formAction] = useActionState(createClinic, initialState);
   const [isPending, startTransition] = useTransition();
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

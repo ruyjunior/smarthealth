@@ -13,7 +13,7 @@ export default function EditTypeForm({
   type: Type;
 }) {
 
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const updateTypeWithId = updateType.bind(null, type.id);
   const [state, formAction] = useActionState(updateTypeWithId, initialState);
   const [isPending, startTransition] = useTransition();

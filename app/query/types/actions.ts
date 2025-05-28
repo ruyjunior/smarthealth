@@ -21,7 +21,7 @@ export type State = {
     description?: string[];
     price?: string[];
   };
-  message?: string | null;
+  message?: string | undefined;
 };
 
 export async function createType(prevState: State, formData: FormData) {

@@ -13,7 +13,7 @@ export default function EditNoteTypeForm({
   notetype: NoteType;
 }) {
 
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const updateNoteTypeWithId = updateNoteType.bind(null, notetype.id);
   const [state, formAction] = useActionState(updateNoteTypeWithId, initialState);
   const [isPending, startTransition] = useTransition();

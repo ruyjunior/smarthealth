@@ -1,8 +1,7 @@
 'use client';
 import React, { useState, useActionState, useTransition } from 'react';
 import Link from 'next/link';
-import {
-  UserGroupIcon, CalendarDateRangeIcon, TagIcon, ClipboardDocumentListIcon, QuestionMarkCircleIcon
+import { CalendarDateRangeIcon, ClipboardDocumentListIcon, QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
 import { createNote, State } from '@/app/query/notes/actions';

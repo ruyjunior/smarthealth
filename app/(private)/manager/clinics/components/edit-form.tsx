@@ -9,7 +9,7 @@ import { upload } from '@vercel/blob/client';
 import Image from 'next/image';
 
 export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const updateclinicWithId = updateClinic.bind(null, clinic.id);
   const [state, formAction] = useActionState(updateclinicWithId, initialState);
   const [logoUrl, setLogoUrl] = useState<string | null>(clinic.logourl ?? null);

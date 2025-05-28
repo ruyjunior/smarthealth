@@ -15,7 +15,7 @@ const FormSchema = z.object({
   role: z.string(),
   idclinic: z.string(),
   avatarurl: z.string().optional(),
-  category: z.string().optional(),
+  category: z.string(),
   password: z.string().optional().nullable().or(z.literal('')), pronoun: z.string(),
 });
 
@@ -25,17 +25,20 @@ const UpdateUser = FormSchema.omit({ id: true, idclinic: true });
 
 export type State = {
   errors?: {
-    name?: string[] | null;
-    email?: string[] | null;
-    role?: string[] | null;
-    idclinic?: string[] | null;
-    category?: string[] | null;
-    pronoun?: string[] | null;
+    name?: string[] | undefined;
+    email?: string[] | undefined;
+    role?: string[] | undefined;
+    idclinic?: string[] | undefined;
+    avatarurl?: string[] | undefined;
+    category?: string[] | undefined;
+    password?: string[] | undefined;
+    pronoun?: string[] | undefined;
   };
-  message?: string | null;
+  message?: string | undefined;
 };
 
 export async function createUser(prevState: State, formData: FormData) {
+
   const validatedFields = CreateUser.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
@@ -77,7 +80,7 @@ export async function createUser(prevState: State, formData: FormData) {
       message: 'Erro ao enviar e-mail de autenticação.',
     };
   }
-
+/*
   const data = await res.json();
   if (data.message && res.ok) {
 
@@ -87,9 +90,12 @@ export async function createUser(prevState: State, formData: FormData) {
     return {
       message: data.message,
     };
-  }
-
+  }*/
+  
+  revalidatePath('/manager/users');
   //redirect('/manager/users');
+  redirect('/manager/users?success=Usuário criado com sucesso!');
+
 }
 
 export async function updateUser(

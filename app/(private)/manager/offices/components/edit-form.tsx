@@ -13,7 +13,7 @@ export default function EditOfficeForm({
   office: Office;
 }) {
 
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const updateOfficeWithId = updateOffice.bind(null, office.id);
   const [state, formAction] = useActionState(updateOfficeWithId, initialState);
   const [isPending, startTransition] = useTransition();

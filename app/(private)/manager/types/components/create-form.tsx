@@ -7,7 +7,7 @@ import { createType, State } from '@/app/query/types/actions';
 import Image from 'next/image';
 
 export default function Form({ id }: { id: string | undefined }) {
-  const initialState: State = { message: null, errors: {} };
+  const initialState: State = { message: undefined, errors: {} };
   const [state, formAction] = useActionState(createType, initialState);
 
   const [isPending, startTransition] = useTransition();
