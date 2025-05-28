@@ -1,3 +1,5 @@
+'use client';
+import { useState } from 'react';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteOffice } from '@/app/query/offices/actions';
@@ -27,12 +29,30 @@ export function UpdateOffice({ id }: { id: string }) {
 
 export function DeleteOffice({ id }: { id: string }) {
   const deleteOfficeWithId = deleteOffice.bind(null, id);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await deleteOfficeWithId();
+    setIsDeleting(false);
+  };
+
   return (
-    <form action={deleteOfficeWithId}>
-      <button type="submit" className="rounded-md border p-2 hover:bg-gray-100">
-        <span className="sr-only">Delete</span>
+    <button
+      type="button"
+      disabled={isDeleting}
+      className="rounded-md border p-2 hover:bg-red-400"
+      onClick={handleDelete}
+    >
+      {isDeleting ? (
+        <span className="flex items-center gap-2">
+          <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+        </span>
+      ) : (
         <TrashIcon className="w-5" />
-      </button>
-    </form>
+      )}
+    </button>
   );
 }
