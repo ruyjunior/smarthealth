@@ -1,27 +1,57 @@
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
-import { sql } from '@vercel/postgres'; // Conexão com Vercel Postgres
+import { sql } from "@vercel/postgres";
 
-export const config = { api: { bodyParser: false } };
+// Desabilita o bodyParser para permitir ler o corpo como Buffer
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
+// Inicializa o Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
 });
 
+// Função auxiliar para ler o corpo da requisição como Buffer
+async function buffer(readable: ReadableStream<Uint8Array>) {
+  const reader = readable.getReader();
+  const chunks: Uint8Array[] = [];
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (value) chunks.push(value);
+  }
+
+  return Buffer.concat(chunks);
+}
+
+// Webhook handler
 export async function POST(req: NextRequest) {
   console.log("🔹 Webhook recebido!");
+
   const signature = req.headers.get("stripe-signature");
   if (!signature) {
     console.error("❌ Nenhuma assinatura Stripe recebida!");
     return new Response(JSON.stringify({ error: "Sem assinatura Stripe" }), { status: 400 });
   }
 
-  const payload = await req.text();
-  console.log("📩 Payload recebido:", payload);
-  let event;
+  let bodyBuffer: Buffer;
+
+  try {
+    bodyBuffer = await buffer(req.body as ReadableStream<Uint8Array>);
+  } catch (err) {
+    console.error("❌ Erro ao ler o corpo da requisição:", err);
+    return new Response("Erro ao ler corpo", { status: 400 });
+  }
+
+  let event: Stripe.Event;
+
   try {
     event = stripe.webhooks.constructEvent(
-      payload,
+      bodyBuffer,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
@@ -33,14 +63,12 @@ export async function POST(req: NextRequest) {
   console.log("🎉 Evento Stripe recebido:", event.type);
 
   if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
+    const session = event.data.object as Stripe.Checkout.Session;
 
     const customerEmail = session.customer_details?.email;
-    const paymentIntentId = typeof session.payment_intent === 'string' ? session.payment_intent : null;
+    const paymentIntentId = typeof session.payment_intent === "string" ? session.payment_intent : null;
     const amountPaid = session.amount_total;
     const status = session.payment_status;
-
-    // Lê metadados e custom_fields
     const metadata = session.metadata;
 
     const nomeClinica = session.custom_fields?.find(
@@ -48,12 +76,12 @@ export async function POST(req: NextRequest) {
     )?.text?.value ?? "Clínica Sem Nome";
 
     let expiresAt = new Date();
-    
-    if (metadata?.plan_type === 'mensal') {
+
+    if (metadata?.plan_type === "mensal") {
       expiresAt.setMonth(expiresAt.getMonth() + 1);
-    } else if (metadata?.plan_type === 'anual') {
+    } else if (metadata?.plan_type === "anual") {
       expiresAt.setFullYear(expiresAt.getFullYear() + 1);
-    } else if (metadata?.plan_type === 'trial') {
+    } else if (metadata?.plan_type === "trial") {
       expiresAt.setDate(expiresAt.getDate() + 7);
     }
 
@@ -62,18 +90,17 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      // Insere ou atualiza usuário
       const userResult = await sql`
         INSERT INTO smarthealth.users (email, name, status, payment_intent, amount_paid, plan_expires_at)
         VALUES (
-          ${customerEmail}, 
-          ${session.customer_details?.name}, 
-          'paid', 
-          ${paymentIntentId}, 
+          ${customerEmail},
+          ${session.customer_details?.name},
+          'paid',
+          ${paymentIntentId},
           ${amountPaid},
           ${expiresAt.toISOString()}
         )
-        ON CONFLICT(email) DO UPDATE 
+        ON CONFLICT(email) DO UPDATE
         SET
           status = 'paid',
           payment_intent = ${paymentIntentId},
@@ -88,7 +115,6 @@ export async function POST(req: NextRequest) {
 
       const userId = userResult.rows[0].id;
 
-      // Cria a clínica se não existir
       const clinicCheck = await sql`
         SELECT id FROM smarthealth.clinics WHERE idmanager = ${userId}
       `;
