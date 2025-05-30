@@ -120,11 +120,13 @@ export default function EditUserForm({
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
+                  
                   id="email"
                   name="email"
                   type="email"
                   placeholder="Insira um email"
                   defaultValue={user.email}
+
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="email-error"
                 />

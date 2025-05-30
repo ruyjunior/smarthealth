@@ -35,48 +35,82 @@ export async function POST(req: NextRequest) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
 
-    // Dados do pagamento
     const customerEmail = session.customer_details?.email;
     const paymentIntentId = typeof session.payment_intent === 'string' ? session.payment_intent : null;
     const amountPaid = session.amount_total;
-    const status = session.payment_status; // Ex: "paid"
+    const status = session.payment_status;
+
+    // Lê metadados e custom_fields
+    const metadata = session.metadata;
+
+    const nomeClinica = session.custom_fields?.find(
+      (field: any) => field.key === "nomefantasiadaclnica"
+    )?.text?.value ?? "Clínica Sem Nome";
+
+    let expiresAt = new Date();
+    
+    if (metadata?.plan_type === 'mensal') {
+      expiresAt.setMonth(expiresAt.getMonth() + 1);
+    } else if (metadata?.plan_type === 'anual') {
+      expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+    } else if (metadata?.plan_type === 'trial') {
+      expiresAt.setDate(expiresAt.getDate() + 7);
+    }
 
     if (!customerEmail) {
       return new Response("Customer email missing", { status: 400 });
     }
 
     try {
-      // Verifica se o email do cliente existe no banco
-      const result = await sql`
-        INSERT INTO smarthealth.users (email, name, status, payment_intent, amount_paid)
+      // Insere ou atualiza usuário
+      const userResult = await sql`
+        INSERT INTO smarthealth.users (email, name, status, payment_intent, amount_paid, plan_expires_at)
         VALUES (
           ${customerEmail}, 
           ${session.customer_details?.name}, 
           'paid', 
           ${paymentIntentId}, 
-          ${amountPaid}
+          ${amountPaid},
+          ${expiresAt.toISOString()}
         )
         ON CONFLICT(email) DO UPDATE 
         SET
           status = 'paid',
           payment_intent = ${paymentIntentId},
-          amount_paid = ${amountPaid}
+          amount_paid = ${amountPaid},
+          plan_expires_at = ${expiresAt.toISOString()}
         RETURNING id, email, status;
       `;
 
-      if (result.rowCount === 0) {
+      if (userResult.rowCount === 0) {
         return new Response("User not found", { status: 404 });
       }
 
-      console.log(`Pagamento confirmado para ${customerEmail}`);
+      const userId = userResult.rows[0].id;
+
+      // Cria a clínica se não existir
+      const clinicCheck = await sql`
+        SELECT id FROM smarthealth.clinics WHERE idmanager = ${userId}
+      `;
+
+      if (clinicCheck.rowCount === 0) {
+        await sql`
+          INSERT INTO smarthealth.clinics (title, idmanager)
+          VALUES (${nomeClinica}, ${userId})
+        `;
+        console.log(`✅ Clínica criada para ${nomeClinica}`);
+      } else {
+        console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
+      }
+
+      console.log(`💰 Pagamento confirmado para ${customerEmail}`);
     } catch (err) {
-      console.error("Erro ao atualizar usuário:", err);
+      console.error("❌ Erro ao atualizar usuário:", err);
       return new Response("Database error", { status: 500 });
     }
-
   }
+
   if (event.type === "invoice.payment_succeeded") {
-    //console.log("✅ Pagamento confirmado!", event.data.object);
     console.log("✅ Pagamento de assinatura confirmado!");
   }
 

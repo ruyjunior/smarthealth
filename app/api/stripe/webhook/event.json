@@ -1,0 +1,19 @@
+{
+  "type": "checkout.session.completed",
+  "data": {
+    "object": {
+      "id": "cs_test_customsession",
+      "payment_status": "paid",
+      "amount_total": 1500,
+      "customer_details": {
+        "email": "ruyjunior21@gmail.com",
+        "name": "Clínica Teste"
+      },
+      "payment_intent": "pi_test_123",
+      "metadata": {
+        "plan_type": "mensal",
+        "clinic_name": "Clínica da Saúde"
+      }
+    }
+  }
+}
