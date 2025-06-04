@@ -107,18 +107,25 @@ export async function POST(req: NextRequest) {
           const userId = userResult.rows[0].id;
 
           const clinicCheck = await sql`
-    SELECT id FROM smarthealth.clinics WHERE idmanager = ${userId}
-  `;
+          SELECT id FROM smarthealth.clinics WHERE idmanager = ${userId}
+          `;
 
           if (clinicCheck.rows && clinicCheck.rows.length === 0) {
             await sql`
-      INSERT INTO smarthealth.clinics (title, idmanager)
-      VALUES (${nomeClinica}, ${userId})
-    `;
+            INSERT INTO smarthealth.clinics (title, idmanager)
+            VALUES (${nomeClinica}, ${userId})
+          `;
             console.log(`✅ Clínica criada para ${nomeClinica}`);
+
           } else {
             console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
           }
+
+          await sql`
+            UPDATE smarthealth.users
+            SET  idclinic = ${clinicCheck.rows[0].id}
+            WHERE email = ${customerEmail}
+         `;
         } else {
           console.error("❌ Nenhum usuário foi criado/atualizado");
           return new Response("User not found or not created", { status: 404 });
