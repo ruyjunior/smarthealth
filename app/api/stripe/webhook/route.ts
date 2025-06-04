@@ -2,142 +2,130 @@ import { NextRequest } from "next/server";
 import Stripe from "stripe";
 import { sql } from "@vercel/postgres";
 
-// Desabilita o bodyParser para permitir ler o corpo como Buffer
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-// Inicializa o Stripe
+// Initialize Stripe with the correct API version
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
 });
 
-// Função auxiliar para ler o corpo da requisição como Buffer
-async function buffer(readable: ReadableStream<Uint8Array>) {
+// Helper function to read raw body
+async function getRawBody(readable: ReadableStream<Uint8Array>): Promise<Buffer> {
+  const chunks = [];
   const reader = readable.getReader();
-  const chunks: Uint8Array[] = [];
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (value) chunks.push(value);
+  
+  let result;
+  while (!(result = await reader.read()).done) {
+    chunks.push(result.value);
   }
-
+  
   return Buffer.concat(chunks);
 }
 
-// Webhook handler
 export async function POST(req: NextRequest) {
-  console.log("🔹 Webhook recebido!");
-
   const signature = req.headers.get("stripe-signature");
+  
   if (!signature) {
-    console.error("❌ Nenhuma assinatura Stripe recebida!");
-    return new Response(JSON.stringify({ error: "Sem assinatura Stripe" }), { status: 400 });
-  }
-
-  let bodyBuffer: Buffer;
-
-  try {
-    bodyBuffer = await buffer(req.body as ReadableStream<Uint8Array>);
-  } catch (err) {
-    console.error("❌ Erro ao ler o corpo da requisição:", err);
-    return new Response("Erro ao ler corpo", { status: 400 });
+    return new Response("No signature header", { status: 400 });
   }
 
   let event: Stripe.Event;
+  let rawBody: Buffer;
 
   try {
+    // Get raw body before any parsing
+    rawBody = await getRawBody(req.body!);
+    
+    // Verify signature with raw body
     event = stripe.webhooks.constructEvent(
-      bodyBuffer,
+      rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
-    console.error("❌ Erro ao validar webhook:", err);
-    return new Response(JSON.stringify({ error: "Erro na validação do webhook" }), { status: 400 });
+    console.error("❌ Webhook error:", err);
+    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
-  console.log("🎉 Evento Stripe recebido:", event.type);
+  // Handle specific event types
+  switch (event.type) {
+    case "checkout.session.completed":
+      try {
+        const session = event.data.object as Stripe.Checkout.Session;
+        
+        // Validate required fields
+        if (!session.customer_details?.email) {
+          throw new Error("Customer email is required");
+        }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object as Stripe.Checkout.Session;
+        const customerEmail = session.customer_details.email;
+        const paymentIntentId = typeof session.payment_intent === "string" 
+          ? session.payment_intent 
+          : null;
+        
+        // Process custom field
+        const nomeClinica = session.custom_fields?.find(
+          (field: any) => field.key === "nomefantasiadaclnica"
+        )?.text?.value ?? "Clínica Sem Nome";
 
-    const customerEmail = session.customer_details?.email;
-    const paymentIntentId = typeof session.payment_intent === "string" ? session.payment_intent : null;
-    const amountPaid = session.amount_total;
-    const status = session.payment_status;
-    const metadata = session.metadata;
+        // Calculate expiration date
+        const expiresAt = new Date();
+        const metadata = session.metadata || {};
+        
+        if (metadata.plan_type === "mensal") {
+          expiresAt.setMonth(expiresAt.getMonth() + 1);
+        } else if (metadata.plan_type === "anual") {
+          expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+        } else if (metadata.plan_type === "trial") {
+          expiresAt.setDate(expiresAt.getDate() + 7);
+        }
 
-    const nomeClinica = session.custom_fields?.find(
-      (field: any) => field.key === "nomefantasiadaclnica"
-    )?.text?.value ?? "Clínica Sem Nome";
-
-    let expiresAt = new Date();
-
-    if (metadata?.plan_type === "mensal") {
-      expiresAt.setMonth(expiresAt.getMonth() + 1);
-    } else if (metadata?.plan_type === "anual") {
-      expiresAt.setFullYear(expiresAt.getFullYear() + 1);
-    } else if (metadata?.plan_type === "trial") {
-      expiresAt.setDate(expiresAt.getDate() + 7);
-    }
-
-    if (!customerEmail) {
-      return new Response("Customer email missing", { status: 400 });
-    }
-
-    try {
-      const userResult = await sql`
-        INSERT INTO smarthealth.users (email, name, status, payment_intent, amount_paid, plan_expires_at)
-        VALUES (
-          ${customerEmail},
-          ${session.customer_details?.name},
-          'paid',
-          ${paymentIntentId},
-          ${amountPaid},
-          ${expiresAt.toISOString()}
-        )
-        ON CONFLICT(email) DO UPDATE
-        SET
-          status = 'paid',
-          payment_intent = ${paymentIntentId},
-          amount_paid = ${amountPaid},
-          plan_expires_at = ${expiresAt.toISOString()}
-        RETURNING id, email, status;
-      `;
-
-      if (userResult.rowCount === 0) {
-        return new Response("User not found", { status: 404 });
-      }
-
-      const userId = userResult.rows[0].id;
-
-      const clinicCheck = await sql`
-        SELECT id FROM smarthealth.clinics WHERE idmanager = ${userId}
-      `;
-
-      if (clinicCheck.rowCount === 0) {
+        // Update database
         await sql`
-          INSERT INTO smarthealth.clinics (title, idmanager)
-          VALUES (${nomeClinica}, ${userId})
+          INSERT INTO smarthealth.users (email, name, status, payment_intent, amount_paid, plan_expires_at)
+          VALUES (
+            ${customerEmail},
+            ${session.customer_details.name},
+            'paid',
+            ${paymentIntentId},
+            ${session.amount_total},
+            ${expiresAt.toISOString()}
+          )
+          ON CONFLICT(email) DO UPDATE
+          SET
+            status = 'paid',
+            payment_intent = ${paymentIntentId},
+            amount_paid = ${session.amount_total},
+            plan_expires_at = ${expiresAt.toISOString()}
         `;
-        console.log(`✅ Clínica criada para ${nomeClinica}`);
-      } else {
-        console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
+
+        // Check and create clinic if needed
+        const userResult = await sql`
+          SELECT id FROM smarthealth.users WHERE email = ${customerEmail}
+        `;
+        
+        if (userResult.rowCount > 0) {
+          const clinicCheck = await sql`
+            SELECT id FROM smarthealth.clinics WHERE idmanager = ${userResult.rows[0].id}
+          `;
+          
+          if (clinicCheck.rowCount === 0) {
+            await sql`
+              INSERT INTO smarthealth.clinics (title, idmanager)
+              VALUES (${nomeClinica}, ${userResult.rows[0].id})
+            `;
+          }
+        }
+      } catch (err) {
+        console.error("Database error:", err);
+        return new Response("Database error", { status: 500 });
       }
-
-      console.log(`💰 Pagamento confirmado para ${customerEmail}`);
-    } catch (err) {
-      console.error("❌ Erro ao atualizar usuário:", err);
-      return new Response("Database error", { status: 500 });
-    }
-  }
-
-  if (event.type === "invoice.payment_succeeded") {
-    console.log("✅ Pagamento de assinatura confirmado!");
+      break;
+      
+    case "invoice.payment_succeeded":
+      // Handle subscription payments
+      break;
+      
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
   }
 
   return new Response(JSON.stringify({ received: true }), { status: 200 });
