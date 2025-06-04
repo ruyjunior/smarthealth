@@ -11,18 +11,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 async function getRawBody(readable: ReadableStream<Uint8Array>): Promise<Buffer> {
   const chunks = [];
   const reader = readable.getReader();
-  
+
   let result;
   while (!(result = await reader.read()).done) {
     chunks.push(result.value);
   }
-  
+
   return Buffer.concat(chunks);
 }
 
 export async function POST(req: NextRequest) {
   const signature = req.headers.get("stripe-signature");
-  
+
   if (!signature) {
     return new Response("No signature header", { status: 400 });
   }
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   try {
     // Get raw body before any parsing
     rawBody = await getRawBody(req.body!);
-    
+
     // Verify signature with raw body
     event = stripe.webhooks.constructEvent(
       rawBody,
@@ -42,7 +42,8 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     console.error("❌ Webhook error:", err);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+    return new Response(`Webhook Error: ${errorMessage}`, { status: 400 });
   }
 
   // Handle specific event types
@@ -50,17 +51,17 @@ export async function POST(req: NextRequest) {
     case "checkout.session.completed":
       try {
         const session = event.data.object as Stripe.Checkout.Session;
-        
+
         // Validate required fields
         if (!session.customer_details?.email) {
           throw new Error("Customer email is required");
         }
 
         const customerEmail = session.customer_details.email;
-        const paymentIntentId = typeof session.payment_intent === "string" 
-          ? session.payment_intent 
+        const paymentIntentId = typeof session.payment_intent === "string"
+          ? session.payment_intent
           : null;
-        
+
         // Process custom field
         const nomeClinica = session.custom_fields?.find(
           (field: any) => field.key === "nomefantasiadaclnica"
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
         // Calculate expiration date
         const expiresAt = new Date();
         const metadata = session.metadata || {};
-        
+
         if (metadata.plan_type === "mensal") {
           expiresAt.setMonth(expiresAt.getMonth() + 1);
         } else if (metadata.plan_type === "anual") {
@@ -101,29 +102,37 @@ export async function POST(req: NextRequest) {
         const userResult = await sql`
           SELECT id FROM smarthealth.users WHERE email = ${customerEmail}
         `;
-        
-        if (userResult.rowCount > 0) {
+
+        if (userResult.rows && userResult.rows.length > 0) {
+          const userId = userResult.rows[0].id;
+
           const clinicCheck = await sql`
-            SELECT id FROM smarthealth.clinics WHERE idmanager = ${userResult.rows[0].id}
-          `;
-          
-          if (clinicCheck.rowCount === 0) {
+    SELECT id FROM smarthealth.clinics WHERE idmanager = ${userId}
+  `;
+
+          if (clinicCheck.rows && clinicCheck.rows.length === 0) {
             await sql`
-              INSERT INTO smarthealth.clinics (title, idmanager)
-              VALUES (${nomeClinica}, ${userResult.rows[0].id})
-            `;
+      INSERT INTO smarthealth.clinics (title, idmanager)
+      VALUES (${nomeClinica}, ${userId})
+    `;
+            console.log(`✅ Clínica criada para ${nomeClinica}`);
+          } else {
+            console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
           }
+        } else {
+          console.error("❌ Nenhum usuário foi criado/atualizado");
+          return new Response("User not found or not created", { status: 404 });
         }
       } catch (err) {
         console.error("Database error:", err);
         return new Response("Database error", { status: 500 });
       }
       break;
-      
+
     case "invoice.payment_succeeded":
       // Handle subscription payments
       break;
-      
+
     default:
       console.log(`Unhandled event type: ${event.type}`);
   }
