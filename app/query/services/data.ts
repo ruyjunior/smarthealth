@@ -49,11 +49,11 @@ export async function fetchFilteredServices(
     FROM smarthealth.services
     LEFT JOIN smarthealth.clients ON services.idclient = clients.id
     WHERE 
-      (clients.name::text ILIKE ${`%${query ?? ''}%`}) OR
-      (clients.cpf::text ILIKE ${`%${query ?? ''}%`}) OR
-      (services.id::text ILIKE ${`%${query ?? ''}%`}) 
+      (clients.name::text ILIKE ${`%${query ?? ''}%`} OR
+      clients.cpf::text ILIKE ${`%${query ?? ''}%`} OR
+      services.id::text ILIKE ${`%${query ?? ''}%`}) 
       AND
-    services.idclinic = ${user.idclinic}
+      services.idclinic = ${user.idclinic}
     ORDER BY services.date DESC, services.starttime ASC
     LIMIT ${ITEMS_PER_PAGE}
     OFFSET ${offset}
