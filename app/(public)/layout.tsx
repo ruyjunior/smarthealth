@@ -1,10 +1,8 @@
-//import '@/app/ui/global.css';
 import { Metadata } from 'next';
 import { SessionProvider } from "next-auth/react";
-import WhatsappButton from "./site/WhatsappButton";
-import TopButton from "./site/TopButton";
 import Footer from "./site/main/footer";
 import Navbar from "./site/main/navbar";
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: {
@@ -53,14 +51,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-100 to-blue-900">
-      <main className="flex-1 flex flex-col">
-        <SessionProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </SessionProvider>
-      </main>
-    </div>
+    <html lang='pt-BR'>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-GVXZJGHHVY"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+        >
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-GVXZJGHHVY');
+          `}
+        </Script>
+
+      </head>
+      <body>
+        <main className="flex-1 flex flex-col">
+          <SessionProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </SessionProvider>
+        </main>
+      </body>
+    </html>
   );
 }
