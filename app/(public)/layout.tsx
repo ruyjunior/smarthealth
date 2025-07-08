@@ -3,6 +3,8 @@ import { SessionProvider } from "next-auth/react";
 import Footer from "./site/main/footer";
 import Navbar from "./site/main/navbar";
 import Script from 'next/script';
+import { Analytics } from "@vercel/analytics/next";
+
 
 export const metadata: Metadata = {
   title: {
@@ -76,6 +78,7 @@ export default function RootLayout({
           <SessionProvider>
             <Navbar />
             {children}
+            <Analytics /> {/* Vercel Analytics */}
             <Footer />
           </SessionProvider>
         </main>
