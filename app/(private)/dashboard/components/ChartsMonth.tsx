@@ -7,7 +7,7 @@ import { User } from '@/app/query/users/definitions';
 import { Client } from '@/app/query/clients/definitions';
 import { Type } from '@/app/query/types/definitions';
 import { Office } from '@/app/query/offices/definitions';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
+import { formatDateToLocal, formatCurrency, formatCurrencyOutput } from '@/app/lib/utils';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 ChartJS.register(
@@ -40,7 +40,7 @@ export default function ChartsMonth(
     );
     const totalValue = servicesForDate.reduce((acc, service) => {
       const type = types.find(t => t.id === service.idtype);
-      const price = type?.price ? (type.price / 100) : 0;
+      const price = type?.price ? Number(type.price) : 0;
       return acc + price;
     }, 0);
     return totalValue;
@@ -71,7 +71,7 @@ export default function ChartsMonth(
           </h1>
         </div>
         <div className="mb-4 text-lg font-bold text-indigo-700 bg-indigo-100 rounded px-4 py-2 shadow">
-          Total acumulado: {formatCurrency(total * 100)}
+          Total acumulado: {formatCurrency(total)}
         </div>
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: 350 }}>

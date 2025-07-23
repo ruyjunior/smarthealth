@@ -31,6 +31,7 @@ export async function createType(prevState: State, formData: FormData) {
     price: formData.get('price'),
     idclinic: formData.get('idclinic')
   });
+  //console.log('validatedFields', validatedFields);
 
   if (!validatedFields.success) {
     return {
@@ -39,13 +40,15 @@ export async function createType(prevState: State, formData: FormData) {
     };
   }
   const { title, description, price, idclinic } = validatedFields.data;
+  const priceFormatted = price.replace(',', '.');
 
   try {
     await sql`
         INSERT INTO smarthealth.types ( title, description, price, idclinic)
-        VALUES (${title}, ${description}, ${price}, ${idclinic})
+        VALUES (${title}, ${description}, ${priceFormatted}, ${idclinic})
         `;
   } catch (error) {
+    console.error('Database Error:', error);
     return {
       message: 'Database Error: Failed to Create Type.',
     };
@@ -64,6 +67,8 @@ export async function updateType(
     description: formData.get('description'),
     price: formData.get('price')
   });
+  //console.log('validatedFields', validatedFields);
+
 
   if (!validatedFields.success) {
     return {
@@ -73,14 +78,16 @@ export async function updateType(
   }
 
   const { title, description, price } = validatedFields.data;
+  const priceFormatted = price.replace(',', '.');
 
   try {
     await sql`
     UPDATE smarthealth.types
-    SET title = ${title}, description = ${description} , price = ${price}
+    SET title = ${title}, description = ${description} , price = ${priceFormatted}
     WHERE id = ${id}
   `;
   } catch (error) {
+    console.error('Database Error:', error);
     return { message: 'Database Error: Failed to Update Type.' };
   }
 

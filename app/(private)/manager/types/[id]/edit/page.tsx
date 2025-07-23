@@ -25,7 +25,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
                 { label: 'Especialidades', href: `/manager/types` },
                 {
                     label: 'Editar Especialidade',
-                    href: `/types/${id}/edit`,
+                    href: `/manager/types/${id}/edit`,
                     active: true,
                 },
                 ]}

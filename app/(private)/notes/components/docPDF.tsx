@@ -44,7 +44,7 @@ export const DocPDF = ({ note, type, user, client, clinic }:
             <Text style={styles.subtitle}>Endereço aqui</Text>
             <Text style={styles.reportDate}>Emitido em: {formatDateToLocal(note.date)}</Text>
           </View>
-          <Image src={logo.src} style={styles.logoApp} />
+          {/*<Image src={logo.src} style={styles.logoApp} /> */}
         </View>
 
         {/* Linha divisória */}

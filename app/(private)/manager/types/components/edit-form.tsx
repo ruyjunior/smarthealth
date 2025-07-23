@@ -7,6 +7,12 @@ import { Button } from '@/app/components/ui/button';
 import { updateType, State } from '@/app/query/types/actions';
 import Image from 'next/image';
 
+import {
+  formatDateToLocal, formatCurrency, formatCurrencyInput,
+  formatCPF, formatCEP, formatPhone, formatDateBr
+} from '@/app/lib/utils';
+
+
 export default function EditTypeForm({
   type,
 }: {
@@ -112,7 +118,10 @@ export default function EditTypeForm({
                   name="price"
                   type="currency"
                   placeholder="Insira um preço"
-                  defaultValue={type.price}
+                  defaultValue={formatCurrency(Number(type.price))}
+                  onChange={(e) => {
+                    e.target.value = formatCurrencyInput(e.target.value);
+                  }}
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="price-error"
                 />

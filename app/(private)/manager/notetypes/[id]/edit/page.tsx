@@ -22,9 +22,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         <main>
             <Breadcrumbs
                 breadcrumbs={[
-                { label: 'Avaliações', href: `/manager/notetypes` },
+                { label: 'Fichas', href: `/manager/notetypes` },
                 {
-                    label: 'Editar Avaliação',
+                    label: 'Editar Ficha',
                     href: `/manager/notetypes/${id}/edit`,
                     active: true,
                 },

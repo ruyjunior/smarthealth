@@ -3,10 +3,30 @@ import { fetchUserById } from '@/app/query/users/data';
 
 
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('pt-BR', {
+  return (amount).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
+};
+
+export const formatCurrencyInput = (value: string) => {
+  // Remove any non-digit characters
+  value = value.replace(/\D/g, '');
+
+  // Format the value as currency
+  const formattedValue = (parseInt(value) / 100).toFixed(2).replace('.', ',');
+
+  return formattedValue;
+};
+
+export const formatCurrencyOutput = (value: string) => {
+  // Remove any non-digit characters
+  value = value.replace(/\D/g, '');
+
+  // Format the value as currency
+  const formattedValue = (parseInt(value) / 100).toFixed(2).replace('.', ',');
+
+  return formattedValue;
 };
 
 export async function CurrentClinicId() {
@@ -158,16 +178,6 @@ export const formatDateDb = (dateStr: string | null | undefined) => {
   const month = String(date.getUTCMonth() + 1).padStart(2, '0');
   const day = String(date.getUTCDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
-};
-
-export const formatCurrencyInput = (value: string) => {
-  // Remove any non-digit characters
-  value = value.replace(/\D/g, '');
-
-  // Format the value as currency
-  const formattedValue = (parseInt(value) / 100).toFixed(2).replace('.', ',');
-
-  return formattedValue;
 };
 
 export const generatePagination = (currentPage: number, totalPages: number) => {

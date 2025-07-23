@@ -61,13 +61,15 @@ export default function Form({ id }: { id: string | undefined }) {
       ) : (
 
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
+          <span className="text-sm text-gray-500">
+            Os campos com * são obrigatórios.
+          </span>
           <input type="hidden" name="idclinic" value={id} />
 
           {/* NAME and Pronoun */}
           <div className="mb-4">
             <label className="mb-2 block text-sm font-medium">
-              Pronome e Nome
+              Pronome e Nome*
             </label>
             <div className="flex flex-col md:flex-row gap-2">
               {/* Pronome */}
@@ -114,7 +116,7 @@ export default function Form({ id }: { id: string | undefined }) {
           {/* CPF */}
           <div className="mb-4">
             <label htmlFor="cpf" className="mb-2 block text-sm font-medium">
-              CPF
+              CPF*
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">

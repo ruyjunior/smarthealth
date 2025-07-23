@@ -5,6 +5,10 @@ import { TagIcon, AtSymbolIcon, CurrencyDollarIcon, ChatBubbleBottomCenterTextIc
 import { Button } from '@/app/components/ui/button';
 import { createType, State } from '@/app/query/types/actions';
 import Image from 'next/image';
+import {
+  formatDateToLocal, formatCurrency, formatCurrencyInput,
+  formatCPF, formatCEP, formatPhone, formatDateBr
+} from '@/app/lib/utils';
 
 export default function Form({ id }: { id: string | undefined }) {
   const initialState: State = { message: undefined, errors: {} };
@@ -108,6 +112,9 @@ export default function Form({ id }: { id: string | undefined }) {
                   type="currency"
                   required
                   placeholder="Insira um preço"
+                  onChange={(e) => {
+                    e.target.value = formatCurrencyInput(e.target.value);
+                  }}
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="price-error"
                 />
@@ -115,13 +122,9 @@ export default function Form({ id }: { id: string | undefined }) {
               </div>
             </div>
           </div>
-
-
         </div>
-
       )}
       {/* Botões de ação */}
-
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/manager/types"

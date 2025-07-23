@@ -1,5 +1,5 @@
 'use client';
-import { useActionState, useTransition } from 'react';
+import { useActionState, useTransition, useState } from 'react';
 import { Service } from '@/app/query/services/definitions';
 import { UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon, BuildingOffice2Icon, QueueListIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -18,11 +18,16 @@ export default function EditServiceForm({
   service: Service, data: any
 }) {
   const { clients, offices, types, users } = data;
+  const client = clients.find((c: Client) => c.id === service.idclient) || { name: '' };
 
   const initialState: State = { message: '', errors: {} };
   const updateServiceWithId = updateService.bind(null, service.id);
   const [state, formAction] = useActionState(updateServiceWithId, initialState);
   const [isPending, startTransition] = useTransition();
+  const [search, setSearch] = useState(client?.name || '');
+  const [filteredClients, setFilteredClients] = useState<Client[]>([client]);
+  const [isSearching, startTransitionSearch] = useTransition();
+
 
   const date = formatDateDb(service.date);
 
@@ -32,6 +37,24 @@ export default function EditServiceForm({
       formAction(new FormData(e.currentTarget));
     });
   }
+  const normalize = (str: string) =>
+    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+  const handleClientSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value);
+    if (value.length >= 3 || 1 < 3) {
+      startTransitionSearch(() => {
+        setFilteredClients(
+          clients.filter((client: Client) =>
+            normalize(client.name).includes(normalize(value))
+          )
+        );
+      });
+    } else {
+      setFilteredClients([]);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -50,11 +73,14 @@ export default function EditServiceForm({
       ) : (
 
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
+          <span className="text-sm text-gray-500">
+            Os campos com * são obrigatórios.
+          </span>
 
           {/* Status */}
           <div className="mb-4">
             <label htmlFor="status" className="mb-2 block text-sm font-medium">
-              Situação
+              Situação*
             </label>
             <div className="relative">
               <select
@@ -84,7 +110,7 @@ export default function EditServiceForm({
           {/* Especialidade */}
           <div className="mb-4">
             <label htmlFor="idtype" className="mb-2 block text-sm font-medium">
-              Especialidade
+              Especialidade*
             </label>
             <div className="relative">
               <select
@@ -118,7 +144,7 @@ export default function EditServiceForm({
           {/* User */}
           <div className="mb-4">
             <label htmlFor="iduser" className="mb-2 block text-sm font-medium">
-              Profissional
+              Profissional*
             </label>
             <div className="relative">
               <select
@@ -152,7 +178,7 @@ export default function EditServiceForm({
           {/* Consultório */}
           <div className="mb-4">
             <label htmlFor="idprovider" className="mb-2 block text-sm font-medium">
-              Consultório
+              Consultório*
             </label>
             <div className="relative">
               <select
@@ -183,7 +209,7 @@ export default function EditServiceForm({
             </div>
           </div>
 
-          {/* Paciente */}
+          {/*  Paciente 
           <div className="mb-4">
             <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
               Paciente
@@ -215,12 +241,61 @@ export default function EditServiceForm({
                   </p>
                 ))}
             </div>
+          </div> */}
+
+          {/* Paciente com busca */}
+          <div className="mb-4">
+            <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
+              Paciente*
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Busque o paciente (mín. 3 letras)"
+                value={search}
+                onChange={handleClientSearch}
+                className="block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500 mb-2"
+              />
+              <UserCircleIcon className="pointer-events-none absolute left-3 top-3 h-[18px] w-[18px] text-gray-500" />
+              <select
+                id="idclient"
+                name="idclient"
+                className={`peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500
+              ${filteredClients.length > 0 ? 'ring-2 ring-blue-200' : ''}`}
+                defaultValue={service.idclient}
+                required
+                
+
+              >
+                <option value="" disabled>
+                  {search.length < 3
+                    ? "Digite pelo menos 3 letras para buscar"
+                    : filteredClients.length === 0
+                      ? "Nenhum paciente encontrado"
+                      : "Selecione um paciente"}
+                </option>
+                {filteredClients.map((client: Client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div id="base-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.idclient &&
+                state.errors.idclient.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
+
 
           {/* Data */}
           <div className="mb-4">
             <label htmlFor="date" className="mb-2 block text-sm font-medium">
-              Data
+              Data*
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -243,7 +318,7 @@ export default function EditServiceForm({
           {/* Start Time */}
           <div className="mb-4">
             <label htmlFor="starttime" className="mb-2 block text-sm font-medium">
-              Horário de Início
+              Horário de Início*
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -264,7 +339,7 @@ export default function EditServiceForm({
           {/* End Time */}
           <div className="mb-4">
             <label htmlFor="endtime" className="mb-2 block text-sm font-medium">
-              Horário de Fim
+              Horário de Fim*
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
