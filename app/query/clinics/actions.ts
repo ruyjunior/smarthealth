@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation';
 import { sql } from '@vercel/postgres';
 import bcrypt from 'bcryptjs';
 import { log } from 'console';
+import { deleteUnusedFiles } from '@/app/lib/deleteUnusedFiles';
+
 
 const FormSchema = z.object({
   id: z.string(),
@@ -49,6 +51,8 @@ export async function createClinic(prevState: State, formData: FormData) {
       message: 'Database Error: Failed to Create Clinic.',
     };
   }
+  deleteUnusedFiles();
+
 
   revalidatePath('/manager/clinics');
   redirect('/manager/clinics');
@@ -82,12 +86,16 @@ export async function updateClinic(
     return { message: 'Database Error: Failed to Update Clinic.' };
   }
 
+  deleteUnusedFiles();
+
+
   revalidatePath('/manager/clinics');
   redirect('/manager/clinics');
 }
 
 export async function deleteClinic(id: string) {
   //throw new Error('Failed to Delete Invoice');
+  deleteUnusedFiles();
 
   await sql`DELETE FROM smarthealth.clinics WHERE id = ${id}`;
   revalidatePath('/manager/clinics');

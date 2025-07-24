@@ -1,7 +1,7 @@
 'use client';
 import { useActionState, useState, useTransition } from 'react';
 import { Note } from '@/app/query/notes/definitions';
-import { CalendarDateRangeIcon, QuestionMarkCircleIcon} from '@heroicons/react/24/outline';
+import { CalendarDateRangeIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { updateNote, State } from '@/app/query/notes/actions';
@@ -9,7 +9,7 @@ import { User } from '@/app/query/users/definitions';
 import { Client } from '@/app/query/clients/definitions';
 import { formatDateDb } from '@/app/lib/utils';
 import { NoteType } from '@/app/query/notetypes/definitions';
-import Image from 'next/image';
+import Loading from '@/app/components/ui/loading';
 
 export default function EditNoteForm({
   note, client, user, types
@@ -45,14 +45,7 @@ export default function EditNoteForm({
 
       {/* Mensagem Carregando */}
       {isPending ? (
-        <div className="flex flex-col items-center justify-center min-h-[200px] gap-2 text-blue-700">
-          <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-          </svg>
-          Processando...
-          <Image src='/ecg.gif' alt="logo App" width={200} height={200} />
-        </div>
+        <Loading />
       ) : (
 
         <div className="rounded-md bg-gray-50 p-4 md:p-6">

@@ -1,17 +1,12 @@
 'use client';
 import { useActionState, useTransition } from 'react';
 import { Type } from '@/app/query/types/definitions';
-import { TagIcon, AtSymbolIcon, ChatBubbleBottomCenterTextIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { TagIcon, ChatBubbleBottomCenterTextIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { updateType, State } from '@/app/query/types/actions';
-import Image from 'next/image';
-
-import {
-  formatDateToLocal, formatCurrency, formatCurrencyInput,
-  formatCPF, formatCEP, formatPhone, formatDateBr
-} from '@/app/lib/utils';
-
+import Loading from '@/app/components/ui/loading';
+import { formatCurrency, formatCurrencyInput } from '@/app/lib/utils';
 
 export default function EditTypeForm({
   type,
@@ -36,14 +31,7 @@ export default function EditTypeForm({
 
       {/* Mensagem Carregando */}
       {isPending ? (
-        <div className="flex flex-col items-center justify-center min-h-[200px] gap-2 text-blue-700">
-          <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-          </svg>
-          Processando...
-          <Image src='/ecg.gif' alt="logo App" width={200} height={200} />
-        </div>
+        <Loading />
       ) : (
 
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -156,6 +144,7 @@ export default function EditTypeForm({
           )}
         </Button>
       </div>
+
     </form>
   );
 }

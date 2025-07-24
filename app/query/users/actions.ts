@@ -6,6 +6,7 @@ import { sql } from '@vercel/postgres';
 import bcrypt from 'bcryptjs';
 import { auth } from '@/app/lib/auth';
 import { fetchUserById } from '@/app/query/users/data';
+import { deleteUnusedFiles } from '@/app/lib/deleteUnusedFiles';
 
 
 const FormSchema = z.object({
@@ -80,6 +81,8 @@ export async function createUser(prevState: State, formData: FormData) {
       message: 'Erro ao enviar e-mail de autenticação.',
     };
   }
+
+  deleteUnusedFiles();
 /*
   const data = await res.json();
   if (data.message && res.ok) {
@@ -142,6 +145,8 @@ export async function updateUser(
     return { message: 'Database Error: Failed to Update User.' };
   }
 
+  deleteUnusedFiles();
+
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
     throw new Error('User session is not available.');
@@ -155,11 +160,16 @@ export async function updateUser(
     revalidatePath('/dashboard');
     redirect('/dashboard');
   }
+
 }
 
 export async function deleteUser(id: string) {
   //throw new Error('Failed to Delete Invoice');
 
   await sql`DELETE FROM smarthealth.users WHERE id = ${id}`;
+  deleteUnusedFiles();
+
   revalidatePath('/manager/users');
+  deleteUnusedFiles();
+
 }
