@@ -76,7 +76,7 @@ export async function updateService(
   prevState: State,
   formData: FormData
 ) {
-
+  console.log(formData);
   const validatedFields = UpdateService.safeParse({
     iduser: formData.get('iduser'),
     idoffice: formData.get('idoffice'),

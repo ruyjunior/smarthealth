@@ -40,7 +40,7 @@ export async function createType(prevState: State, formData: FormData) {
     };
   }
   const { title, description, price, idclinic } = validatedFields.data;
-  const priceFormatted = price.replace(',', '.');
+  const priceFormatted = price.replace(/[^\d.,-]/g, '').replace(/\./g, '').replace(',', '.');
 
   try {
     await sql`
@@ -62,6 +62,8 @@ export async function updateType(
   prevState: State,
   formData: FormData
 ) {
+  //console.log(formData);
+
   const validatedFields = UpdateType.safeParse({
     title: formData.get('title'),
     description: formData.get('description'),
@@ -78,7 +80,7 @@ export async function updateType(
   }
 
   const { title, description, price } = validatedFields.data;
-  const priceFormatted = price.replace(',', '.');
+  const priceFormatted = price.replace(/[^\d.,-]/g, '').replace(/\./g, '').replace(',', '.');
 
   try {
     await sql`
