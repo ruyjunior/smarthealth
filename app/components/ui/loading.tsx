@@ -9,7 +9,7 @@ export default function Loading() {
         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
       </svg>
       Processando...
-      <Image src='/ecg.gif' alt="logo App" width={200} height={200} />
+      <Image src='/ecg.gif' alt="logo App" width={200} height={200} unoptimized />
     </div>
   );
 }

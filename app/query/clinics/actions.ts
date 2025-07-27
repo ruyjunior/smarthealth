@@ -11,8 +11,12 @@ import { deleteUnusedFiles } from '@/app/lib/deleteUnusedFiles';
 const FormSchema = z.object({
   id: z.string(),
   title: z.string(),
-  idmanager: z.string(),
+  idmanager: z.string().optional(),
   logourl: z.string().optional(),
+  siteurl: z.string().optional(),
+  cnpj: z.string().optional(),
+  address: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 const CreateClinic = FormSchema.omit({ id: true });
@@ -22,6 +26,10 @@ export type State = {
   errors?: {
     title?: string[];
     logourl?: string[] | null;
+    siteurl?: string[] | null;
+    cnpj?: string[] | null;
+    address?: string[] | null;
+    phone?: string[] | null;
   };
   message?: string | null;
 };
@@ -29,7 +37,7 @@ export type State = {
 export async function createClinic(prevState: State, formData: FormData) {
   const validatedFields = CreateClinic.safeParse({
     title: formData.get('title'),
-    idmanager: formData.get('idmanager')
+    idmanager: formData.get('idmanager'),
   });
 
   if (!validatedFields.success) {
@@ -66,6 +74,10 @@ export async function updateClinic(
   const validatedFields = UpdateClinic.safeParse({
     title: formData.get('title'),
     logourl: formData.get('logourl'),
+    siteurl: formData.get('siteurl'),
+    cnpj: formData.get('cnpj'),
+    address: formData.get('address'),
+    phone: formData.get('phone')
   });
   if (!validatedFields.success) {
     return {
@@ -74,12 +86,12 @@ export async function updateClinic(
     };
   }
 
-  const { title, logourl } = validatedFields.data;
+  const { title, logourl, siteurl, cnpj, address, phone } = validatedFields.data;
 
   try {
     await sql`
     UPDATE smarthealth.clinics
-    SET title = ${title}, logourl = ${logourl}
+    SET title = ${title}, logourl = ${logourl}, siteurl = ${siteurl}, cnpj = ${cnpj}, address = ${address}, phone = ${phone}
     WHERE id = ${id}
   `;
   } catch (error) {
@@ -87,8 +99,6 @@ export async function updateClinic(
   }
 
   deleteUnusedFiles();
-
-
   revalidatePath('/manager/clinics');
   redirect('/manager/clinics');
 }

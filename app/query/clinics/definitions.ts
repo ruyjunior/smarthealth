@@ -3,4 +3,8 @@ export type Clinic = {
   title: string;
   idmanager: string;
   logourl: string;
+  cnpj: string;
+  address: string;
+  phone: string;
+  siteurl: string;
 }

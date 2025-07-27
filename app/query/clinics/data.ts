@@ -13,7 +13,7 @@ export async function fetchClinics() {
 
   try {
     const data = await sql<Clinic>`
-      SELECT id, title, idmanager, logourl
+      SELECT id, title, idmanager, logourl, cnpj, address, phone, siteurl
       FROM smarthealth.clinics
       WHERE clinics.id = ${user.idclinic}
       ORDER BY title ASC
@@ -39,7 +39,7 @@ export async function fetchFilteredClinics(
 
   try {
     const data = await sql<Clinic>`
-      SELECT id, title, idmanager, logourl
+      SELECT id, title, idmanager, logourl, cnpj, address, phone, siteurl
       FROM smarthealth.clinics
       WHERE
         clinics.title ILIKE ${`%${query}%`} AND clinics.id = ${user.idclinic}
@@ -79,7 +79,7 @@ export async function fetchClinicsPages(query: string) {
 export async function fetchClinicById(id: string) {
   try {
     const data = await sql<Clinic>`
-      SELECT id, title, idmanager, logourl
+      SELECT id, title, idmanager, logourl, cnpj, address, phone, siteurl
       FROM smarthealth.clinics
       WHERE clinics.id = ${id} `;
 

@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       '7ggbyzj75ltavdzk.public.blob.vercel-storage.com',
       // outros domínios externos, se necessário
     ],
-  }
+  },
 };
 
 export default nextConfig;

@@ -30,6 +30,9 @@ export default async function clinicsTable({
                       <div className="border-b pb-4">
                         <h3 className="text-xl font-semibold text-gray-900">{clinic.title}</h3>
                         <p className="text-sm text-gray-600">Gerente: {manager.name}</p>
+                        <p className="text-sm text-gray-600">Telefone: {clinic.phone}</p>
+                        <p className="text-sm text-gray-600">CNPJ: {clinic.cnpj}</p>
+                        <p className="text-sm text-gray-600">Endereço: {clinic.address}</p>
                       </div>
                       <div className="flex justify-end gap-3 pt-3">
                         <Updateclinic id={clinic.id} />
@@ -46,6 +49,10 @@ export default async function clinicsTable({
                     <th className="px-2 py-2">Editar</th>
                     <th className="px-2 py-2">Título</th>
                     <th className="px-2 py-2">Gerente</th>
+                    <th className="px-2 py-2">Telefone</th>
+                    <th className="px-2 py-2">CNPJ</th>
+                    <th className="px-2 py-2">Endereço</th>
+                    <th className="px-2 py-2">Site</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -58,6 +65,10 @@ export default async function clinicsTable({
                         </td>
                         <td className="px-2 py-2 text-xs">{clinic.title}</td>
                         <td className="px-2 py-2 text-xs">{manager.name}</td>
+                        <td className="px-2 py-2 text-xs">{clinic.phone}</td>
+                        <td className="px-2 py-2 text-xs">{clinic.cnpj}</td>
+                        <td className="px-2 py-2 text-xs">{clinic.address}</td>
+                        <td className="px-2 py-2 text-xs">{clinic.siteurl}</td>
                       </tr>
                     );
                   })}
