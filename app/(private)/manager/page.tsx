@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   const menuItems = [
     { name: "Clínica", path: '/manager/clinics', icon: <HospitalIcon size={20} /> },
-    { name: "Especialidades", path: "/manager/types", icon: <FolderHeartIcon size={20} /> },
+    { name: "Produtos", path: "/manager/types", icon: <FolderHeartIcon size={20} /> },
     { name: "Consultórios", path: "/manager/offices", icon: <HeartHandshakeIcon size={20} /> },
     { name: "Fichas", path: "/manager/notetypes", icon: <ClipboardPenLine size={20} /> },
     { name: "Usuários", path: '/manager/users', icon: <UserIcon size={20} /> },

@@ -5,6 +5,8 @@ import { Type } from '@/app/query/types/definitions';
 import PdfForm from './pdf-form';
 import { User } from '@/app/query/users/definitions';
 import { Clinic } from '@/app/query/clinics/definitions';
+import { TrashIcon, PlusIcon, PrinterIcon } from '@heroicons/react/24/outline';
+
 
 export type BudgetItem = {
   type: Type;
@@ -79,10 +81,10 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
               ))}
             </select>
             <button
-              className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white shadow hover:bg-blue-700 transition-colors w-full md:w-auto"
+              className="flex h-10 items-center align-middle rounded-lg bg-blue-600 px-4 text-sm font-medium text-white shadow hover:bg-blue-700 transition-colors w-full md:w-auto"
               type="submit"
             >
-              Adicionar item
+              <PlusIcon className="h-5 w-5 mr-2 item-center" />
             </button>
           </form>
         </div>
@@ -95,10 +97,7 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
             disabled={list.length === 0}
             title={list.length === 0 ? "Adicione itens para gerar o PDF" : "Gerar orçamento em PDF"}
           >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-            Gerar PDF
+            <PrinterIcon className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -130,7 +129,7 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
                         className="ml-2 text-red-500 hover:underline"
                         onClick={() => onRemoveItem(idx)}
                       >
-                        Excluir
+                        <TrashIcon className="h-5 w-5" />
                       </button>
                     </td>
                   </tr>
@@ -159,7 +158,7 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
                 className="text-red-500 text-xs hover:underline"
                 onClick={() => onRemoveItem(idx)}
               >
-                Excluir
+                <TrashIcon className="h-5 w-5" />
               </button>
             </div>
             <div className="flex justify-between text-xs text-gray-700">

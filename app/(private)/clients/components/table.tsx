@@ -1,4 +1,7 @@
-import { UpdateClient, DeleteClient, ViewClient } from './buttons';
+import { ButtonDelete } from '@/app/components/ui/buttonDelete';
+import { UpdateClient, DeleteClient, ViewClient, CallWhatsapp } from './buttons';
+import { deleteClient } from '@/app/query/clients/actions';
+
 import {
   formatDateToLocal, formatCurrency,
   formatCPF, formatCEP, formatPhone
@@ -31,6 +34,7 @@ export default async function ClientsTable({
                         <p className="text-sm text-gray-600">Phone: {formatPhone(client.phone)}</p>
                       </div>
                       <div className="flex justify-end gap-3 pt-3">
+                        {client.phone && <CallWhatsapp phone={client.phone?.replace(/\D/g, '')} />}
                         <ViewClient id={client.id} />
                         <UpdateClient id={client.id} />
                         <DeleteClient id={client.id} />
@@ -59,18 +63,27 @@ export default async function ClientsTable({
                   {clients.map((client) => {
                     return (
                       <tr key={client.id} className="hover:bg-blue-300">
-                        <td className="py-2 px-2 flex gap-2 items-center justify-center">
-                          <ViewClient id={client.id} />
-                          <UpdateClient id={client.id} />
+                        <td className="py-2 px-2">
+                          <div className="flex gap-2 items-center justify-center">
+                            <ViewClient id={client.id} />
+                            <UpdateClient id={client.id} />
+                          </div>
                         </td>
-                        <td className="px-2 py-2 text-xs">{client.pronoun} {client.name}</td>
-                        <td className="px-2 py-2 text-xs">{formatCPF(client.cpf)}</td>
-                        <td className="px-2 py-2 text-xs">{client.birth ? formatDateToLocal(client.birth) : ''}</td>
-                        <td className="px-2 py-2 text-xs">{client.email}</td>
-                        <td className="px-2 py-2 text-xs">{formatPhone(client.phone)}</td>
-                        <td className="px-2 py-2 text-xs">{formatCEP(client.cep)}</td>
-                        <td className="py-2 px-2 flex justify-center items-center">
-                          <DeleteClient id={client.id} />
+                        <td className="px-2 py-2 text-xs align-middle">{client.pronoun} {client.name}</td>
+                        <td className="px-2 py-2 text-xs align-middle">{formatCPF(client.cpf)}</td>
+                        <td className="px-2 py-2 text-xs align-middle">{client.birth ? formatDateToLocal(client.birth) : ''}</td>
+                        <td className="px-2 py-2 text-xs align-middle">{client.email}</td>
+                        <td className="py-2 px-2 text-xs">
+                          <div className="flex gap-1 items-center justify-center">
+                            {formatPhone(client.phone)}
+                            {client.phone && <CallWhatsapp phone={client.phone?.replace(/\D/g, '')} />}
+                          </div>
+                        </td>
+                        <td className="px-2 py-2 text-xs align-middle">{formatCEP(client.cep)}</td>
+                        <td className="py-2 px-2">
+                          <div className="flex justify-center items-center">
+                            <DeleteClient id={client.id} />
+                          </div>
                         </td>
                       </tr>
                     )
@@ -81,6 +94,6 @@ export default async function ClientsTable({
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
