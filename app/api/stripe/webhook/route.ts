@@ -81,21 +81,13 @@ export async function POST(req: NextRequest) {
 
         // Update database
         await sql`
-          INSERT INTO smarthealth.users (email, name, status, payment_intent, amount_paid, plan_expires_at)
-          VALUES (
-            ${customerEmail},
-            ${session.customer_details.name},
-            'paid',
-            ${paymentIntentId},
-            ${session.amount_total},
-            ${expiresAt.toISOString()}
+        INSERT INTO smarthealth.users (email, name, role)
+        VALUES (
+        ${customerEmail}, 
+        ${session.customer_details.name}, 
+        'Gerente'
           )
-          ON CONFLICT(email) DO UPDATE
-          SET
-            status = 'paid',
-            payment_intent = ${paymentIntentId},
-            amount_paid = ${session.amount_total},
-            plan_expires_at = ${expiresAt.toISOString()}
+          ON CONFLICT (email) DO NOTHING
         `;
 
         // Check and create clinic if needed
@@ -126,6 +118,16 @@ export async function POST(req: NextRequest) {
             SET  idclinic = ${clinicCheck.rows[0].id}
             WHERE email = ${customerEmail}
          `;
+          await sql`
+            INSERT INTO smarthealth.credits (email, amount, idclinic, expires)
+            VALUES ( 
+            ${customerEmail}, 
+            ${session.amount_total}, 
+            ${clinicCheck.rows[0].id}, 
+            ${expiresAt.toISOString()}
+            )
+          `;
+
         } else {
           console.error("❌ Nenhum usuário foi criado/atualizado");
           return new Response("User not found or not created", { status: 404 });
