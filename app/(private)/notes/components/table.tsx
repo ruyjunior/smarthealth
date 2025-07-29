@@ -6,7 +6,6 @@ import { fetchUsers } from '@/app/query/users/data';
 import { fetchNoteTypes } from '@/app/query/notetypes/data';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
-
 export default async function NotesTable({
   query,
   currentPage,
@@ -14,7 +13,6 @@ export default async function NotesTable({
   query: string;
   currentPage: number | undefined | null;
 }) {
-
   const notes = await fetchFilteredNotes(query, currentPage);
   const clients = await fetchClients();
   const users = await fetchUsers();

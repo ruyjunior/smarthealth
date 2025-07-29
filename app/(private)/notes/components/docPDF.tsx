@@ -41,7 +41,10 @@ export const DocPDF = ({ note, type, user, client, clinic }:
           <Image src={clinic.logourl} style={styles.logo} />
           <View style={styles.headerTextContainer}>
             <Text style={styles.title}>{clinic.title}</Text>
-            <Text style={styles.subtitle}>Endereço aqui</Text>
+            <Text style={styles.subtitle}>{clinic?.siteurl}</Text>
+            <Text style={styles.subtitle}>{clinic?.address}</Text>
+            <Text style={styles.subtitle}>Telefone: {clinic?.phone}</Text>
+            <Text style={styles.subtitle}>CNPJ: {clinic?.cnpj}</Text>
             <Text style={styles.reportDate}>Emitido em: {formatDateToLocal(note.date)}</Text>
           </View>
           {/*<Image src={logo.src} style={styles.logoApp} /> */}
@@ -52,12 +55,6 @@ export const DocPDF = ({ note, type, user, client, clinic }:
 
         {/* Profissional e Paciente */}
         <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-          {/* Profissional */}
-          <View style={{ flex: 1, paddingRight: 8 }}>
-            <Text style={styles.sectionTitle}>Profissional</Text>
-            <Text style={styles.field}><Text style={styles.label}></Text>{user.pronoun} {user.name}</Text>
-            <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
-          </View>
           {/* Paciente */}
           <View style={{ flex: 1, paddingLeft: 8 }}>
             <Text style={styles.sectionTitle}>Paciente</Text>
@@ -130,27 +127,40 @@ export const DocPDF = ({ note, type, user, client, clinic }:
           <Text style={styles.tableCell}>Nenhum campo preenchido.</Text>
         )}
 
-        {/* Footer */}
-        <View style={styles.footer}
-          fixed
-        >
-          {/* Esquerda */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Image src={logo.src} style={styles.logoApp} />
-            <View style={{ marginLeft: 12 }}>
-              <Text style={styles.footerText}>Smart Health - Sua Clínica Online</Text>
-              <Text style={styles.footerText}>www.smarthealt.app.br</Text>
-            </View>
-          </View>
-          {/* Direita */}
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ marginRight: 12, textAlign: 'right' }}>
-              <Text style={styles.footerTextDev}>Desenvolvido por Autoric Automation</Text>
-              <Text style={styles.footerTextDev}>www.autoric.com.br</Text>
-            </View>
-            <Image src="https://www.autoric.com.br/images/logo.png" style={styles.logoDev} />
+        {/* Linha divisória */}
+        <View style={{ borderBottomWidth: 2, borderBottomColor: '#0077b6', marginBottom: 12, marginTop: 12 }} />
+
+        {/* Profissional */}
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1, paddingRight: 8 , marginTop: 12 }}>
+            <Text style={styles.sectionTitle}>Profissional</Text>
+            <Text style={styles.field}><Text style={styles.label}></Text>{user.pronoun} {user.name}</Text>
+            <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
           </View>
         </View>
+
+
+          {/* Footer */}
+          <View style={styles.footer}
+            fixed
+          >
+            {/* Esquerda */}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image src={logo.src} style={styles.logoApp} />
+              <View style={{ marginLeft: 12 }}>
+                <Text style={styles.footerText}>Smart Health - Sua Clínica Online</Text>
+                <Text style={styles.footerText}>www.smarthealt.app.br</Text>
+              </View>
+            </View>
+            {/* Direita */}
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ marginRight: 12, textAlign: 'right' }}>
+                <Text style={styles.footerTextDev}>Desenvolvido por Autoric Automation</Text>
+                <Text style={styles.footerTextDev}>www.autoric.com.br</Text>
+              </View>
+              <Image src="https://www.autoric.com.br/images/logo.png" style={styles.logoDev} />
+            </View>
+          </View>
       </Page>
     </Document>
   );

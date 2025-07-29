@@ -35,21 +35,9 @@ export const DocPDF = ({ list, clinic, user }: {
         {/* Linha divisória */}
         <View style={{ borderBottomWidth: 2, borderBottomColor: '#0077b6', marginBottom: 12 }} />
 
-        {/* Profissional */}
-        <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-          {/* Profissional */}
-          <View style={{ flex: 1, paddingRight: 8 }}>
-            <Text style={styles.sectionTitle}>Profissional</Text>
-            <Text style={styles.field}><Text style={styles.label}></Text>{user.pronoun} {user.name}</Text>
-            <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
-          </View>
-        </View>
-
-        {/* Linha divisória */}
-        <View style={{ borderBottomWidth: 1, borderBottomColor: '#bbb', marginBottom: 12 }} />
         {/* Total */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 }}>
-          <Text style={styles.sectionTitle}>Orçamento</Text>
+          <Text style={styles.sectionTitle}>Lista</Text>
           <Text style={styles.sectionTitle}>Total</Text>
           <Text style={styles.field}>{formatCurrency(list.reduce((acc, item) => acc + item.total, 0))}</Text>
         </View>
@@ -91,6 +79,19 @@ export const DocPDF = ({ list, clinic, user }: {
               )}
             </View>
           ))}
+
+          {/* Linha divisória */}
+          <View style={{ borderBottomWidth: 1, borderBottomColor: '#bbb', marginBottom: 20 }} />
+
+          {/* Profissional */}
+          <View style={{ flexDirection: 'row', marginBottom: 12, marginTop: 12, alignContent: 'center', alignItems: 'center' }}>
+            <View style={{ flex: 1, paddingRight: 8 }}>
+              <Text style={styles.sectionTitle}>Profissional</Text>
+              <Text style={styles.field}><Text style={styles.label}></Text>{user.pronoun} {user.name}</Text>
+              <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
+            </View>
+          </View>
+
         </View>
         {/* Footer */}
         <View style={styles.footer}

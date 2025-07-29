@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useActionState, useTransition } from 'react';
 import Link from 'next/link';
-import { CalendarDateRangeIcon, ClipboardDocumentListIcon, QuestionMarkCircleIcon
+import {
+  CalendarDateRangeIcon, ClipboardDocumentListIcon, QuestionMarkCircleIcon
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
 import { createNote, State } from '@/app/query/notes/actions';
@@ -114,9 +115,7 @@ export default function Form({ client, user, types }: { client: Client; user: Us
           {type && (
             <>
               <div className="mb-4">
-                <label className="mb-2 block text-sm font-medium">
-                  Campos
-                </label>
+                {type.fieldslabels && type.fieldslabels.length > 0 && <p className="mb-2 block text-sm font-medium">Campos</p>}
                 {type.fieldslabels.map((label, idx) => (
                   <div key={idx} className="relative mt-2 rounded-md">
                     <p className='text-xs'>{label}</p>
@@ -131,9 +130,7 @@ export default function Form({ client, user, types }: { client: Client; user: Us
                 ))}
               </div>
               <div className="mb-4">
-                <label className="mb-2 block text-sm font-medium">
-                  Caixas de seleção
-                </label>
+                {type.checkslabels && type.checkslabels.length > 0 && <p className="mb-2 block text-sm font-medium">Caixas de seleção</p>}
                 {type.checkslabels.map((label, idx) => (
                   <div key={idx} className="relative mt-2 rounded-md flex items-center gap-2">
                     <input
