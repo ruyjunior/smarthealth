@@ -67,10 +67,11 @@ export default async function Page(props: {
       <div className="mt-5 flex w-full justify-center">
         {<Pagination totalPages={totalPages} />}
       </div>
-
+      {/*
       <div className="mt-5 flex w-full justify-center">
         <CalendarView services={ServicesData} />
       </div>
+      */}
 
     </div>
   );
