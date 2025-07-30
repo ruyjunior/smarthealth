@@ -65,21 +65,17 @@ export async function POST(req: NextRequest) {
 
         // Process custom field
         const nomeClinica = session.custom_fields?.find(
-          (field: any) => field.key === "nomefantasiadaclnica"
+          (field: any) => field.key === "nomefantasiadaclinica"
         )?.text?.value ?? "Clínica Sem Nome";
 
         // Calculate expiration date
-        const expiresAt = new Date(session.expires_at * 1000); // multiplica por 1000 para converter de segundos para milissegundos
+        const expiresAt = new Date(session.expires_at * 1000);
 
         // Update database
         await sql`
         INSERT INTO smarthealth.users (email, name, role)
-        VALUES (
-        ${customerEmail}, 
-        ${session.customer_details.name}, 
-        'Gerente'
-          )
-          ON CONFLICT (email) DO NOTHING
+        VALUES ( ${customerEmail}, ${session.customer_details.name}, 'Gerente')
+        ON CONFLICT (email) DO NOTHING
         `;
 
         // Check and create clinic if needed
@@ -99,19 +95,7 @@ export async function POST(req: NextRequest) {
             INSERT INTO smarthealth.clinics (title, idmanager)
             VALUES (${nomeClinica}, ${userId})
           `;
-            console.log(`✅ Clínica criada para ${nomeClinica}`);
-
-          } else {
-            console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
-          }
-
-          await sql`
-            UPDATE smarthealth.users
-            SET  idclinic = ${clinicCheck.rows[0].id}
-            WHERE email = ${customerEmail}
-         `;
-
-          await sql`
+            await sql`
             INSERT INTO smarthealth.credits (email, amount, idclinic, expires)
             VALUES ( 
             ${customerEmail}, 
@@ -120,6 +104,26 @@ export async function POST(req: NextRequest) {
             ${expiresAt.toISOString()}
             )
           `;
+            console.log(`✅ Clínica criada para ${nomeClinica}`);
+            console.log(`✅ Créditos adicionados para ${customerEmail}`);
+          } else {
+            await sql`
+            INSERT INTO smarthealth.credits ( amount, idclinic, expires)
+            VALUES ( 
+            ${session.amount_total}, 
+            ${clinicCheck.rows[0].id}, 
+            ${expiresAt.toISOString()}
+            )
+          `;
+            console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
+            console.log(`🔎 Crédito adicionado`);
+          }
+
+          await sql`
+            UPDATE smarthealth.users
+            SET  idclinic = ${clinicCheck.rows[0].id}
+            WHERE email = ${customerEmail}
+         `;
 
         } else {
           console.error("❌ Nenhum usuário foi criado/atualizado");

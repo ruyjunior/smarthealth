@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import { lusitana } from '@/app/components/ui/fonts';
-import { UserIcon, HospitalIcon, HeartHandshakeIcon, FolderHeartIcon, ClipboardPenLine, CircleDollarSign, HandCoinsIcon } from "lucide-react";
+import {
+  UserIcon, HospitalIcon, HeartHandshakeIcon, FolderHeartIcon,
+  ClipboardPenLine, CircleDollarSign, HandCoinsIcon, AtSignIcon
+} from "lucide-react";
 import Link from "next/link";
 
 
@@ -17,6 +20,7 @@ export default async function Page() {
     { name: "Usuários", path: '/manager/users', icon: <UserIcon size={20} /> },
     { name: "Pagamentos", path: '/manager/payments', icon: <CircleDollarSign size={20} /> },
     { name: "Ganhos", path: '/manager/gains', icon: <HandCoinsIcon size={20} /> },
+    { name: "Conta", path: '/manager/account', icon: <AtSignIcon size={20} /> },
   ];
 
 
