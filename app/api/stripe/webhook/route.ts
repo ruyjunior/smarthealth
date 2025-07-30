@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
     case "checkout.session.completed":
       try {
         const session = event.data.object as Stripe.Checkout.Session;
+        console.log("Checkout session completed:", session);
 
         // Validate required fields
         if (!session.customer_details?.email) {
@@ -69,7 +70,8 @@ export async function POST(req: NextRequest) {
 
         // Calculate expiration date
         const expiresAt = new Date();
-        const metadata = session.metadata || {};
+        const metadata = session.metadata || {}; //Necessário cadastrar plan_type no Stripe
+        console.log("Metadata:", metadata);
 
         if (metadata.plan_type === "mensal") {
           expiresAt.setMonth(expiresAt.getMonth() + 1);
@@ -78,6 +80,7 @@ export async function POST(req: NextRequest) {
         } else if (metadata.plan_type === "trial") {
           expiresAt.setDate(expiresAt.getDate() + 7);
         }
+        console.log("Plan Type:", metadata.plan_type);
 
         // Update database
         await sql`
@@ -118,6 +121,7 @@ export async function POST(req: NextRequest) {
             SET  idclinic = ${clinicCheck.rows[0].id}
             WHERE email = ${customerEmail}
          `;
+
           await sql`
             INSERT INTO smarthealth.credits (email, amount, idclinic, expires)
             VALUES ( 
