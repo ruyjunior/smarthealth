@@ -69,18 +69,7 @@ export async function POST(req: NextRequest) {
         )?.text?.value ?? "Clínica Sem Nome";
 
         // Calculate expiration date
-        const expiresAt = new Date();
-        const metadata = session.metadata || {}; //Necessário cadastrar plan_type no Stripe
-        console.log("Metadata:", metadata);
-
-        if (metadata.plan_type === "mensal") {
-          expiresAt.setMonth(expiresAt.getMonth() + 1);
-        } else if (metadata.plan_type === "anual") {
-          expiresAt.setFullYear(expiresAt.getFullYear() + 1);
-        } else if (metadata.plan_type === "trial") {
-          expiresAt.setDate(expiresAt.getDate() + 7);
-        }
-        console.log("Plan Type:", metadata.plan_type);
+        const expiresAt = new Date(session.expires_at * 1000); // multiplica por 1000 para converter de segundos para milissegundos
 
         // Update database
         await sql`
