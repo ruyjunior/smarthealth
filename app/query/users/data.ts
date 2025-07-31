@@ -41,6 +41,7 @@ export async function fetchFilteredUsers(
       ORDER BY name ASC
     `;
     const users = data.rows;
+    //console.log(users);
     return users;
   } catch (err) {
     console.error('Database Error:', err);

@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { TagIcon, AtSymbolIcon, KeyIcon, IdentificationIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
 import { createUser, State } from '@/app/query/users/actions';
-import  Loading  from '@/app/components/ui/loading';
+import Loading from '@/app/components/ui/loading';
 
-export default function Form({ id } : { id: string | undefined }) {
+export default function Form({ id }: { id: string | undefined }) {
 
   const initialState: State = { message: '', errors: {} };
-  
+
   const [state, formAction] = useActionState(createUser, initialState);
 
   const [isPending, startTransition] = useTransition();
@@ -113,35 +113,6 @@ export default function Form({ id } : { id: string | undefined }) {
             </div>
           </div>
 
-          {/*
-        {/* PASSWORD 
-        <div className="mb-4">
-          <label htmlFor="password" className="mb-2 block text-sm font-medium">
-            Senha
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Insira uma senha"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="password-error"
-              />
-              <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-            <div id="password-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.password &&
-                state.errors.password.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div>
-        </div>
-*/}
           {/* Categoria */}
           <div className="mb-4">
             <label htmlFor="category" className="mb-2 block text-sm font-medium">
@@ -175,7 +146,6 @@ export default function Form({ id } : { id: string | undefined }) {
 
         </div>
       )}
-
 
       {/* Botões de Ação */}
       <div className="mt-6 flex justify-end gap-4">

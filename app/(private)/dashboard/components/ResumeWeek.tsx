@@ -6,7 +6,7 @@ import { User } from '@/app/query/users/definitions';
 import { Client } from '@/app/query/clients/definitions';
 import { Type } from '@/app/query/types/definitions';
 import { Office } from '@/app/query/offices/definitions';
-import { formatCurrencyInput, formatCurrencyOutput, formatCurrency } from '@/app/lib/utils';
+import { formatCurrency } from '@/app/lib/utils';
 
 export default function ResumeWeek(
     { services, users, clients, types, offices }:

@@ -7,7 +7,7 @@ import { User } from '@/app/query/users/definitions';
 import { Client } from '@/app/query/clients/definitions';
 import { Type } from '@/app/query/types/definitions';
 import { Office } from '@/app/query/offices/definitions';
-import { formatDateToLocal, formatCurrency, formatCurrencyOutput } from '@/app/lib/utils';
+import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 ChartJS.register(

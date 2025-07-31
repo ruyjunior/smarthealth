@@ -19,16 +19,6 @@ export const formatCurrencyInput = (value: string) => {
   return formattedValue;
 };
 
-export const formatCurrencyOutput = (value: string) => {
-  // Remove any non-digit characters
-  value = value.replace(/\D/g, '');
-
-  // Format the value as currency
-  const formattedValue = (parseInt(value) / 100).toFixed(2).replace('.', ',');
-
-  return formattedValue;
-};
-
 export async function CurrentClinicId() {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
@@ -58,6 +48,7 @@ export function timeToDecimal(time: string | null | undefined) {
 }
 
 export const formatDateToLocal = (
+  // Formata Data para dia/mes/ano
   dateStr: string | null | undefined,
   locale: string = 'pt-BR',
 ) => {
