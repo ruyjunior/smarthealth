@@ -2,6 +2,9 @@ import { UpdateUser, DeleteUser } from './buttons';
 import { fetchFilteredUsers } from '@/app/query/users/data';
 import Image from 'next/image';
 import logo from '@/public/images/logo.png';
+import { fetchCreditByEmail, fetchCredits } from '@/app/query/credit/data';
+import { format } from 'path';
+import { formatDateToLocal } from '@/app/lib/utils';
 
 
 export default async function UsersTable({
@@ -12,6 +15,7 @@ export default async function UsersTable({
   currentPage: number;
 }) {
   const users = await fetchFilteredUsers(query, currentPage);
+  const credits = await fetchCredits();
 
   return (
     <div className="w-full">
@@ -29,6 +33,8 @@ export default async function UsersTable({
                     );
                     managerName = manager?.name || "—";
                   }
+                  const credit = credits.find((credit) => credit.email === user.email);
+
                   return (
                     <div key={user.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
                       <div className="flex border-b pb-4 items-center">
@@ -38,10 +44,11 @@ export default async function UsersTable({
                           <p className="text-sm text-gray-600">Cargo: {user.role}</p>
                           <p className="text-sm text-gray-600">Categoria: {user.category}</p>
                           <p className="text-sm text-gray-600">Gerente: {managerName}</p>
+                          <p className="text-sm text-gray-600">Espira: {formatDateToLocal(credit?.expires)}</p>
                         </div>
                         <div className="flex-shrink-0 ml-1">
                           <Image
-                            src={user.avatarurl ? user.avatarurl : logo.src }
+                            src={user.avatarurl ? user.avatarurl : logo.src}
                             alt="Avatar"
                             width={64}
                             height={64}
@@ -72,7 +79,7 @@ export default async function UsersTable({
                     <th className="px-2 py-2">Cargo</th>
                     <th className="px-2 py-2">Categoria</th>
                     <th className="px-2 py-2">Gerente</th>
-                    <th className="px-2 py-2">Deletar</th>
+                    <th className="px-2 py-2">Expira</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -84,11 +91,13 @@ export default async function UsersTable({
                       );
                       managerName = manager?.name || "—";
                     }
+                    const credit = credits.find((credit) => credit.email === user.email);
+
                     return (
                       <tr key={user.id} className="hover:bg-blue-300">
                         <td className="py-2 px-2 text-xs gap-2 items-center justify-center">
                           <Image
-                            src={user.avatarurl ? user.avatarurl : logo.src }
+                            src={user.avatarurl ? user.avatarurl : logo.src}
                             alt="Avatar"
                             width={200}
                             height={200}
@@ -103,11 +112,13 @@ export default async function UsersTable({
                         <td className="px-2 py-2 text-xs">{user.role}</td>
                         <td className="px-2 py-2 text-xs">{user.category}</td>
                         <td className="px-2 py-2 text-xs">{managerName}</td>
+                        <td className="px-2 py-2 text-xs">{formatDateToLocal(credit?.expires)}</td>
+                        {/*}
                         <td className="py-2 px-2 text-xs gap-2 items-center justify-center">
                           {user.role !== 'Gerente' && (
                             <DeleteUser id={user.id} />
                           )}
-                        </td>
+                        </td> */}
                       </tr>
                     )
                   })}

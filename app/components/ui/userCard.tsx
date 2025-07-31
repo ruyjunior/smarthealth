@@ -1,5 +1,6 @@
 import { auth } from '@/app/lib/auth';
 import { fetchUserById } from '@/app/query/users/data';
+import { fetchCredits } from '@/app/query/credit/data';
 import Image from 'next/image';
 import logo from '@/public/images/logo.png';
 import Link from "next/link";
@@ -9,6 +10,8 @@ export default async function UserCard() {
   if (!session) return <p>Nenhuma sessão</p>;
   if (!session.user) return <p>Nenhum usuário logado.</p>;
   const user = await fetchUserById(session.user.id);
+  const credit = (await fetchCredits()).filter((credit) => credit.email === session.user.email);
+  const expires = new Date(credit[0].expires);
 
   return (
     <Link href="/user" className="block group">
@@ -22,6 +25,7 @@ export default async function UserCard() {
           className="h-10 w-10 md:h-20 md:w-20 rounded-full"
         />
         <span className="text-xs text-blue-100">{session.user.role}</span>
+        <span className="text-xs text-blue-100">Usuário ativo até {expires.toLocaleDateString('pt-BR')}</span> 
       </div>
     </Link>);
 }

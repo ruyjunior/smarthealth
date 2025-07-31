@@ -3,10 +3,12 @@ import { formatDateBr, formatDateToLocal } from '@/app/lib/utils';
 
 export default async function Table({ credits }: { credits: Credit[] }) {
   const numberOfcreditsActive = credits.filter((credit) => credit.expires.toString() > new Date().toISOString()).length;
-
+  const numberOfcreditsUsed = credits.filter((credit) => credit.email ).length;
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-4">Creditos Ativos: {numberOfcreditsActive}</h2>
+      <h1 className="text-2xl font-bold mb-4">Creditos </h1>
+      <h2 className="text-2sm font-bold mb-4">Ativos: {numberOfcreditsActive}</h2>
+      <h2 className="text-2sm font-bold mb-4">Usados: {numberOfcreditsUsed}</h2>
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -17,9 +19,10 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                   return (
                     <div key={credit.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
                       <div className="border-b pb-4">
-                        <h3 className="text-xl font-semibold text-gray-900">{(credit.date.toString())}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{(formatDateToLocal(credit.date))}</h3>
+                        <p className="text-sm text-gray-600">{credit.email ? 'Usuário: ' + credit.email : 'Disponível'}</p>
                         <p className="text-sm text-gray-600">Valor: {credit.amount}</p>
-                        <p className="text-sm text-gray-600">Expira em: {(credit.expires.toString())}</p>
+                        <p className="text-sm text-gray-600">Expira em: {formatDateToLocal(credit.expires)}</p>
                       </div>
                     </div>
                   );
