@@ -12,7 +12,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
   const CreditComponent = () => {
     return (
       <div className="w-full bg-white rounded-lg shadow-md p-2">
-        <h1 className="text-lg font-bold mb-1 text-gray-900">Créditos</h1>
+        <h1 className="text-lg font-bold mb-1 p-2 text-gray-900">Créditos</h1>
         <div className="flex flex-wrap justify-center mb-2">
           <div className="w-full md:w-1/2 xl:w-1/3 p-1 flex items-center">
             <CreditCard className="w-4 h-4 mr-2 text-gray-600" />
@@ -51,6 +51,10 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                         <p className="text-sm text-gray-600">Status: {new Date(credit.expires).getTime() > todayNumber ? 'Ativo' : 'Vencido'}</p>
                         <p className="text-sm text-gray-600">Valor: {credit.amount}</p>
                         <p className="text-sm text-gray-600">Compra: {(new Date(credit?.date).toLocaleDateString('pt-BR'))}</p>
+                        <div className="flex justify-end gap-3 pt-3">
+                          {!credit.email ? <Update id={credit.id} /> : 'Em uso'}
+                        </div>
+
                       </div>
                     </div>
                   );
@@ -58,6 +62,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
               </div>
 
               {/* Desktop View */}
+              <h1 className="text-lg font-bold m-1 p-2 text-gray-900 hidden md:block">Detalhes dos Créditos</h1>
               <table className="hidden min-w-full text-gray-900 md:table">
                 <thead className="bg-green-100 text-left text-xs font-medium">
                   <tr>
@@ -74,7 +79,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                     const status = new Date(credit.expires).getTime() > todayNumber ? 'Ativo' : 'Vencido';
                     return (
                       <tr key={credit.id} className="hover:bg-gray-300">
-                        <td className="px-2 py-2 text-xs">
+                        <td className="py-2 px-2 text-xs flex gap-2">
                           {!credit.email ? <Update id={credit.id} /> : 'Em uso'}
                         </td>
                         <td className="px-2 py-2 text-xs">{status}</td>

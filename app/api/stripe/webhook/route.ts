@@ -69,7 +69,13 @@ export async function POST(req: NextRequest) {
         )?.text?.value ?? "Clínica Sem Nome";
 
         // Calculate expiration date
-        const expiresAt = new Date(session.expires_at * 1000);
+        const expiresAt = new Date();
+        if (session.metadata?.plan_type === "mensal") {
+          expiresAt.setMonth(expiresAt.getMonth() + 1);
+        } else if (session.metadata?.plan_type === "anual") {
+          expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+        }
+        console.log('expiresAt', expiresAt);
 
         // Update database
         await sql`
