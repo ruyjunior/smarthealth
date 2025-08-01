@@ -101,10 +101,16 @@ export async function POST(req: NextRequest) {
             INSERT INTO smarthealth.clinics (title, idmanager)
             VALUES (${nomeClinica}, ${userId})
           `;
-            const amountDB = 0;
-            if (session.amount_total !== null) {
-              const amountDB = session.amount_total / 100;
-            };
+            console.log('Total pago: ' + session.amount_total);
+            let amount = session.amount_total;
+
+            if (amount !== null) {
+              amount = amount / 100;
+            }
+
+            const amountDB = amount !== null ? parseFloat(amount.toFixed(2)) : 0;
+            console.log('amountDB: ' + amountDB);
+            
             await sql`
             INSERT INTO smarthealth.credits (email, amount, idclinic, expires)
             VALUES ( 
@@ -113,9 +119,18 @@ export async function POST(req: NextRequest) {
             ${clinicCheck.rows[0].id}, 
             ${expiresAt.toISOString()}
             )
+            };
+            await sql`
+            INSERT INTO smarthealth.credits(email, amount, idclinic, expires)
+            VALUES(
+              ${ customerEmail },
+              ${ amountDB },
+              ${ clinicCheck.rows[0].id },
+              ${ expiresAt.toISOString() }
+            )
           `;
-            console.log(`✅ Clínica criada para ${nomeClinica}`);
-            console.log(`✅ Créditos adicionados para ${customerEmail}`);
+            console.log(`✅ Clínica criada para ${ nomeClinica } `);
+            console.log(`✅ Créditos adicionados para ${ customerEmail } `);
           } else {
 
             const amountDB = 0;
@@ -124,22 +139,22 @@ export async function POST(req: NextRequest) {
             };
 
             await sql`
-            INSERT INTO smarthealth.credits ( amount, idclinic, expires)
-            VALUES ( 
-            ${amountDB}, 
-            ${clinicCheck.rows[0].id}, 
-            ${expiresAt.toISOString()}
+            INSERT INTO smarthealth.credits(amount, idclinic, expires)
+            VALUES(
+              ${ amountDB },
+              ${ clinicCheck.rows[0].id },
+              ${ expiresAt.toISOString() }
             )
           `;
-            console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);
+            console.log(`🔎 Clínica já existe para o usuário ${ customerEmail } `);
             console.log(`🔎 Crédito adicionado`);
           }
 
           await sql`
             UPDATE smarthealth.users
-            SET  idclinic = ${clinicCheck.rows[0].id}
-            WHERE email = ${customerEmail}
-         `;
+            SET  idclinic = ${ clinicCheck.rows[0].id }
+            WHERE email = ${ customerEmail }
+            `;
 
         } else {
           console.error("❌ Nenhum usuário foi criado/atualizado");
@@ -156,7 +171,7 @@ export async function POST(req: NextRequest) {
       break;
 
     default:
-      console.log(`Unhandled event type: ${event.type}`);
+      console.log(`Unhandled event type: ${ event.type } `);
   }
 
   return new Response(JSON.stringify({ received: true }), { status: 200 });
