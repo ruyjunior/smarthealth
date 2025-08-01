@@ -101,11 +101,15 @@ export async function POST(req: NextRequest) {
             INSERT INTO smarthealth.clinics (title, idmanager)
             VALUES (${nomeClinica}, ${userId})
           `;
+            const amountDB = 0;
+            if (session.amount_total) {
+              const amountDB = session.amount_total / 100;
+            };
             await sql`
             INSERT INTO smarthealth.credits (email, amount, idclinic, expires)
             VALUES ( 
             ${customerEmail}, 
-            ${session.amount_total}, 
+            ${amountDB}, 
             ${clinicCheck.rows[0].id}, 
             ${expiresAt.toISOString()}
             )
