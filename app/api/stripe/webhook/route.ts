@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
             VALUES (${nomeClinica}, ${userId})
           `;
             const amountDB = 0;
-            if (session.amount_total) {
+            if (session.amount_total !== null) {
               const amountDB = session.amount_total / 100;
             };
             await sql`
@@ -117,9 +117,9 @@ export async function POST(req: NextRequest) {
             console.log(`✅ Clínica criada para ${nomeClinica}`);
             console.log(`✅ Créditos adicionados para ${customerEmail}`);
           } else {
-            
+
             const amountDB = 0;
-            if (session.amount_total) {
+            if (session.amount_total !== null) {
               const amountDB = session.amount_total / 100;
             };
 
