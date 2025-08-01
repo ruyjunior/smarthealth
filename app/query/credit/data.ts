@@ -13,7 +13,7 @@ export async function fetchCredits() {
 
   try {
     const data = await sql<Credit>`
-      SELECT id, idclinic, date, expires, email, amount
+      SELECT id, idclinic, date, expires, email, amount, type
       FROM smarthealth.credits
       WHERE idclinic = ${user.idclinic}
       ORDER BY expires DESC
@@ -35,7 +35,7 @@ export async function fetchCreditById(id: string) {
 
   try {
     const data = await sql<Credit>`
-      SELECT id, idclinic, date, expires, email, amount
+      SELECT id, idclinic, date, expires, email, amount, type
       FROM smarthealth.credits
       WHERE id = ${id} AND idclinic = ${user.idclinic}
     `;
@@ -56,7 +56,7 @@ export async function fetchCreditByEmail(email: string) {
 
   try {
     const data = await sql<Credit>`
-      SELECT id, idclinic, date, expires, email, amount
+      SELECT id, idclinic, date, expires, email, amount, type
       FROM smarthealth.credits
       WHERE email = ${email} AND idclinic = ${user.idclinic}
       ORDER BY date DESC

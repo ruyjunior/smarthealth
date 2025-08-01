@@ -5,4 +5,5 @@ export type Credit = {
   expires: string;
   email: string;
   amount: string;
+  type: string;
 }

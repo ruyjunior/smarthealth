@@ -69,7 +69,7 @@ export const DocPDF = ({ list, clinic, user }: {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={[styles.field, { flex: 2 }]}>{item.type.title}</Text>
                 <Text style={[styles.field, { flex: 1, textAlign: 'center' }]}>{item.quantity}</Text>
-                <Text style={[styles.field, { flex: 1, textAlign: 'center' }]}>{formatCurrency(item.type.price)}</Text>
+                <Text style={[styles.field, { flex: 1, textAlign: 'center' }]}>{formatCurrency(Number(item.type.price))}</Text>
                 <Text style={[styles.field, { flex: 1, textAlign: 'center', fontWeight: 'bold' }]}>{formatCurrency(item.total)}</Text>
               </View>
               {item.type.description && (

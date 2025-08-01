@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { update, State } from '@/app/query/credit/actions';
 import Loading from '@/app/components/ui/loading';
-import { UserGroupIcon  } from '@heroicons/react/24/outline';
+import { UserGroupIcon } from '@heroicons/react/24/outline';
 
 
 export default function EditForm({ credit, users }: { credit: Credit, users: User[] }) {
@@ -43,6 +43,8 @@ export default function EditForm({ credit, users }: { credit: Credit, users: Use
                 name="email"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="email-error"
+                defaultValue=""
+                required
               >
                 <option value="" disabled>
                   Selecione um Usuário para aplicar crédito

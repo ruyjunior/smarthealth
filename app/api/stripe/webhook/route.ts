@@ -110,12 +110,13 @@ export async function POST(req: NextRequest) {
             const amountDB = amount !== null ? parseFloat(amount.toFixed(2)) : 0;
 
             await sql`
-            INSERT INTO smarthealth.credits (email, amount, idclinic, expires)
+            INSERT INTO smarthealth.credits (email, amount, idclinic, expires, type)
             VALUES ( 
             ${customerEmail}, 
             ${amountDB}, 
             ${clinicCheck.rows[0].id}, 
-            ${expiresAt.toISOString()}
+            ${expiresAt.toISOString()},
+            ${session.metadata?.plan_type}
             )
           `;
             console.log(`✅ Clínica criada para ${nomeClinica}`);
@@ -131,11 +132,12 @@ export async function POST(req: NextRequest) {
             const amountDB = amount !== null ? parseFloat(amount.toFixed(2)) : 0;
 
             await sql`
-            INSERT INTO smarthealth.credits ( amount, idclinic, expires)
+            INSERT INTO smarthealth.credits ( amount, idclinic, expires, type)
             VALUES ( 
             ${amountDB}, 
             ${clinicCheck.rows[0].id}, 
-            ${expiresAt.toISOString()}
+            ${expiresAt.toISOString()},
+            ${session.metadata?.plan_type}
             )
           `;
             console.log(`🔎 Clínica já existe para o usuário ${customerEmail}`);

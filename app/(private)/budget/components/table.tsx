@@ -121,7 +121,7 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
                   <tr key={idx} className="border-b border-gray-200">
                     <td className="px-2 py-4">{item.type.title}</td>
                     <td className="px-2 py-4">{item.quantity}</td>
-                    <td className="px-2 py-4">{formatCurrency(item.type.price)}</td>
+                    <td className="px-2 py-4">{formatCurrency(Number(item.type.price))}</td>
                     <td className="px-2 py-4">{formatCurrency(item.total)}</td>
                     <td className="px-2 py-4">
                       <button

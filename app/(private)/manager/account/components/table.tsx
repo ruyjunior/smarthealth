@@ -1,6 +1,7 @@
 import { Credit } from '@/app/query/credit/definitions';
 import { Update } from './buttons';
 import { CreditCard, Check, X } from 'lucide-react';
+import { formatCurrency } from '@/app/lib/utils';
 
 export default async function Table({ credits }: { credits: Credit[] }) {
   const todayNumber = new Date().getTime();
@@ -49,7 +50,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                         <h3 className="text-xl font-semibold text-gray-900">Expira: {(new Date(credit?.expires).toLocaleDateString('pt-BR'))}</h3>
                         <p className="text-sm text-gray-600">{credit.email ? 'Usuário: ' + credit.email : ''}</p>
                         <p className="text-sm text-gray-600">Status: {new Date(credit.expires).getTime() > todayNumber ? 'Ativo' : 'Vencido'}</p>
-                        <p className="text-sm text-gray-600">Valor: {credit.amount}</p>
+                        <p className="text-sm text-gray-600">Valor: {formatCurrency(Number(credit.amount))}</p>
                         <p className="text-sm text-gray-600">Compra: {(new Date(credit?.date).toLocaleDateString('pt-BR'))}</p>
                         <div className="flex justify-end gap-3 pt-3">
                           {!credit.email ? <Update id={credit.id} /> : 'Em uso'}
@@ -84,7 +85,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                         </td>
                         <td className="px-2 py-2 text-xs">{status}</td>
                         <td className="px-2 py-2 text-xs">{credit.email}</td>
-                        <td className="px-2 py-2 text-xs">{credit.amount}</td>
+                        <td className="px-2 py-2 text-xs">{formatCurrency(Number(credit.amount))}</td>
                         <td className="px-2 py-2 text-xs">{(new Date(credit?.date).toLocaleDateString('pt-BR'))}</td>
                         <td className="px-2 py-2 text-xs">{(new Date(credit?.expires).toLocaleDateString('pt-BR'))}</td>
                       </tr>
