@@ -71,6 +71,7 @@ export default function RootLayout({
           gtag('config', 'G-ZWQVYPC32Q');
           `}
         </Script>
+        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
 
       </head>
       <body>

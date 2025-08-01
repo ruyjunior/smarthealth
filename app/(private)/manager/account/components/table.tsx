@@ -51,6 +51,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                         <p className="text-sm text-gray-600">{credit.email ? 'Usuário: ' + credit.email : ''}</p>
                         <p className="text-sm text-gray-600">Status: {new Date(credit.expires).getTime() > todayNumber ? 'Ativo' : 'Vencido'}</p>
                         <p className="text-sm text-gray-600">Valor: {formatCurrency(Number(credit.amount))}</p>
+                        <p className="text-sm text-gray-600">Tipo: {credit.type}</p>
                         <p className="text-sm text-gray-600">Compra: {(new Date(credit?.date).toLocaleDateString('pt-BR'))}</p>
                         <div className="flex justify-end gap-3 pt-3">
                           {!credit.email ? <Update id={credit.id} /> : 'Em uso'}
@@ -71,6 +72,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                     <th className="px-2 py-2">Status</th>
                     <th className="px-2 py-2">Usuário</th>
                     <th className="px-2 py-2">Valor</th>
+                    <th className="px-2 py-2">Tipo</th>
                     <th className="px-2 py-2">Compra</th>
                     <th className="px-2 py-2">Expira</th>
                   </tr>
@@ -86,6 +88,7 @@ export default async function Table({ credits }: { credits: Credit[] }) {
                         <td className="px-2 py-2 text-xs">{status}</td>
                         <td className="px-2 py-2 text-xs">{credit.email}</td>
                         <td className="px-2 py-2 text-xs">{formatCurrency(Number(credit.amount))}</td>
+                        <td className="px-2 py-2 text-xs">{credit.type}</td>
                         <td className="px-2 py-2 text-xs">{(new Date(credit?.date).toLocaleDateString('pt-BR'))}</td>
                         <td className="px-2 py-2 text-xs">{(new Date(credit?.expires).toLocaleDateString('pt-BR'))}</td>
                       </tr>
