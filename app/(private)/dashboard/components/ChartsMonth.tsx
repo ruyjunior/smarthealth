@@ -62,7 +62,7 @@ export default function ChartsMonth(
   };
 
   return (
-    <div className="p-0 mt-4">
+    <div className="flex w-full items-center justify-between p-4">
       <div className="rounded-xl border bg-gradient-to-br from-indigo-50 to-blue-100 p-6 shadow-lg flex flex-col items-center w-full max-w-5xl mx-auto">
         <div className="flex items-center gap-2 mb-2">
           <CurrencyDollarIcon className="h-8 w-8 text-indigo-500" />
@@ -74,7 +74,7 @@ export default function ChartsMonth(
           Total acumulado: {formatCurrency(total)}
         </div>
         <div className="w-full overflow-x-auto">
-          <div style={{ minWidth: 350 }}>
+          <div >
             <Bar
               data={data}
               options={{

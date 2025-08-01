@@ -25,7 +25,7 @@ export default async function UserCard() {
           className="h-10 w-10 md:h-20 md:w-20 rounded-full"
         />
         <span className="text-xs text-blue-100">{session.user.role}</span>
-        <span className="text-xs text-blue-100">Usuário ativo até {expires.toLocaleDateString('pt-BR')}</span> 
+        <span className="text-xs text-blue-100">Ativo até {expires.toLocaleDateString('pt-BR')}</span> 
       </div>
     </Link>);
 }

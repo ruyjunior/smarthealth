@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  
+
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
     throw new Error('User session is not available.');
@@ -18,11 +18,11 @@ export default async function Page() {
   const user = await fetchUserById(session.user.id);
 
   return (
-    <main>
+    <div className="w-full">
       <div className="flex w-full items-center justify-between">
         <h1 className={`${lusitana.className} text-2xl`}>Perfil</h1>
       </div>
       <Form user={user} />
-    </main>
+    </div>
   );
 }

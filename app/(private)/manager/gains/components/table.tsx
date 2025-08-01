@@ -1,10 +1,8 @@
 'use client';
-import { UpdatePayment, DeletePayment } from './buttons';
-import { formatDateToLocal, formatTime, formatDateDb } from '@/app/lib/utils';
+import { formatDateToLocal, formatDateDb } from '@/app/lib/utils';
 import { formatCurrency } from '@/app/lib/utils';
 import { useState } from 'react';
 import { DateFilter } from './DateFilter';
-import { CreatePayment } from './buttons';
 import { Service } from '@/app/query/services/definitions';
 import { Type } from '@/app/query/types/definitions';
 import { User } from '@/app/query/users/definitions';
@@ -45,7 +43,6 @@ export default function PaymentsTable({
           onStartDateChange={setStartDate}
           onEndDateChange={setEndDate}
         />
-        <CreatePayment />
       </div>
       <div>
         <h4 className="text-lg font-semibold text-gray-900">Total:</h4>

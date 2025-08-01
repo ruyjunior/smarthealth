@@ -27,19 +27,15 @@ export default async function Page() {
   const offices = await fetchOffices();
 
   return (
-    <div className="w-full">
-      <div className="w-full">
-        <ServiceSwitcher
-          user={user}
-          todayServices={todayServices}
-          weekServices={weekServices}
-          monthServices={monthServices}
-          users={users}
-          clients={clients}
-          types={types}
-          offices={offices}
-        />
-      </div>
-    </div>
+      <ServiceSwitcher
+        user={user}
+        todayServices={todayServices}
+        weekServices={weekServices}
+        monthServices={monthServices}
+        users={users}
+        clients={clients}
+        types={types}
+        offices={offices}
+      />
   );
 }
