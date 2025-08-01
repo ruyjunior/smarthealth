@@ -117,10 +117,16 @@ export async function POST(req: NextRequest) {
             console.log(`✅ Clínica criada para ${nomeClinica}`);
             console.log(`✅ Créditos adicionados para ${customerEmail}`);
           } else {
+            
+            const amountDB = 0;
+            if (session.amount_total) {
+              const amountDB = session.amount_total / 100;
+            };
+
             await sql`
             INSERT INTO smarthealth.credits ( amount, idclinic, expires)
             VALUES ( 
-            ${session.amount_total}, 
+            ${amountDB}, 
             ${clinicCheck.rows[0].id}, 
             ${expiresAt.toISOString()}
             )
