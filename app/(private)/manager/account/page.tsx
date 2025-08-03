@@ -4,14 +4,15 @@ import Table from './components/table';
 import { TableSkeleton } from './components/skeletons';
 import Breadcrumbs from '@/app/components/ui/breadcrumbs';
 import { fetchCredits } from '@/app/query/credit/data';
-
+import CreditComponent from './components/creditComponent';
+import PricingTable from '@/app/(public)/plans/pricingTable';
 
 export const metadata: Metadata = {
   title: 'Conta',
 };
 
 export default async function Page() {
-    const credits = await fetchCredits();
+  const credits = await fetchCredits();
 
   return (
     <div className="w-full">
@@ -24,7 +25,9 @@ export default async function Page() {
         />
       </div>
       {<Suspense fallback={<TableSkeleton />}>
+        <CreditComponent credits={credits} />
         <Table credits={credits} />
+        <PricingTable />
       </Suspense>}
     </div>
   );

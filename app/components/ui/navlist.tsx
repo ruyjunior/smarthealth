@@ -13,7 +13,6 @@ export default function Nav({ user } : { user: User}) {
     { name: "Orçamento", path: "/budget", icon: <ListPlusIcon size={20} /> },
     { name: "Agenda", path: "/services", icon: <CalendarDays size={20} /> },
     { name: "Pacientes", path: "/clients", icon: <ContactIcon size={20} /> },
-    { name: "Perfil", path: "/user", icon: <UserCog2Icon size={20} /> },
     ...(user.role === "Gerente"
       ? [{ name: "Gerência", path: "/manager", icon: <ShieldUserIcon size={20} /> }]
       : []),

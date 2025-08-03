@@ -33,7 +33,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/(public)/plans/PricingPage.jsx",
   ],
   "exclude": [
     "node_modules"

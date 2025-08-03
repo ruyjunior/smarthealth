@@ -31,12 +31,28 @@ export default function EditServiceForm({
 
   const date = formatDateDb(service.date);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    startTransition(() => {
-      formAction(new FormData(e.currentTarget));
-    });
+function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const formData = new FormData(form);
+
+  const rawDate = formData.get('date') as string; // ex: "2025-08-03"
+  if (rawDate) {
+    // Cria um Date local com 00:00 no fuso do navegador
+    const localDate = new Date(`${rawDate}T00:00:00`);
+    
+    // Converte para string ISO completa (com Z, ou seja, UTC)
+    const isoWithTimezone = localDate.toISOString(); // ex: "2025-08-03T03:00:00.000Z"
+
+    // Substitui o campo date com esse valor ISO
+    formData.set('date', isoWithTimezone);
   }
+
+  startTransition(() => {
+    formAction(formData);
+  });
+}
   const normalize = (str: string) =>
     str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
@@ -200,40 +216,6 @@ export default function EditServiceForm({
                 ))}
             </div>
           </div>
-
-          {/*  Paciente 
-          <div className="mb-4">
-            <label htmlFor="idclient" className="mb-2 block text-sm font-medium">
-              Paciente
-            </label>
-            <div className="relative">
-              <select
-                id="idclient"
-                name="idclient"
-                className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue={service.idclient}
-                aria-describedby="provider-error"
-              >
-                <option value="" disabled>
-                  Selecione um cliente
-                </option>
-                {clients.map((client: Client) => (
-                  <option key={client.id} value={client.id}>
-                    {client.name}
-                  </option>
-                ))}
-              </select>
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-            </div>
-            <div id="base-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.idclient &&
-                state.errors.idclient.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div> */}
 
           {/* Paciente com busca */}
           <div className="mb-4">

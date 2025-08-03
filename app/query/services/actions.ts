@@ -76,7 +76,7 @@ export async function updateService(
   prevState: State,
   formData: FormData
 ) {
-  console.log(formData);
+  //console.log('formData', formData);
   const validatedFields = UpdateService.safeParse({
     iduser: formData.get('iduser'),
     idoffice: formData.get('idoffice'),
@@ -88,7 +88,6 @@ export async function updateService(
     endtime: formData.get('endtime'),
   });
 
-
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -97,10 +96,8 @@ export async function updateService(
   }
 
   const { iduser, idoffice, idclient, idtype, status, date, starttime, endtime } = validatedFields.data;
-  const sanitizedEndDate = date || null;
   const sanitizedStartTime = starttime || null;
   const sanitizedEndTime = endtime || null;
-
   try {
     await sql`
     UPDATE smarthealth.services

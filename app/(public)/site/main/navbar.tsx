@@ -32,7 +32,7 @@ const Navbar = () => {
         {/* Menu Desktop */}
         <div className="hidden md:flex space-x-6 text-white text-lg font-semibold">
           <Link href="/">Home</Link>
-          <Link href="/login">Login</Link>
+          <Link href="/dashboard">Login</Link>
         </div>
 
         {/* Botão Menu Mobile */}
@@ -45,7 +45,7 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-[#020d1f] text-white text-lg font-semibold py-4 flex flex-col items-center space-y-4">
           <Link href="/" onClick={toggleMenu}>Home</Link>
-          <Link href="/login" onClick={toggleMenu}>Login</Link>
+          <Link href="/dashboard" onClick={toggleMenu}>Login</Link>
         </div>
       )}
     </nav>

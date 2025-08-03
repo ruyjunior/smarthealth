@@ -11,7 +11,7 @@ export default function Logout() {
                 className="flex h-[48px] w-full grow items-center justify-center gap-0 rounded-md bg-red-500 py-3 px-2 text-sm font-medium hover:bg-sky-200 hover:text-blue-600 md:justify-start md:py-2 md:px-3 transition-all"
             >
                 <PowerIcon className="w-6" />
-                <div className="hidden md:block ml-5">Sign Out</div>
+                <div className="hidden md:block ml-5">Sair</div>
             </button>
         </div>
     );

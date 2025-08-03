@@ -67,7 +67,7 @@ export default function ChartsMonth(
         <div className="flex items-center gap-2 mb-2">
           <CurrencyDollarIcon className="h-8 w-8 text-indigo-500" />
           <h1 className={`${lusitana.className} text-2xl text-blue-900 font-extrabold tracking-tight`}>
-            Faturamento Mensal
+            Faturamento do Mês
           </h1>
         </div>
         <div className="mb-4 text-lg font-bold text-indigo-700 bg-indigo-100 rounded px-4 py-2 shadow">

@@ -139,17 +139,23 @@ export async function fetchServicesByUser(id: string) {
 export async function fetchTodayServices() {
   const idclinic = await CurrentClinicId();
 
+  const localToday = new Date();
+  localToday.setHours(0, 0, 0, 0); // Zera hora
+  const localDateString = localToday.toISOString().split("T")[0]; // "2025-08-03"
+
   try {
     const data = await sql<Service>`
       SELECT 
         id, iduser, idoffice, idclient, idtype, status, date, starttime, endtime
       FROM smarthealth.services
       WHERE services.idclinic = ${idclinic}
-        AND services.date = CURRENT_DATE
+        AND DATE(services.date AT TIME ZONE 'UTC') = ${localDateString}    
       ORDER BY starttime ASC
     `;
     return data.rows;
+    console.log(data.rows);
   } catch (err) {
+    console.log(err);
     console.error('Database Error:', err);
     throw new Error('Failed to fetch today\'s services.');
   }
