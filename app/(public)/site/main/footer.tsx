@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Logo from '@/app/components/ui/logo';
 
 const Footer = () => {
@@ -13,6 +14,24 @@ const Footer = () => {
           </span>
         </div>
       </div>
+
+      <nav
+        aria-label="Links legais"
+        className="container mx-auto mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 text-xs text-blue-100"
+      >
+        <Link
+          href="/privacidade"
+          className="transition hover:text-white hover:underline underline-offset-2"
+        >
+          Política de Privacidade
+        </Link>
+        <Link
+          href="/termos"
+          className="transition hover:text-white hover:underline underline-offset-2"
+        >
+          Termos de Uso
+        </Link>
+      </nav>
 
       <div className="container mx-auto mt-4 flex flex-col items-center justify-end gap-2 px-6 text-center text-xs text-blue-100 md:flex-row md:justify-end md:text-right">
         <p>

@@ -31,4 +31,14 @@ describe('path classification', () => {
     expect(isPublicPath('/')).toBe(true);
     expect(isProtectedPath('/')).toBe(false);
   });
+
+  it('keeps the legal pages public and never protected', () => {
+    // /privacidade e /termos precisam continuar acessíveis publicamente
+    expect(isPublicPath('/privacidade')).toBe(true);
+    expect(isPublicPath('/termos')).toBe(true);
+    expect(isProtectedPath('/privacidade')).toBe(false);
+    expect(isProtectedPath('/termos')).toBe(false);
+    expect(isManagerPath('/privacidade')).toBe(false);
+    expect(isManagerPath('/termos')).toBe(false);
+  });
 });

@@ -9,6 +9,8 @@ export const PUBLIC_PATHS = [
   '/auth',
   '/auth/register',
   '/auth/confirm',
+  '/privacidade',
+  '/termos',
 ];
 
 export const PROTECTED_PATHS = [
