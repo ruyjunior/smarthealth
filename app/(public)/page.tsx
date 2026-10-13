@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   description: 'Sua clínica online, na palma da sua mão!',
 };
 
+// A vitrine de clientes lê as logos das clínicas do banco; sem isso a página
+// congelaria esses dados até o próximo build.
+export const revalidate = 3600;
+
 const videoId = '-qrYjDDNlUU?si=NXH_X1_2EkD7qTNM';
 
 export default async function Page() {

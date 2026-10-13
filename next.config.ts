@@ -9,7 +9,15 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '7ggbyzj75ltavdzk.public.blob.vercel-storage.com',
       },
-      // outros domínios externos, se necessário
+      // o avatar público do GitHub: a URL legível redireciona para o host abaixo
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
     ],
   },
 };

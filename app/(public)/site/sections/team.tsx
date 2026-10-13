@@ -20,7 +20,7 @@ const Team: React.FC = () => {
         <div className="mx-auto max-w-md rounded-[2rem] border border-blue-100 bg-white p-8 shadow-[0_25px_75px_rgba(37,99,235,0.12)]">
           <div className="mb-5 flex justify-center">
             <SafeImage
-              src="/images/team/ruy.jpg"
+              src="https://github.com/ruyjunior.png?size=240"
               width={120}
               height={120}
               alt="Ruy Junior"

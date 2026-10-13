@@ -1,14 +1,18 @@
 import SafeImage from '@/app/components/ui/safe-image';
+import { fetchPublicClinicLogos } from '@/app/domains/clinics/queries';
 
-const logos = [
-  { src: '/images/clients/ambev.jpg', label: 'Ambev' },
-  { src: '/images/clients/assaabloy.png', label: 'Assa Abloy' },
-  { src: '/images/clients/gestamp.jpg', label: 'Gestamp' },
-  { src: '/images/clients/gm.jpg', label: 'GM' },
-  { src: '/images/clients/zegla.jpg', label: 'Zegla' },
-];
+/**
+ * Vitrine de clientes: mostra a logo das clínicas que já cadastraram uma.
+ * Só entram as que têm logo, e o nome da clínica é usado como alt e como
+ * fallback caso a imagem falhe.
+ */
+const Clients = async () => {
+  const clinics = await fetchPublicClinicLogos();
 
-const Clients = () => {
+  if (clinics.length === 0) {
+    return null;
+  }
+
   return (
     <section id="clients" className="relative py-24 text-center">
       <div className="absolute inset-0 bg-gradient-to-b from-white via-sky-50 to-white" />
@@ -19,24 +23,24 @@ const Clients = () => {
         </span>
 
         <h2 className="mb-12 text-3xl font-extrabold text-blue-900 sm:text-4xl lg:text-5xl">
-          Clientes que já usam nossas ferramentas
+          Clínicas que já usam nossas ferramentas
         </h2>
 
         <div className="flex flex-wrap items-center justify-center gap-6">
-          {logos.map((logo) => (
+          {clinics.map((clinic) => (
             <div
-              key={logo.src}
+              key={clinic.id}
               className="flex h-24 w-32 items-center justify-center rounded-2xl border border-slate-200 bg-white/90 p-3 shadow-[0_15px_35px_rgba(148,163,184,0.12)] backdrop-blur-sm"
             >
               <SafeImage
-                src={logo.src}
+                src={clinic.logourl}
                 width={100}
                 height={100}
-                alt={`Logo de ${logo.label}`}
+                alt={`Logo de ${clinic.title}`}
                 className="h-auto max-h-12 w-auto object-contain"
                 fallback={
                   <span className="text-sm font-bold leading-tight text-slate-500">
-                    {logo.label}
+                    {clinic.title}
                   </span>
                 }
               />

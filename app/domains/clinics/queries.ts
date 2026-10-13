@@ -56,3 +56,35 @@ export async function fetchClinicById(idclinic: string) {
     throw new Error('Failed to fetch clinic.');
   }
 }
+
+/**
+ * Clínicas com logo cadastrada, para a vitrine pública do site.
+ *
+ * É a única consulta sem escopo de clínica de propósito: a página inicial é
+ * pública e mostra os clientes da plataforma. Só devolve título e logo, e
+ * degrada para lista vazia em caso de erro — uma instabilidade do banco não
+ * pode derrubar a página de vendas.
+ */
+export async function fetchPublicClinicLogos(): Promise<
+  Pick<Clinic, 'id' | 'title' | 'logourl'>[]
+> {
+  try {
+    const data = await sql<Pick<Clinic, 'id' | 'title' | 'logourl'>>`
+      SELECT id, title, logourl
+      FROM smarthealth.clinics
+      WHERE logourl IS NOT NULL AND logourl <> ''
+      ORDER BY title
+    `;
+
+    if (data.rows.length === 0) {
+      // a seção some da home quando não há logo; o log evita que uma falha
+      // transitória passe despercebida
+      console.warn('Nenhuma clínica com logo cadastrada para a vitrine pública.');
+    }
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    return [];
+  }
+}

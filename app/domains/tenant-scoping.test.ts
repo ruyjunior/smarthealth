@@ -23,6 +23,16 @@ const SESSION_GUARD =
 const BINDS_CLINIC = /\$\{(idclinic|manager\.id)\}/;
 const VALIDATES_CLIENT = /fetchClientById\(idclinic/;
 
+/**
+ * Consultas sem escopo de clínica por decisão explícita. Cada uma precisa de um
+ * motivo — a allowlist existe para que a exceção seja visível, não para dar
+ * margem a esquecimento.
+ */
+const GLOBAL_QUERY_ALLOWLIST: Record<string, string> = {
+  // página inicial pública: vitrine dos clientes da plataforma, só título e logo
+  fetchPublicClinicLogos: 'public landing page listing',
+};
+
 function walk(dir: string, match: (file: string) => boolean): string[] {
   return readdirSync(dir).flatMap((entry) => {
     const full = join(dir, entry);
@@ -102,17 +112,28 @@ describe('tenant isolation in server actions', () => {
 });
 
 describe('tenant isolation in queries', () => {
-  it('every exported query takes the clinic', () => {
+  it('every exported query takes the clinic, except the documented allowlist', () => {
     const offenders: string[] = [];
 
     for (const file of domainFiles('queries.ts')) {
       for (const fn of exportedFunctions(readFileSync(file, 'utf8'))) {
+        if (GLOBAL_QUERY_ALLOWLIST[fn.name]) continue;
         const signature = fn.body.slice(0, fn.body.indexOf('{'));
         if (!signature.includes('idclinic')) offenders.push(`${relative(file)}::${fn.name}`);
       }
     }
 
     expect(offenders).toEqual([]);
+  });
+
+  it('keeps the allowlist honest', () => {
+    const exported = domainFiles('queries.ts').flatMap((file) =>
+      exportedFunctions(readFileSync(file, 'utf8')).map((fn) => fn.name),
+    );
+
+    for (const allowed of Object.keys(GLOBAL_QUERY_ALLOWLIST)) {
+      expect(exported, `${allowed} está na allowlist mas não existe mais`).toContain(allowed);
+    }
   });
 
   it('every by-id lookup actually constrains by clinic in its SQL', () => {
