@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import SafeImage from '@/app/components/ui/safe-image';
 import Link from 'next/link';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 
@@ -19,12 +19,17 @@ const Team: React.FC = () => {
 
         <div className="mx-auto max-w-md rounded-[2rem] border border-blue-100 bg-white p-8 shadow-[0_25px_75px_rgba(37,99,235,0.12)]">
           <div className="mb-5 flex justify-center">
-            <Image
+            <SafeImage
               src="/images/team/ruy.jpg"
               width={120}
               height={120}
               alt="Ruy Junior"
               className="rounded-full border-4 border-blue-100 object-cover shadow-lg"
+              fallback={
+                <span className="flex h-[120px] w-[120px] items-center justify-center rounded-full border-4 border-blue-100 bg-blue-50 text-3xl font-extrabold text-blue-700 shadow-lg">
+                  RJ
+                </span>
+              }
             />
           </div>
 

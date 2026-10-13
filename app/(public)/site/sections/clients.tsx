@@ -1,11 +1,11 @@
-import Image from 'next/image';
+import SafeImage from '@/app/components/ui/safe-image';
 
 const logos = [
-  '/images/clients/ambev.jpg',
-  '/images/clients/assaabloy.png',
-  '/images/clients/gestamp.jpg',
-  '/images/clients/gm.jpg',
-  '/images/clients/zegla.jpg',
+  { src: '/images/clients/ambev.jpg', label: 'Ambev' },
+  { src: '/images/clients/assaabloy.png', label: 'Assa Abloy' },
+  { src: '/images/clients/gestamp.jpg', label: 'Gestamp' },
+  { src: '/images/clients/gm.jpg', label: 'GM' },
+  { src: '/images/clients/zegla.jpg', label: 'Zegla' },
 ];
 
 const Clients = () => {
@@ -23,17 +23,22 @@ const Clients = () => {
         </h2>
 
         <div className="flex flex-wrap items-center justify-center gap-6">
-          {logos.map((logo, index) => (
+          {logos.map((logo) => (
             <div
-              key={index}
+              key={logo.src}
               className="flex h-24 w-32 items-center justify-center rounded-2xl border border-slate-200 bg-white/90 p-3 shadow-[0_15px_35px_rgba(148,163,184,0.12)] backdrop-blur-sm"
             >
-              <Image
-                src={logo}
+              <SafeImage
+                src={logo.src}
                 width={100}
                 height={100}
-                alt="Cliente do Smart Health"
+                alt={`Logo de ${logo.label}`}
                 className="h-auto max-h-12 w-auto object-contain"
+                fallback={
+                  <span className="text-sm font-bold leading-tight text-slate-500">
+                    {logo.label}
+                  </span>
+                }
               />
             </div>
           ))}
