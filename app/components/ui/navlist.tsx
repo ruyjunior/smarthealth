@@ -4,6 +4,7 @@ import { isManager } from '@/app/lib/roles';
 import {
   CalendarDays,
   ChartPieIcon,
+  CircleHelp,
   ContactIcon,
   ShieldUserIcon,
   ListPlusIcon,
@@ -22,6 +23,7 @@ export default function Nav({ user }: { user: User }) {
     ...(isManager(user.role)
       ? [{ name: 'Gerência', path: '/manager', icon: <ShieldUserIcon size={20} /> }]
       : []),
+    { name: 'Ajuda', path: '/help', icon: <CircleHelp size={20} /> },
   ];
 
   return (

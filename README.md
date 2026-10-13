@@ -23,6 +23,7 @@ O **Smart Health App** é uma solução completa para clínicas que desejam otim
 - 📊 **Gráficos de evolução** e relatórios analíticos
 - 🔐 **Acesso seguro em nuvem** para gestores e equipe
 - 🤝 **Suporte especializado** com foco em clínicas de fisioterapia
+- ❓ **Central de Ajuda** com guias rápidos por funcionalidade
 
 ---
 

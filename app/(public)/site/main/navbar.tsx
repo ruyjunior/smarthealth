@@ -36,6 +36,9 @@ const Navbar = () => {
           <Link href="/" className="transition hover:text-blue-200">
             Home
           </Link>
+          <Link href="/#guides" className="transition hover:text-blue-200">
+            Guias
+          </Link>
           <Link href="/dashboard" className="transition hover:text-blue-200">
             Login
           </Link>
@@ -55,6 +58,9 @@ const Navbar = () => {
           <div className="container mx-auto flex flex-col items-center gap-4">
             <Link href="/" onClick={toggleMenu} className="transition hover:text-blue-200">
               Home
+            </Link>
+            <Link href="/#guides" onClick={toggleMenu} className="transition hover:text-blue-200">
+              Guias
             </Link>
             <Link href="/dashboard" onClick={toggleMenu} className="transition hover:text-blue-200">
               Login

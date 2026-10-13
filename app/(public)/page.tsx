@@ -1,5 +1,6 @@
 import Hero from './site/sections/hero';
 import Services from './site/sections/services';
+import Guides from './site/sections/guides';
 import About from './site/sections/about';
 import Clients from './site/sections/clients';
 import Team from './site/sections/team';
@@ -23,6 +24,7 @@ export default async function Page() {
     <div className="text-gray-900">
       <Hero />
       <Services />
+      <Guides />
       <YouTubeEmbed videoId={videoId} title="Apresentação do Smart Health" />
       <About />
       <Clients />

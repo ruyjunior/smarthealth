@@ -18,6 +18,7 @@ export const PROTECTED_PATHS = [
   '/notes',
   '/services',
   '/user',
+  '/help',
   '/manager',
 ];
 
