@@ -1,0 +1,249 @@
+/* Theming for react-big-calendar. Scoped under .sh-agenda so nothing leaks.
+   Selectors intentionally out-specify the library defaults (.rbc-*). */
+
+.sh-agenda .rbc-calendar {
+  height: 100%;
+  font-family: inherit;
+  color: #0f172a;
+}
+
+/* ---------- Toolbar (library sets display:flex on the wrapper) ---------- */
+.sh-agenda .rbc-toolbar {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.sh-agenda .rbc-toolbar button {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+
+.sh-agenda .rbc-toolbar button:active,
+.sh-agenda .rbc-toolbar button:focus,
+.sh-agenda .rbc-toolbar button:hover {
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* ---------- Grid shell ---------- */
+.sh-agenda .rbc-month-view,
+.sh-agenda .rbc-time-view,
+.sh-agenda .rbc-agenda-view table.rbc-agenda-table {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.sh-agenda .rbc-month-row + .rbc-month-row,
+.sh-agenda .rbc-day-bg + .rbc-day-bg,
+.sh-agenda .rbc-header + .rbc-header {
+  border-color: #eef2f7;
+  border-left-color: #eef2f7;
+}
+
+.sh-agenda .rbc-header {
+  padding: 10px 6px;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.sh-agenda .rbc-month-view .rbc-header {
+  border-bottom-color: #e2e8f0;
+}
+
+/* ---------- Day cells ---------- */
+.sh-agenda .rbc-off-range-bg {
+  background-color: #f8fafc;
+}
+
+.sh-agenda .rbc-off-range {
+  color: #cbd5e1;
+}
+
+.sh-agenda .rbc-today {
+  background-color: #eff6ff;
+}
+
+.sh-agenda .rbc-date-cell {
+  padding: 7px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  text-align: right;
+}
+
+.sh-agenda .rbc-date-cell.rbc-now .rbc-button-link {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+.sh-agenda .rbc-button-link {
+  font: inherit;
+  color: inherit;
+}
+
+.sh-agenda .rbc-selected-cell {
+  background-color: #e0ecff;
+}
+
+.sh-agenda .rbc-show-more {
+  margin-top: 2px;
+  padding: 1px 4px;
+  background-color: transparent;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+/* ---------- Events ---------- */
+/* Reset the library pill so the custom chip controls the look. */
+.sh-agenda .rbc-event,
+.sh-agenda .rbc-event.rbc-selected,
+.sh-agenda .rbc-day-slot .rbc-event,
+.sh-agenda .rbc-day-slot .rbc-event.rbc-selected,
+.sh-agenda .rbc-day-slot .rbc-background-event {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  box-shadow: none;
+}
+
+.sh-agenda .rbc-event:focus,
+.sh-agenda .rbc-event:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 1px;
+}
+
+.sh-agenda .rbc-row-segment {
+  padding: 0 3px 2px 3px;
+}
+
+.sh-agenda .rbc-month-view .rbc-event-content {
+  overflow: hidden;
+}
+
+.sh-agenda .rbc-overlay {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14);
+  padding: 6px;
+}
+
+.sh-agenda .rbc-overlay-header {
+  padding: 6px 8px;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+
+/* ---------- Time views (week / day) ---------- */
+/* The custom chip already prints the time, so the default range label is noise. */
+.sh-agenda .rbc-event-label {
+  display: none;
+}
+
+.sh-agenda .rbc-day-slot .rbc-event-content {
+  width: 100%;
+  height: 100%;
+  padding: 1px 2px;
+}
+
+.sh-agenda .rbc-time-gutter,
+.sh-agenda .rbc-time-header-gutter {
+  background-color: transparent;
+}
+
+.sh-agenda .rbc-time-header-content,
+.sh-agenda .rbc-time-content,
+.sh-agenda .rbc-time-header,
+.sh-agenda .rbc-timeslot-group {
+  border-color: #eef2f7;
+}
+
+.sh-agenda .rbc-time-content {
+  border-top: 1px solid #e2e8f0;
+}
+
+.sh-agenda .rbc-time-gutter .rbc-label,
+.sh-agenda .rbc-label {
+  padding: 0 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.sh-agenda .rbc-current-time-indicator {
+  height: 2px;
+  background-color: #ef4444;
+}
+
+.sh-agenda .rbc-current-time-indicator::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background-color: #ef4444;
+}
+
+.sh-agenda .rbc-allday-cell {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* ---------- Agenda view ---------- */
+.sh-agenda .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+  padding: 10px 12px;
+  border-top: 1px solid #eef2f7;
+  font-size: 12px;
+  color: #334155;
+}
+
+.sh-agenda .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  text-align: left;
+}
+
+.sh-agenda .rbc-agenda-date-cell,
+.sh-agenda .rbc-agenda-time-cell {
+  white-space: nowrap;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.sh-agenda .rbc-agenda-empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* ---------- Slot selection ---------- */
+.sh-agenda .rbc-slot-selection {
+  background-color: rgba(29, 78, 216, 0.12);
+  border-radius: 8px;
+  font-size: 10px;
+  color: #1e3a8a;
+}

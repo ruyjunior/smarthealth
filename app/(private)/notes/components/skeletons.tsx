@@ -1,6 +1,3 @@
-// Loading animation
-const shimmer =
-  'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 import { TableRowSkeleton } from '@/app/components/ui/skeletons';
 
 export function NoteSkeleton() {
@@ -18,7 +15,7 @@ export function NoteSkeleton() {
   );
 }
 
-export function NotesMobileSkeleton() {
+function NotesMobileSkeleton() {
   return (
     <div className="mb-2 w-full rounded-md bg-white p-4">
       <div className="flex items-center justify-between border-b border-gray-100 pb-8">
@@ -46,7 +43,7 @@ export function NotesTableSkeleton() {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-[2rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-[0_25px_80px_rgba(59,130,246,0.08)] md:p-5">
           <div className="md:hidden">
             <NotesMobileSkeleton />
             <NotesMobileSkeleton />
@@ -57,8 +54,8 @@ export function NotesTableSkeleton() {
             <NotesMobileSkeleton />
             <NotesMobileSkeleton />
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="bg-green-100 text-left text-xs font-medium">
+          <table className="hidden min-w-full text-slate-800 md:table">
+            <thead className="bg-gradient-to-r from-blue-700 to-indigo-700 text-left text-xs font-semibold uppercase tracking-[0.18em] text-white">
               <tr>
                 <th className="px-2 py-2">Editar</th>
                 <th className="px-2 py-2">Data</th>

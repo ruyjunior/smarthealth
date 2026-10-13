@@ -1,9 +1,5 @@
-import { auth } from '@/app/lib/auth';
-import { fetchUserById } from '@/app/query/users/data';
-
-
 export const formatCurrency = (amount: number) => {
-  return (amount).toLocaleString('pt-BR', {
+  return amount.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
@@ -19,32 +15,19 @@ export const formatCurrencyInput = (value: string) => {
   return formattedValue;
 };
 
-export async function CurrentClinicId() {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
-  const idclinic = user.idclinic;
-  if (!idclinic) {
-    throw new Error('User clinic ID is not available.');
-  }
-  return idclinic;
-}
-
 export function toPgArray(arr: (string | boolean)[]): string {
-  return '{' + arr.map(v => typeof v === 'boolean' ? v : `"${String(v).replace(/"/g, '\\"')}"`).join(',') + '}';
+  return (
+    '{' +
+    arr
+      .map((v) =>
+        typeof v === 'boolean' ? v : `"${String(v).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`,
+      )
+      .join(',') +
+    '}'
+  );
 }
 export function cn(...classes: (string | undefined | null | false)[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export function timeToDecimal(time: string | null | undefined) {
-  if (!time) {
-    return 0; // Retorna 0 se o valor for null ou undefined
-  }
-  const [hours, minutes, seconds] = time.split(":").map(Number);
-  return hours + minutes / 60 + (seconds || 0) / 3600;
+  return classes.filter(Boolean).join(' ');
 }
 
 export const formatDateToLocal = (
@@ -193,13 +176,5 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   // If the current page is somewhere in the middle,
   // show the first page, an ellipsis, the current page and its neighbors,
   // another ellipsis, and the last page.
-  return [
-    1,
-    '...',
-    currentPage - 1,
-    currentPage,
-    currentPage + 1,
-    '...',
-    totalPages,
-  ];
+  return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
 };

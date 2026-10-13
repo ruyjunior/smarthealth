@@ -1,10 +1,8 @@
 import { Metadata } from 'next';
-import { SessionProvider } from "next-auth/react";
-import Footer from "./site/main/footer";
-import Navbar from "./site/main/navbar";
+import Footer from './site/main/footer';
+import Navbar from './site/main/navbar';
 import Script from 'next/script';
-import { Analytics } from "@vercel/analytics/next";
-
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: {
@@ -44,46 +42,33 @@ export const metadata: Metadata = {
     description: 'Sua Clínica Online.',
     images: ['/images/logo.png'],
   },
-
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+/**
+ * Layout of the public site. It must NOT render <html>/<head>/<body>: the root
+ * layout already provides them, and a nested document breaks hydration.
+ */
+export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='pt-BR'>
-      <head>
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-ZWQVYPC32Q"
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-        >
-          {`
+    <main className="flex min-h-screen flex-col">
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-ZWQVYPC32Q"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
 
           gtag('config', 'G-ZWQVYPC32Q');
-          `}
-        </Script>
-        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+        `}
+      </Script>
 
-      </head>
-      <body>
-        <main className="flex-1 flex flex-col">
-          <SessionProvider>
-            <Navbar />
-            {children}
-            <Analytics /> {/* Vercel Analytics */}
-            <Footer />
-          </SessionProvider>
-        </main>
-      </body>
-    </html>
+      <Navbar />
+      {children}
+      <Analytics />
+      <Footer />
+    </main>
   );
 }

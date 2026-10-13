@@ -1,27 +1,40 @@
 'use client';
 import React, { useState, useActionState, useTransition } from 'react';
 import Link from 'next/link';
-import { UserGroupIcon, UserCircleIcon, CalendarDateRangeIcon, ClockIcon, BuildingOffice2Icon, QueueListIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import {
+  UserGroupIcon,
+  UserCircleIcon,
+  CalendarDateRangeIcon,
+  ClockIcon,
+  BuildingOffice2Icon,
+  QueueListIcon,
+  QuestionMarkCircleIcon,
+} from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
-import { createService, State } from '@/app/query/services/actions';
-import { Office } from '@/app/query/offices/definitions';
-import { Client } from '@/app/query/clients/definitions';
+import { createService, State } from '@/app/domains/services/actions';
+import { Office } from '@/app/domains/offices/types';
+import { Client } from '@/app/domains/clients/types';
 import { formatDateBr } from '@/app/lib/utils';
-import { Type } from '@/app/query/types/definitions';
-import { User } from '@/app/query/users/definitions';
+import { Type } from '@/app/domains/types/types';
+import { User } from '@/app/domains/users/types';
 import Loading from '@/app/components/ui/loading';
 
+type FormDataProps = {
+  clients: Client[];
+  offices: Office[];
+  types: Type[];
+  users: User[];
+};
 
-export default function Form({ data }: { data: any }) {
-
-  const { clients, offices, types, users, idclinic } = data;
+export default function Form({ data }: { data: FormDataProps }) {
+  const { clients, offices, types, users } = data;
 
   const initialState: State = { message: '', errors: {} };
   const [state, formAction] = useActionState(createService, initialState);
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState('');
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
-  const [isSearching, startTransitionSearch] = useTransition();
+  const [, startTransitionSearch] = useTransition();
 
   const today = new Date();
   const [date, setDate] = useState(today.toISOString().split('T')[0]);
@@ -30,31 +43,34 @@ export default function Form({ data }: { data: any }) {
     const formattedDate = formatDateBr(event.target.value);
     setDate(formattedDate);
   };
-function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-  const form = e.currentTarget;
-  const formData = new FormData(form);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
-  const rawDate = formData.get('date') as string; // ex: "2025-08-03"
-  if (rawDate) {
-    // Cria um Date local com 00:00 no fuso do navegador
-    const localDate = new Date(`${rawDate}T00:00:00`);
-    
-    // Converte para string ISO completa (com Z, ou seja, UTC)
-    const isoWithTimezone = localDate.toISOString(); // ex: "2025-08-03T03:00:00.000Z"
+    const rawDate = formData.get('date') as string; // ex: "2025-08-03"
+    if (rawDate) {
+      // Cria um Date local com 00:00 no fuso do navegador
+      const localDate = new Date(`${rawDate}T00:00:00`);
 
-    // Substitui o campo date com esse valor ISO
-    formData.set('date', isoWithTimezone);
+      // Converte para string ISO completa (com Z, ou seja, UTC)
+      const isoWithTimezone = localDate.toISOString(); // ex: "2025-08-03T03:00:00.000Z"
+
+      // Substitui o campo date com esse valor ISO
+      formData.set('date', isoWithTimezone);
+    }
+
+    startTransition(() => {
+      formAction(formData);
+    });
   }
-
-  startTransition(() => {
-    formAction(formData);
-  });
-}
   // Busca clientes conforme digitação
   const normalize = (str: string) =>
-    str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
 
   const handleClientSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -62,9 +78,7 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     if (value.length >= 3) {
       startTransitionSearch(() => {
         setFilteredClients(
-          clients.filter((client: Client) =>
-            normalize(client.name).includes(normalize(value))
-          )
+          clients.filter((client: Client) => normalize(client.name).includes(normalize(value))),
         );
       });
     } else {
@@ -74,17 +88,12 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 
   return (
     <form onSubmit={handleSubmit}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
-          <input type="hidden" name="idclinic" value={idclinic} />
-          <span className="text-sm text-gray-500">
-            Os campos com * são obrigatórios.
-          </span>
+          <span className="text-sm text-gray-500">Os campos com * são obrigatórios.</span>
 
           {/* Especialidade */}
           <div className="mb-4">
@@ -216,10 +225,10 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
               >
                 <option value="" disabled>
                   {search.length < 3
-                    ? "Digite pelo menos 3 letras para buscar"
+                    ? 'Digite pelo menos 3 letras para buscar'
                     : filteredClients.length === 0
-                      ? "Nenhum paciente encontrado"
-                      : "Selecione um paciente"}
+                      ? 'Nenhum paciente encontrado'
+                      : 'Selecione um paciente'}
                 </option>
                 {filteredClients.map((client: Client) => (
                   <option key={client.id} value={client.id}>
@@ -320,7 +329,10 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="status-error"
               >
-                <option value="" disabled> Selecione a situação </option>
+                <option value="" disabled>
+                  {' '}
+                  Selecione a situação{' '}
+                </option>
                 <option value="Vazia"> Vazia </option>
                 <option value="Marcada"> Marcada </option>
                 <option value="Feito"> Feito </option>
@@ -336,7 +348,6 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
                 ))}
             </div>
           </div>
-
         </div>
       )}
 
@@ -352,17 +363,23 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-      
     </form>
   );
 }

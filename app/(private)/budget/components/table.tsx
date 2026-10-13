@@ -1,12 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { formatCurrency } from '@/app/lib/utils';
-import { Type } from '@/app/query/types/definitions';
+import { Type } from '@/app/domains/types/types';
 import PdfForm from './pdf-form';
-import { User } from '@/app/query/users/definitions';
-import { Clinic } from '@/app/query/clinics/definitions';
+import { User } from '@/app/domains/users/types';
+import { Clinic } from '@/app/domains/clinics/types';
 import { TrashIcon, PlusIcon, PrinterIcon } from '@heroicons/react/24/outline';
-
 
 export type BudgetItem = {
   type: Type;
@@ -14,7 +13,15 @@ export type BudgetItem = {
   total: number;
 };
 
-export default function BudgetTable({ types, user, clinic }: { types: Type[], user: User, clinic: Clinic }) {
+export default function BudgetTable({
+  types,
+  user,
+  clinic,
+}: {
+  types: Type[];
+  user: User;
+  clinic: Clinic;
+}) {
   const [list, setList] = useState<BudgetItem[]>([]);
   const [selectedTypeId, setSelectedTypeId] = useState('');
   const [quantity, setQuantity] = useState('1');
@@ -28,14 +35,14 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
 
   const onAddItem = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const type = types.find(type => type.id === selectedTypeId);
+    const type = types.find((type) => type.id === selectedTypeId);
     if (type && quantity) {
       const newItem: BudgetItem = {
         type,
         quantity: Number(quantity),
         total: Number(type.price) * Number(quantity),
       };
-      setList(prev => [...prev, newItem]);
+      setList((prev) => [...prev, newItem]);
       setSelectedTypeId('');
       setQuantity('1');
       setShowPDF(false);
@@ -43,7 +50,7 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
   };
 
   const onRemoveItem = (index: number) => {
-    setList(prev => prev.filter((_, i) => i !== index));
+    setList((prev) => prev.filter((_, i) => i !== index));
     setShowPDF(false);
   };
 
@@ -52,16 +59,21 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
       {/* Header e total */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:mt-8">
         <div className="flex flex-col md:flex-row items-center gap-4 w-full">
-          <form className="flex flex-col md:flex-row items-center gap-2 w-full" onSubmit={onAddItem}>
+          <form
+            className="flex flex-col md:flex-row items-center gap-2 w-full"
+            onSubmit={onAddItem}
+          >
             <select
               name="typeId"
               id="typeId"
               className="block w-full md:w-auto rounded-md border border-gray-200 py-2 pl-3 pr-10 text-sm outline-2 placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-100"
               value={selectedTypeId}
-              onChange={e => setSelectedTypeId(e.target.value)}
+              onChange={(e) => setSelectedTypeId(e.target.value)}
               required
             >
-              <option value="" disabled>Selecione um tipo</option>
+              <option value="" disabled>
+                Selecione um tipo
+              </option>
               {types.map((type) => (
                 <option key={type.id} value={type.id}>
                   {type.title}
@@ -73,11 +85,13 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
               name="quantity"
               id="quantity"
               value={quantity}
-              onChange={e => setQuantity(e.target.value)}
+              onChange={(e) => setQuantity(e.target.value)}
               required
             >
-              {[1, 2, 3, 4, 5].map(q => (
-                <option key={q} value={q}>{q}</option>
+              {[1, 2, 3, 4, 5].map((q) => (
+                <option key={q} value={q}>
+                  {q}
+                </option>
               ))}
             </select>
             <button
@@ -95,7 +109,7 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
             onClick={() => setShowPDF(true)}
             className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white font-semibold shadow hover:bg-blue-700 transition-colors text-sm"
             disabled={list.length === 0}
-            title={list.length === 0 ? "Adicione itens para gerar o PDF" : "Gerar orçamento em PDF"}
+            title={list.length === 0 ? 'Adicione itens para gerar o PDF' : 'Gerar orçamento em PDF'}
           >
             <PrinterIcon className="h-5 w-5" />
           </button>
@@ -136,7 +150,9 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
                 ))}
                 {list.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="text-center py-4 text-gray-400">Nenhum item adicionado</td>
+                    <td colSpan={5} className="text-center py-4 text-gray-400">
+                      Nenhum item adicionado
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -147,10 +163,15 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
       {/* Cards para mobile */}
       <div className="mt-6 flex flex-col gap-3 md:hidden">
         {list.length === 0 && (
-          <div className="text-center py-4 text-gray-400 bg-gray-50 rounded-lg">Nenhum item adicionado</div>
+          <div className="text-center py-4 text-gray-400 bg-gray-50 rounded-lg">
+            Nenhum item adicionado
+          </div>
         )}
         {list.map((item, idx) => (
-          <div key={idx} className="bg-white rounded-lg shadow p-3 flex flex-col gap-1 border border-blue-100">
+          <div
+            key={idx}
+            className="bg-white rounded-lg shadow p-3 flex flex-col gap-1 border border-blue-100"
+          >
             <div className="flex justify-between">
               <span className="font-semibold text-blue-700">{item.type.title}</span>
               <button
@@ -162,9 +183,15 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
               </button>
             </div>
             <div className="flex justify-between text-xs text-gray-700">
-              <span>Quantidade: <b>{item.quantity}</b></span>
-              <span>Unidade: <b>{formatCurrency(item.type.price)}</b></span>
-              <span>Total: <b>{formatCurrency(item.total)}</b></span>
+              <span>
+                Quantidade: <b>{item.quantity}</b>
+              </span>
+              <span>
+                Unidade: <b>{formatCurrency(item.type.price)}</b>
+              </span>
+              <span>
+                Total: <b>{formatCurrency(item.total)}</b>
+              </span>
             </div>
           </div>
         ))}
@@ -179,7 +206,13 @@ export default function BudgetTable({ types, user, clinic }: { types: Type[], us
               onClick={() => setShowPDF(false)}
               title="Fechar"
             >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

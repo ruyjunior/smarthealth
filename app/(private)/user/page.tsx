@@ -1,28 +1,24 @@
 import Form from './components/edit-form';
-import { fetchUserById } from '@/app/query/users/data';
-import { notFound } from 'next/navigation';
+import { requireSessionUser } from '@/app/lib/session';
 import { Metadata } from 'next';
-import { lusitana } from '@/app/components/ui/fonts';
-import { auth } from '@/app/lib/auth';
+import ListPageShell from '@/app/components/ui/list-page-shell';
 
 export const metadata: Metadata = {
   title: 'Editar Perfil',
 };
 
 export default async function Page() {
-
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
+  const user = await requireSessionUser();
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Perfil</h1>
+    <ListPageShell
+      eyebrow="Conta"
+      title="Meu perfil"
+      subtitle="Atualize seus dados de acesso e informações pessoais."
+    >
+      <div className="mx-auto mt-6 w-full max-w-5xl">
+        <Form user={user} />
       </div>
-      <Form user={user} />
-    </div>
+    </ListPageShell>
   );
 }

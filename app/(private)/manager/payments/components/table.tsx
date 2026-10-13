@@ -1,25 +1,20 @@
 'use client';
 import { UpdatePayment, DeletePayment } from './buttons';
-import { formatDateToLocal, formatTime, formatDateDb } from '@/app/lib/utils';
+import { formatDateToLocal, formatDateDb } from '@/app/lib/utils';
 import { formatCurrency } from '@/app/lib/utils';
 import { useState } from 'react';
 import { DateFilter } from './DateFilter';
 import { CreatePayment } from './buttons';
+import { Payment } from '@/app/domains/payments/types';
 
-export default function PaymentsTable({
-  query, currentPage, payments
-}: {
-  query: string;
-  currentPage: number;
-  payments: any[];
-}) {
+export default function PaymentsTable({ payments }: { payments: Payment[] }) {
   const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
   const lastDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
   const [startDate, setStartDate] = useState(firstDayOfMonth.toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(lastDayOfMonth.toISOString().split('T')[0]);
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     if (!startDate || !endDate) return true; // Se nenhuma data for selecionada, retorna todos os pagamentos
     const paymentDate = formatDateDb(payment.date);
     return paymentDate >= startDate && paymentDate <= endDate;
@@ -48,31 +43,37 @@ export default function PaymentsTable({
         <div className="mt-6 flow-root">
           <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
-              <div className="overflow-hidden rounded-lg bg-blue-200 shadow-md p-4 md:pt-0">
+              <div className="overflow-hidden rounded-[2rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-[0_25px_80px_rgba(59,130,246,0.08)] md:p-5">
                 {/* Mobile View */}
                 <div className="md:hidden">
                   {filteredPayments?.map((payment) => {
-
                     return (
-                      <div key={payment.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
+                      <div
+                        key={payment.id}
+                        className="mb-4 w-full rounded-[1.5rem] border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100"
+                      >
                         <div className="border-b pb-4">
-                          <h3 className="text-xl font-semibold text-gray-900">{formatDateToLocal(payment.date)}</h3>
+                          <h3 className="text-xl font-semibold text-gray-900">
+                            {formatDateToLocal(payment.date)}
+                          </h3>
                           <p className="text-sm text-gray-600">Título: {payment.title}</p>
                           <p className="text-sm text-gray-600">Descrição: {payment.description}</p>
-                          <p className="text-sm text-gray-600">Valor: {formatCurrency(Number(payment.amount))}</p>
+                          <p className="text-sm text-gray-600">
+                            Valor: {formatCurrency(Number(payment.amount))}
+                          </p>
                         </div>
                         <div className="flex justify-end gap-3 pt-3">
                           <UpdatePayment id={payment.id} />
                           <DeletePayment id={payment.id} />
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
 
                 {/* Desktop View */}
                 <table className="hidden min-w-full text-center text-gray-900 md:table">
-                  <thead className="bg-blue-300 text-xs font-medium">
+                  <thead className="bg-gradient-to-r from-blue-700 to-indigo-700 text-xs font-semibold uppercase tracking-[0.18em] text-white">
                     <tr>
                       <th className="px-2 py-2">Editar</th>
                       <th className="px-2 py-2">Data</th>
@@ -82,22 +83,24 @@ export default function PaymentsTable({
                       <th className="px-2 py-2">Deletar</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-slate-200">
                     {filteredPayments.map((payment) => {
                       return (
-                        <tr key={payment.id} className="hover:bg-blue-300">
+                        <tr key={payment.id} className="bg-white/80 transition hover:bg-blue-50/80">
                           <td className="py-2 px-2 flex gap-2 items-center justify-center">
                             <UpdatePayment id={payment.id} />
                           </td>
                           <td className="px-2 py-2 text-xs">{formatDateToLocal(payment.date)}</td>
                           <td className="px-2 py-2 text-xs">{payment.title}</td>
                           <td className="px-2 py-2 text-xs">{payment.description}</td>
-                          <td className="px-2 py-2 text-xs">{formatCurrency(Number(payment.amount))}</td>
+                          <td className="px-2 py-2 text-xs">
+                            {formatCurrency(Number(payment.amount))}
+                          </td>
                           <td className="py-2 px-2 flex justify-center items-center">
                             <DeletePayment id={payment.id} />
                           </td>
                         </tr>
-                      )
+                      );
                     })}
                   </tbody>
                 </table>
@@ -107,5 +110,5 @@ export default function PaymentsTable({
         </div>
       </div>
     </div>
-  )
+  );
 }

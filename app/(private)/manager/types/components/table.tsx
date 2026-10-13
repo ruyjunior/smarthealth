@@ -1,5 +1,6 @@
 import { UpdateType, DeleteType } from './buttons';
-import { fetchFilteredTypes } from '@/app/query/types/data';
+import { getCurrentClinicId } from '@/app/lib/session';
+import { fetchFilteredTypes } from '@/app/domains/types/queries';
 import { formatCurrency } from '@/app/lib/utils';
 
 export default async function TypesTable({
@@ -9,21 +10,27 @@ export default async function TypesTable({
   query: string;
   currentPage: number;
 }) {
-  const types = await fetchFilteredTypes(query, currentPage);
+  const idclinic = await getCurrentClinicId();
+  const types = await fetchFilteredTypes(idclinic, query, currentPage);
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden rounded-lg bg-blue-200 shadow-md p-4 md:pt-0">
+            <div className="overflow-hidden rounded-[2rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-[0_25px_80px_rgba(59,130,246,0.08)] md:p-5">
               {/* Mobile View */}
               <div className="md:hidden">
                 {types?.map((type) => (
-                  <div key={type.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
+                  <div
+                    key={type.id}
+                    className="mb-4 w-full rounded-[1.5rem] border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100"
+                  >
                     <div className="border-b pb-4">
                       <h3 className="text-xl font-semibold text-gray-900">{type.title}</h3>
                       <p className="text-sm text-gray-600">Desc.: {type.description}</p>
-                      <p className="text-sm text-gray-600">Valor: {formatCurrency(Number(type.price))}</p>
+                      <p className="text-sm text-gray-600">
+                        Valor: {formatCurrency(Number(type.price))}
+                      </p>
                     </div>
                     <div className="flex justify-end gap-3 pt-3">
                       <UpdateType id={type.id} />
@@ -34,8 +41,8 @@ export default async function TypesTable({
               </div>
 
               {/* Desktop View */}
-              <table className="hidden min-w-full text-gray-900 text-center text-gray-900 md:table">
-                <thead className="bg-blue-300 text-xs font-medium">
+              <table className="hidden min-w-full text-slate-800 text-center md:table">
+                <thead className="bg-gradient-to-r from-blue-700 to-indigo-700 text-xs font-semibold uppercase tracking-[0.18em] text-white">
                   <tr>
                     <th className="px-2 py-2">Editar</th>
                     <th className="px-2 py-2">Título</th>
@@ -44,10 +51,10 @@ export default async function TypesTable({
                     <th className="px-2 py-2">Deletar</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-slate-200">
                   {types.map((type) => (
-                    <tr key={type.id} className="hover:bg-blue-300">
-                      <td className="py-2 px-2 flex gap-2 itens-center justify-center">
+                    <tr key={type.id} className="bg-white/80 transition hover:bg-blue-50/80">
+                      <td className="py-2 px-2 flex gap-2 items-center justify-center">
                         <UpdateType id={type.id} />
                       </td>
                       <td className="px-2 py-2 text-xs">{type.title}</td>

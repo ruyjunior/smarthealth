@@ -1,29 +1,32 @@
 'use server';
 import { signIn } from '@/app/lib/auth';
-import { fetchUserByEmail } from '@/app/query/users/data';
+
+type CredentialsError = {
+  digest?: string;
+  type?: string;
+  message?: string;
+};
 
 export async function authenticate(
   _prevState: string | undefined,
   formData: FormData,
 ): Promise<string | undefined> {
-
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const redirectTo = formData.get('redirectTo') as string || '/dashboard';
-  
-  const user = await fetchUserByEmail(email);
-  if (!user) return 'E-mail não cadastrado.';
-
   try {
-    const redirectTo = formData.get('redirectTo') as string || '/dashboard';
+    const redirectTo = (formData.get('redirectTo') as string) || '/dashboard';
     await signIn('credentials', formData, { redirectTo });
-  } catch (error: any) {
-    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+  } catch (error) {
+    const credentialsError = error as CredentialsError;
+    if (credentialsError?.digest?.startsWith('NEXT_REDIRECT')) {
       // Deixe o erro ser lançado para o Next.js redirecionar!
       throw error;
     }
-    if (error?.type === 'CredentialsSignin' || error?.message?.includes('CredentialsSignin')) {
-      return 'Senha incorreta.';
+    if (
+      credentialsError?.type === 'CredentialsSignin' ||
+      credentialsError?.message?.includes('CredentialsSignin')
+    ) {
+      // A mesma resposta para e-mail inexistente e senha errada: dizer qual dos
+      // dois falhou revela quais endereços têm conta.
+      return 'E-mail ou senha incorretos.';
     }
     return 'Erro ao tentar autenticar. Tente novamente.';
   }

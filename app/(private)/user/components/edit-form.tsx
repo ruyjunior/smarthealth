@@ -1,20 +1,14 @@
 'use client';
 import { useActionState, useState, useTransition } from 'react';
-import { User } from '@/app/query/users/definitions';
+import { User } from '@/app/domains/users/types';
 import { TagIcon, AtSymbolIcon, KeyIcon, IdentificationIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { updateUser, State } from '@/app/query/users/actions';
+import { updateUser } from '@/app/domains/users/actions';
 import { upload } from '@vercel/blob/client';
-import  Loading  from '@/app/components/ui/loading';
+import Loading from '@/app/components/ui/loading';
 
-
-export default function EditUserForm({
-  user,
-}: {
-  user: User;
-}) {
-
+export default function EditUserForm({ user }: { user: User }) {
   const initialState = { message: '', errors: {} };
   const updateUserWithId = updateUser.bind(null, user.id);
   const [state, formAction] = useActionState(updateUserWithId, initialState);
@@ -47,22 +41,16 @@ export default function EditUserForm({
 
   return (
     <form onSubmit={handleSubmit} aria-busy={isPending}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
-
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-          <span className="text-sm text-gray-500">
-            Os campos com * são obrigatórios.
-          </span>
+          <span className="text-sm text-gray-500">Os campos com * são obrigatórios.</span>
 
           {/* NAME and Pronoun */}
           <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium">
-              Pronome e Nome*
-            </label>
+            <label className="mb-2 block text-sm font-medium">Pronome e Nome*</label>
             <div className="flex flex-col md:flex-row gap-2">
               {/* Pronome */}
               <div className="relative flex-1 md:max-w-[140px]">
@@ -116,7 +104,6 @@ export default function EditUserForm({
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
-
                   id="email"
                   name="email"
                   type="email"
@@ -197,7 +184,7 @@ export default function EditUserForm({
           </div>
 
           {/* Role */}
-          <input type="hidden" name="role" value={user.role === "Gerente" ? "Gerente" : "Funcionário"} />
+          <input type="hidden" name="role" value={user.role} />
 
           {/* Avatar */}
           <div className="mb-4">
@@ -215,7 +202,7 @@ export default function EditUserForm({
                   onChange={handleAvatarChange}
                   disabled={uploading}
                 />
-                <span className='text-sm '>
+                <span className="text-sm ">
                   Imagens jpg, jpeg, png com tamanho de no máximo 1MB - 200x200
                 </span>
               </div>
@@ -223,16 +210,18 @@ export default function EditUserForm({
                 {uploading && <p className="text-xs text-blue-600 mt-1">Enviando avatar...</p>}
                 {avatarUrl && (
                   <div className="mt-2">
-                    <img src={avatarUrl} alt="Preview" className="h-20 rounded-md" />
+                    <img
+                      src={avatarUrl}
+                      alt="Pré-visualização do seu avatar"
+                      className="h-20 rounded-md"
+                    />
                     <input type="hidden" name="avatarurl" value={avatarUrl} />
                   </div>
                 )}
               </div>
             </div>
           </div>
-
         </div>
-
       )}
 
       {/* Buttons */}
@@ -243,21 +232,31 @@ export default function EditUserForm({
         >
           Sair
         </Link>
-        <Button type="submit" disabled={isPending || uploading} aria-disabled={isPending || uploading}>
+        <Button
+          type="submit"
+          disabled={isPending || uploading}
+          aria-disabled={isPending || uploading}
+        >
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-
     </form>
   );
 }

@@ -1,20 +1,26 @@
-'use client'
-import { User } from "@/app/query/users/definitions";
-import { CalendarDays, ChartPieIcon, ContactIcon, UserCog2Icon, ShieldUserIcon, ListPlusIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+'use client';
+import { User } from '@/app/domains/users/types';
+import { isManager } from '@/app/lib/roles';
+import {
+  CalendarDays,
+  ChartPieIcon,
+  ContactIcon,
+  ShieldUserIcon,
+  ListPlusIcon,
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-
-export default function Nav({ user } : { user: User}) {
+export default function Nav({ user }: { user: User }) {
   const pathname = usePathname();
 
   const menuItems = [
-    { name: "Dashboard", path: "/dashboard", icon: <ChartPieIcon size={20} /> },
-    { name: "Orçamento", path: "/budget", icon: <ListPlusIcon size={20} /> },
-    { name: "Agenda", path: "/services", icon: <CalendarDays size={20} /> },
-    { name: "Pacientes", path: "/clients", icon: <ContactIcon size={20} /> },
-    ...(user.role === "Gerente"
-      ? [{ name: "Gerência", path: "/manager", icon: <ShieldUserIcon size={20} /> }]
+    { name: 'Dashboard', path: '/dashboard', icon: <ChartPieIcon size={20} /> },
+    { name: 'Orçamento', path: '/budget', icon: <ListPlusIcon size={20} /> },
+    { name: 'Agenda', path: '/services', icon: <CalendarDays size={20} /> },
+    { name: 'Pacientes', path: '/clients', icon: <ContactIcon size={20} /> },
+    ...(isManager(user.role)
+      ? [{ name: 'Gerência', path: '/manager', icon: <ShieldUserIcon size={20} /> }]
       : []),
   ];
 
@@ -22,26 +28,29 @@ export default function Nav({ user } : { user: User}) {
     <nav className="w-full max-w-xs mx-auto mt-6">
       <ul className="flex flex-col gap-2">
         {menuItems.map(({ name, path, icon }) => {
-          const active = pathname === path;
+          const active = pathname === path || pathname.startsWith(`${path}/`);
           return (
             <li key={path}>
               <Link
                 href={path}
                 className={`
-                  flex items-center gap-3 w-full px-4 py-3 rounded-lg transition
-                  ${active
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
-                    : "bg-white text-blue-900 hover:bg-blue-50 hover:text-blue-700 border border-transparent hover:border-blue-200"}
-                  font-semibold
-                  text-base
-                  sm:text-base
-                  md:text-base
-                  lg:text-base
+                  group flex w-full items-center justify-center gap-3 rounded-xl border px-2 py-3 text-sm font-semibold transition md:justify-start md:px-4
+                  ${
+                    active
+                      ? 'border-blue-400/30 bg-blue-500/20 text-white shadow-inner shadow-blue-950/20'
+                      : 'border-transparent text-slate-300 hover:border-white/10 hover:bg-white/10 hover:text-white'
+                  }
                 `}
-                aria-current={active ? "page" : undefined}
+                aria-current={active ? 'page' : undefined}
+                aria-label={name}
+                title={name}
               >
-                <span className={`transition ${active ? "text-white" : "text-blue-500"}`}>{icon}</span>
-                <span className="ml-1 truncate">{name}</span>
+                <span
+                  className={`transition ${active ? 'text-blue-200' : 'text-slate-400 group-hover:text-white'}`}
+                >
+                  {icon}
+                </span>
+                <span className="ml-1 hidden truncate md:block">{name}</span>
               </Link>
             </li>
           );

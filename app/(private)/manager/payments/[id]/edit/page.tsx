@@ -1,24 +1,19 @@
 import Form from '../../components/edit-form';
+import { getCurrentClinicId } from '@/app/lib/session';
 import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-import { fetchPaymentById } from '@/app/query/payments/data';
+import { fetchPaymentById } from '@/app/domains/payments/queries';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { fetchClients } from '@/app/query/clients/data';
-import { fetchOffices } from '@/app/query/offices/data';
-import { fetchTypes } from '@/app/query/types/data';
-import { fetchUsers } from '@/app/query/users/data';
-
 
 export const metadata: Metadata = {
   title: 'Editar Pagamento',
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const idclinic = await getCurrentClinicId();
   const params = await props.params;
   const id = params.id;
-  const [payment] = await Promise.all([
-    fetchPaymentById    (id),
-  ]);
+  const [payment] = await Promise.all([fetchPaymentById(idclinic, id)]);
   if (!payment) {
     notFound();
   }

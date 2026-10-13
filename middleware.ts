@@ -1,29 +1,42 @@
-import { auth } from "@/app/lib/auth"; // Certifique-se de que auth está exportado corretamente
-import { NextResponse } from "next/server";
+import { auth } from '@/app/lib/auth';
+import { isManagerPath, isProtectedPath, isPublicPath } from '@/app/lib/access';
+import { isManager } from '@/app/lib/roles';
+import { NextResponse } from 'next/server';
 
 export async function middleware(request: Request) {
-  const session = await auth(); // auth() já retorna os dados da sessão corretamente
-  const isLoggedIn = !!session?.user; // Agora acessamos session.user diretamente
-  const isManager = session?.user.role === 'Gerente';
-
+  const session = await auth();
   const { pathname } = new URL(request.url);
-  const isPublicRoute = pathname === "/" || pathname === "/plans" ||
-    pathname === "/login" || pathname === "/register" ||
-    pathname === "/forgot-password" || pathname === "/reset-password" || pathname === "/confirm" ;
-  
-  const managerRoute = pathname === "/manager";
 
-  if (!isPublicRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (isPublicPath(pathname)) {
+    return NextResponse.next();
   }
 
-  if (!isManager && managerRoute){
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  } 
+  if (!session?.user) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  if (isProtectedPath(pathname) && isManagerPath(pathname) && !isManager(session.user.role)) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/manager"],
+  matcher: [
+    '/dashboard',
+    '/dashboard/:path*',
+    '/budget',
+    '/budget/:path*',
+    '/clients',
+    '/clients/:path*',
+    '/notes',
+    '/notes/:path*',
+    '/services',
+    '/services/:path*',
+    '/user',
+    '/user/:path*',
+    '/manager',
+    '/manager/:path*',
+  ],
 };

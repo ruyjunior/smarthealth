@@ -1,166 +1,197 @@
 import React from 'react';
 import { Page, Text, View, Document, Image } from '@react-pdf/renderer';
-import styles from './stylesPDF';
-import { formatPhone } from '@/app/lib/utils';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
-import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
-import { Note } from '@/app/query/notes/definitions';
-import { NoteType } from '@/app/query/notetypes/definitions';
-import { User } from '@/app/query/users/definitions';
-import { Clinic } from '@/app/query/clinics/definitions';
-import { Client } from '@/app/query/clients/definitions';
-import { formatDateToLocal } from '@/app/lib/utils';
+import styles from '@/app/components/ui/pdf-styles';
+import { formatPhone, formatDateToLocal } from '@/app/lib/utils';
+import { Note } from '@/app/domains/notes/types';
+import { NoteType } from '@/app/domains/notetypes/types';
+import { User } from '@/app/domains/users/types';
+import { Clinic } from '@/app/domains/clinics/types';
+import { Client } from '@/app/domains/clients/types';
 import logo from '@/public/images/logo.png';
+import logoDev from '@/public/images/logos/logoDev.png';
 
-export const PagePDF = ({ note, type, user, client, clinic }: {
-  note: Note, type: NoteType, user: User, client: Client, clinic: Clinic
-}) => (
-  <div>
-    <PDFDownloadLink
-      document={<DocPDF note={note} type={type} user={user} client={client} clinic={clinic} />}
-      fileName={type.title + '_' + client.name + '.pdf'}
-    >
-      {({ loading }) => (loading ? 'Gerando PDF...' : 'Download ')}
-    </PDFDownloadLink>
-    <DocumentArrowDownIcon className="h-5 w-5 text-gray-500" />
+type DocProps = {
+  note: Note;
+  type: NoteType;
+  user: User;
+  client: Client;
+  clinic: Clinic;
+};
 
-    <PDFViewer style={{ width: '100%', height: '500px', marginTop: 20 }}>
-      <DocPDF note={note} type={type} user={user} client={client} clinic={clinic} />
-    </PDFViewer>
-  </div>
-);
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <View style={styles.sectionHeaderRow}>
+      <View style={styles.sectionAccent} />
+      <Text style={styles.sectionTitle}>{children}</Text>
+    </View>
+  );
+}
 
-export const DocPDF = ({ note, type, user, client, clinic }:
-  { note: Note, type: NoteType, user: User, client: Client, clinic: Clinic }) => {
+function PdfFooter() {
+  return (
+    <View style={styles.footer} fixed>
+      <View style={styles.footerBlock}>
+        <Image src={logo.src} style={styles.footerLogo} />
+        <View>
+          <Text style={styles.footerText}>Smart Health - Sua Clinica Online</Text>
+          <Text style={styles.footerTextFaint}>www.smarthealth.app.br</Text>
+        </View>
+      </View>
+
+      <Text
+        style={styles.pageNumber}
+        render={({ pageNumber, totalPages }) => `Pagina ${pageNumber} de ${totalPages}`}
+      />
+
+      <View style={[styles.footerBlock, { justifyContent: 'flex-end' }]}>
+        <View style={{ alignItems: 'flex-end', marginRight: 8 }}>
+          <Text style={styles.footerTextFaint}>Desenvolvido por Autoric Automation</Text>
+          <Text style={styles.footerTextFaint}>www.autoric.com.br</Text>
+        </View>
+        <Image src={logoDev.src} style={styles.footerLogoDev} />
+      </View>
+    </View>
+  );
+}
+
+function FieldTable({
+  labels,
+  values,
+  renderValue,
+}: {
+  labels: string[];
+  values: (string | boolean | undefined)[];
+  renderValue?: (value: string | boolean | undefined) => string;
+}) {
+  if (labels.length === 0) return null;
 
   return (
-    <Document>
+    <View style={styles.table}>
+      {labels.map((label, idx) => {
+        const raw = values[idx];
+        const text = renderValue ? renderValue(raw) : String(raw ?? '');
+
+        return (
+          <View
+            key={`${label}-${idx}`}
+            style={[styles.tableRow, idx % 2 === 1 ? styles.tableRowAlt : {}]}
+          >
+            <Text style={styles.colLabel}>{label}</Text>
+            <Text style={styles.colValue}>{text}</Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+}
+
+export const DocPDF = ({ note, type, user, client, clinic }: DocProps) => {
+  const fieldLabels = type.fieldslabels ?? [];
+  const checkLabels = type.checkslabels ?? [];
+  const hasFields = fieldLabels.length > 0;
+  const hasChecks = checkLabels.length > 0;
+
+  return (
+    <Document title={`${type.title} - ${client.name}`} author={clinic.title}>
       <Page size="A4" style={styles.page}>
+        <View style={styles.topBar} fixed />
+
         {/* Header */}
-        <View style={styles.headerSection}>
-          <Image src={clinic.logourl} style={styles.logo} />
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.title}>{clinic.title}</Text>
-            <Text style={styles.subtitle}>{clinic?.siteurl}</Text>
-            <Text style={styles.subtitle}>{clinic?.address}</Text>
-            <Text style={styles.subtitle}>Telefone: {clinic?.phone}</Text>
-            <Text style={styles.subtitle}>CNPJ: {clinic?.cnpj}</Text>
-            <Text style={styles.reportDate}>Emitido em: {formatDateToLocal(note.date)}</Text>
+        <View style={styles.header}>
+          <View style={styles.logoBox}>
+            <Image src={clinic.logourl} style={styles.logo} />
           </View>
-          {/*<Image src={logo.src} style={styles.logoApp} /> */}
-        </View>
 
-        {/* Linha divisória */}
-        <View style={{ borderBottomWidth: 2, borderBottomColor: '#0077b6', marginBottom: 12 }} />
-
-        {/* Profissional e Paciente */}
-        <View style={{ flexDirection: 'row', marginBottom: 12 }}>
-          {/* Paciente */}
-          <View style={{ flex: 1, paddingLeft: 8 }}>
-            <Text style={styles.sectionTitle}>Paciente</Text>
-            <Text style={styles.field}><Text style={styles.label}></Text>{client.pronoun} {client.name}</Text>
-            <Text style={styles.field}><Text style={styles.label}>Telefone:</Text> {formatPhone(client.phone)}</Text>
-            <Text style={styles.field}><Text style={styles.label}>Email:</Text> {client.email}</Text>
+          <View style={styles.headerInfo}>
+            <Text style={styles.docTitle}>FICHA CLINICA</Text>
+            <Text style={styles.clinicName}>{clinic.title}</Text>
+            {clinic.siteurl ? <Text style={styles.clinicLine}>{clinic.siteurl}</Text> : null}
+            {clinic.address ? <Text style={styles.clinicLine}>{clinic.address}</Text> : null}
+            {clinic.phone ? <Text style={styles.clinicLine}>Telefone: {clinic.phone}</Text> : null}
+            {clinic.cnpj ? <Text style={styles.clinicLine}>CNPJ: {clinic.cnpj}</Text> : null}
           </View>
-        </View>
 
-        {/* Linha divisória */}
-        <View style={{ borderBottomWidth: 1, borderBottomColor: '#bbb', marginBottom: 12 }} />
-
-        {/* Ficha - Campos/Checks */}
-        <View style={{ marginBottom: 8 }}>
-          <Text style={styles.chapter}>{type.title}</Text>
-        </View>
-
-        {type.fieldslabels.length > 0 && type.checkslabels.length > 0 ? (
-          // Ambos existem: lado a lado
-          <View style={[styles.table, { flexDirection: 'row', gap: 12 }]}>
-            {/* Coluna dos Campos */}
-            <View style={{ flex: 1 }}>
-              <Text style={styles.tableSectionTitle}>Campos</Text>
-              {type.fieldslabels.map((label, idx) => (
-                <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
-                  <Text style={styles.tableCellHeader}>{label}</Text>
-                  <Text style={styles.tableCell}>{note.fields?.[idx] ?? ''}</Text>
-                </View>
-              ))}
-            </View>
-            {/* Coluna dos Checks */}
-            <View style={{ flex: 1 }}>
-              <Text style={styles.tableSectionTitle}>Checks</Text>
-              {type.checkslabels.map((label, idx) => (
-                <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
-                  <Text style={styles.tableCellHeader}>{label}</Text>
-                  <Text style={styles.tableCell}>
-                    {note.checks?.[idx] ? 'Sim' : '-'}
-                  </Text>
-                </View>
-              ))}
+          <View style={styles.headerMeta}>
+            <View style={styles.metaBox}>
+              <Text style={styles.metaLabel}>Emitido em</Text>
+              <Text style={styles.metaValue}>{formatDateToLocal(note.date)}</Text>
             </View>
           </View>
-        ) : type.fieldslabels.length > 0 ? (
-          // Só fields
-          <View style={styles.table}>
-            <Text style={styles.tableSectionTitle}>Campos</Text>
-            {type.fieldslabels.map((label, idx) => (
-              <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
-                <Text style={styles.tableCellHeader}>{label}</Text>
-                <Text style={styles.tableCell}>{note.fields?.[idx] ?? ''}</Text>
-              </View>
-            ))}
-          </View>
-        ) : type.checkslabels.length > 0 ? (
-          // Só checks
-          <View style={styles.table}>
-            <Text style={styles.tableSectionTitle}>Checks</Text>
-            {type.checkslabels.map((label, idx) => (
-              <View key={idx} style={[styles.tableRow, idx % 2 === 0 ? styles.tableRowAlt : {}]}>
-                <Text style={styles.tableCellHeader}>{label}</Text>
-                <Text style={styles.tableCell}>
-                  {note.checks?.[idx] ? 'Sim' : '-'}
-                </Text>
-              </View>
-            ))}
-          </View>
-        ) : (
-          // Nenhum campo/check
-          <Text style={styles.tableCell}>Nenhum campo preenchido.</Text>
-        )}
+        </View>
 
-        {/* Linha divisória */}
-        <View style={{ borderBottomWidth: 2, borderBottomColor: '#0077b6', marginBottom: 12, marginTop: 12 }} />
+        {/* Paciente */}
+        <View style={styles.sectionCard}>
+          <SectionTitle>Paciente</SectionTitle>
+          <Text style={styles.field}>
+            <Text style={styles.label}>Nome: </Text>
+            {client.pronoun} {client.name}
+          </Text>
+          {client.phone ? (
+            <Text style={styles.field}>
+              <Text style={styles.label}>Telefone: </Text>
+              {formatPhone(client.phone)}
+            </Text>
+          ) : null}
+          {client.email ? (
+            <Text style={styles.field}>
+              <Text style={styles.label}>Email: </Text>
+              {client.email}
+            </Text>
+          ) : null}
+        </View>
+
+        {/* Ficha */}
+        <View style={styles.sectionCard}>
+          <SectionTitle>{type.title}</SectionTitle>
+
+          {!hasFields && !hasChecks ? (
+            <Text style={styles.emptyText}>Nenhum campo preenchido nesta ficha.</Text>
+          ) : (
+            <>
+              {hasFields && (
+                <View style={hasChecks ? { marginBottom: 12 } : {}}>
+                  {hasChecks ? (
+                    <Text style={[styles.label, { marginBottom: 5 }]}>Campos</Text>
+                  ) : null}
+                  <FieldTable labels={fieldLabels} values={note.fields ?? []} />
+                </View>
+              )}
+
+              {hasChecks && (
+                <View>
+                  {hasFields ? (
+                    <Text style={[styles.label, { marginBottom: 5 }]}>Caixas de selecao</Text>
+                  ) : null}
+                  <FieldTable
+                    labels={checkLabels}
+                    values={note.checks ?? []}
+                    renderValue={(value) => (value ? 'Sim' : 'Nao')}
+                  />
+                </View>
+              )}
+            </>
+          )}
+        </View>
 
         {/* Profissional */}
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 1, paddingRight: 8 , marginTop: 12 }}>
-            <Text style={styles.sectionTitle}>Profissional</Text>
-            <Text style={styles.field}><Text style={styles.label}></Text>{user.pronoun} {user.name}</Text>
-            <Text style={styles.field}><Text style={styles.label}>Registro:</Text> {user.category}</Text>
+        <View style={styles.sectionCard}>
+          <SectionTitle>Profissional responsavel</SectionTitle>
+          <Text style={styles.field}>
+            <Text style={styles.label}>Nome: </Text>
+            {user.pronoun} {user.name}
+          </Text>
+          {user.category ? (
+            <Text style={styles.field}>
+              <Text style={styles.label}>Registro: </Text>
+              {user.category}
+            </Text>
+          ) : null}
+          <View style={styles.signatureLine}>
+            <Text style={[styles.emptyText, { fontSize: 8 }]}>Assinatura</Text>
           </View>
         </View>
 
-
-          {/* Footer */}
-          <View style={styles.footer}
-            fixed
-          >
-            {/* Esquerda */}
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Image src={logo.src} style={styles.logoApp} />
-              <View style={{ marginLeft: 12 }}>
-                <Text style={styles.footerText}>Smart Health - Sua Clínica Online</Text>
-                <Text style={styles.footerText}>www.smarthealt.app.br</Text>
-              </View>
-            </View>
-            {/* Direita */}
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ marginRight: 12, textAlign: 'right' }}>
-                <Text style={styles.footerTextDev}>Desenvolvido por Autoric Automation</Text>
-                <Text style={styles.footerTextDev}>www.autoric.com.br</Text>
-              </View>
-              <Image src="https://www.autoric.com.br/images/logo.png" style={styles.logoDev} />
-            </View>
-          </View>
+        <PdfFooter />
       </Page>
     </Document>
   );

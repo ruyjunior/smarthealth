@@ -1,10 +1,16 @@
 'use client';
 import { useActionState, useState, useTransition } from 'react';
-import { Clinic } from '@/app/query/clinics/definitions';
-import { TagIcon, IdentificationIcon, PhoneIcon, TruckIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { Clinic } from '@/app/domains/clinics/types';
+import {
+  TagIcon,
+  IdentificationIcon,
+  PhoneIcon,
+  TruckIcon,
+  GlobeAltIcon,
+} from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { updateClinic, State } from '@/app/query/clinics/actions';
+import { updateClinic, State } from '@/app/domains/clinics/actions';
 import { upload } from '@vercel/blob/client';
 import Loading from '@/app/components/ui/loading';
 import { formatCNPJ, formatPhone } from '@/app/lib/utils';
@@ -51,16 +57,13 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
     setPhone(formattedPhone);
   };
 
-
   return (
     <form onSubmit={handleSubmit}>
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
-
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
           {/* Title */}
           <div className="mb-4">
             <label htmlFor="title" className="mb-2 block text-sm font-medium">
@@ -218,16 +221,19 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
                   onChange={handleLogoChange}
                   disabled={uploading}
                 />
-                <span className='text-sm '>
+                <span className="text-sm ">
                   Imagens jpg, jpeg, png com tamanho de no máximo 1MB - 200x200
                 </span>
-
               </div>
               <div>
                 {uploading && <p className="text-xs text-blue-600 mt-1">Enviando logo...</p>}
                 {logoUrl && (
                   <div className="mt-2">
-                    <img src={logoUrl} alt="Preview" className="h-20 rounded-md" />
+                    <img
+                      src={logoUrl}
+                      alt="Pré-visualização do logotipo da clínica"
+                      className="h-20 rounded-md"
+                    />
                     <input type="hidden" name="logourl" value={logoUrl} />
                   </div>
                 )}
@@ -235,7 +241,6 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
             </div>
           </div>
         </div>
-
       )}
 
       {/* Botões */}
@@ -250,17 +255,23 @@ export default function EditclinicForm({ clinic }: { clinic: Clinic }) {
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-
     </form>
   );
 }

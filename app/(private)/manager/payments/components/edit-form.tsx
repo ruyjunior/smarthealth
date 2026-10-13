@@ -1,20 +1,20 @@
 'use client';
-import { useActionState, useTransition, useState } from 'react';
-import { Payment } from '@/app/query/payments/definitions';
-import { TagIcon, ChatBubbleBottomCenterTextIcon, CurrencyDollarIcon, CalendarDateRangeIcon } from '@heroicons/react/24/outline';
+import { useActionState, useTransition } from 'react';
+import { Payment } from '@/app/domains/payments/types';
+import {
+  TagIcon,
+  ChatBubbleBottomCenterTextIcon,
+  CurrencyDollarIcon,
+  CalendarDateRangeIcon,
+} from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { updatePayment, State } from '@/app/query/payments/actions';
+import { updatePayment, State } from '@/app/domains/payments/actions';
 import { formatDateDb } from '@/app/lib/utils';
 import Loading from '@/app/components/ui/loading';
 import { formatCurrency, formatCurrencyInput } from '@/app/lib/utils';
 
-
-export default function EditPaymentForm({
-  payment
-}: {
-  payment: Payment
-}) {
+export default function EditPaymentForm({ payment }: { payment: Payment }) {
   const initialState: State = { message: '', errors: {} };
   const updatePaymentWithId = updatePayment.bind(null, payment.id);
   const [state, formAction] = useActionState(updatePaymentWithId, initialState);
@@ -31,16 +31,12 @@ export default function EditPaymentForm({
 
   return (
     <form onSubmit={handleSubmit}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
-
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-          <span className="text-sm text-gray-500">
-            Os campos com * são obrigatórios.
-          </span>
+          <span className="text-sm text-gray-500">Os campos com * são obrigatórios.</span>
 
           {/* Title */}
           <div className="mb-4">
@@ -145,9 +141,7 @@ export default function EditPaymentForm({
               </div>
             </div>
           </div>
-
         </div>
-
       )}
 
       {/* Bottons */}
@@ -162,17 +156,23 @@ export default function EditPaymentForm({
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-
     </form>
   );
 }

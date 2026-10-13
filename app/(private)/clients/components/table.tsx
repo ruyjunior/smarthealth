@@ -1,12 +1,7 @@
-import { ButtonDelete } from '@/app/components/ui/buttonDelete';
 import { UpdateClient, DeleteClient, ViewClient, CallWhatsapp } from './buttons';
-import { deleteClient } from '@/app/query/clients/actions';
-
-import {
-  formatDateToLocal, formatCurrency,
-  formatCPF, formatCEP, formatPhone
-} from '@/app/lib/utils';
-import { fetchFilteredClients } from '@/app/query/clients/data';
+import { getCurrentClinicId } from '@/app/lib/session';
+import { formatDateToLocal, formatCPF, formatCEP, formatPhone } from '@/app/lib/utils';
+import { fetchFilteredClients } from '@/app/domains/clients/queries';
 
 export default async function ClientsTable({
   query,
@@ -15,78 +10,90 @@ export default async function ClientsTable({
   query: string;
   currentPage: number | undefined | null;
 }) {
-  const clients = await fetchFilteredClients(query, currentPage);
+  const idclinic = await getCurrentClinicId();
+  const clients = await fetchFilteredClients(idclinic, query, currentPage);
 
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden rounded-lg bg-blue-200 shadow-md p-4 md:pt-0">
-              {/* Mobile View */}
+            <div className="overflow-hidden rounded-[2rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-[0_25px_80px_rgba(59,130,246,0.08)] md:p-5">
               <div className="md:hidden">
                 {clients?.map((client) => {
                   return (
-                    <div key={client.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
-                      <div className="border-b pb-4">
-                        <h3 className="text-xl font-semibold text-gray-900">{client.pronoun} {client.name}</h3>
-                        <p className="text-sm text-gray-600">Email: {client.email}</p>
-                        <p className="text-sm text-gray-600">Phone: {formatPhone(client.phone)}</p>
+                    <div
+                      key={client.id}
+                      className="mb-4 w-full rounded-[1.5rem] border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100"
+                    >
+                      <div className="border-b border-slate-100 pb-4">
+                        <h3 className="text-lg font-bold text-slate-800">
+                          {client.pronoun} {client.name}
+                        </h3>
+                        <p className="mt-2 text-sm text-slate-600">Email: {client.email}</p>
+                        <p className="text-sm text-slate-600">
+                          Telefone: {formatPhone(client.phone)}
+                        </p>
                       </div>
-                      <div className="flex justify-end gap-3 pt-3">
+                      <div className="mt-4 flex justify-end gap-2">
                         {client.phone && <CallWhatsapp phone={client.phone?.replace(/\D/g, '')} />}
                         <ViewClient id={client.id} />
                         <UpdateClient id={client.id} />
                         <DeleteClient id={client.id} />
                       </div>
                     </div>
-                  )
+                  );
                 })}
               </div>
 
-              {/* Desktop View */}
-              <table className="hidden min-w-full text-gray-900 text-center md:table">
-                <thead className="bg-blue-300 text-xs font-medium">
+              <table className="hidden min-w-full text-center text-slate-800 md:table">
+                <thead className="bg-gradient-to-r from-blue-700 to-indigo-700 text-xs font-semibold uppercase tracking-[0.18em] text-white">
                   <tr>
-                    <th className="px-2 py-2">Editar</th>
-                    <th className="px-2 py-2">Nome</th>
-                    <th className="px-2 py-2">CPF</th>
-                    <th className="px-2 py-2">Nasc.:</th>
-                    <th className="px-2 py-2">Email</th>
-                    <th className="px-2 py-2">Telefone</th>
-                    <th className="px-2 py-2">CEP</th>
-                    <th className="px-2 py-2">Deletar</th>
+                    <th className="px-2 py-3">Ações</th>
+                    <th className="px-2 py-3">Nome</th>
+                    <th className="px-2 py-3">CPF</th>
+                    <th className="px-2 py-3">Nasc.</th>
+                    <th className="px-2 py-3">Email</th>
+                    <th className="px-2 py-3">Telefone</th>
+                    <th className="px-2 py-3">CEP</th>
+                    <th className="px-2 py-3">Excluir</th>
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-slate-200">
                   {clients.map((client) => {
                     return (
-                      <tr key={client.id} className="hover:bg-blue-300">
-                        <td className="py-2 px-2">
-                          <div className="flex gap-2 items-center justify-center">
+                      <tr key={client.id} className="bg-white/80 transition hover:bg-blue-50/80">
+                        <td className="px-2 py-3">
+                          <div className="flex items-center justify-center gap-2">
                             <ViewClient id={client.id} />
                             <UpdateClient id={client.id} />
                           </div>
                         </td>
-                        <td className="px-2 py-2 text-xs align-middle">{client.pronoun} {client.name}</td>
-                        <td className="px-2 py-2 text-xs align-middle">{formatCPF(client.cpf)}</td>
-                        <td className="px-2 py-2 text-xs align-middle">{client.birth ? formatDateToLocal(client.birth) : ''}</td>
-                        <td className="px-2 py-2 text-xs align-middle">{client.email}</td>
-                        <td className="py-2 px-2 text-xs">
-                          <div className="flex gap-1 items-center justify-center">
-                            {formatPhone(client.phone)}
-                            {client.phone && <CallWhatsapp phone={client.phone?.replace(/\D/g, '')} />}
+                        <td className="px-2 py-3 text-sm font-semibold align-middle">
+                          {client.pronoun} {client.name}
+                        </td>
+                        <td className="px-2 py-3 text-xs align-middle">{formatCPF(client.cpf)}</td>
+                        <td className="px-2 py-3 text-xs align-middle">
+                          {client.birth ? formatDateToLocal(client.birth) : ''}
+                        </td>
+                        <td className="px-2 py-3 text-xs align-middle">{client.email}</td>
+                        <td className="px-2 py-3 text-xs align-middle">
+                          <div className="flex items-center justify-center gap-2">
+                            <span>{formatPhone(client.phone)}</span>
+                            {client.phone && (
+                              <CallWhatsapp phone={client.phone?.replace(/\D/g, '')} />
+                            )}
                           </div>
                         </td>
-                        <td className="px-2 py-2 text-xs align-middle">{formatCEP(client.cep)}</td>
-                        <td className="py-2 px-2">
-                          <div className="flex justify-center items-center">
+                        <td className="px-2 py-3 text-xs align-middle">{formatCEP(client.cep)}</td>
+                        <td className="px-2 py-3 align-middle">
+                          <div className="flex items-center justify-center">
                             <DeleteClient id={client.id} />
                           </div>
                         </td>
                       </tr>
-                    )
+                    );
                   })}
                 </tbody>
               </table>
@@ -94,6 +101,6 @@ export default async function ClientsTable({
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

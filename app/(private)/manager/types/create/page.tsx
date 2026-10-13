@@ -1,19 +1,14 @@
 import Form from '../components/create-form';
+import { requireSessionUser } from '@/app/lib/session';
 import Breadcrumbs from '@/app/components/ui/breadcrumbs';
 import { Metadata } from 'next';
-import { auth } from '@/app/lib/auth';
-import { fetchUserById } from '@/app/query/users/data';
 
 export const metadata: Metadata = {
   title: 'Nova Especialidade',
 };
 
 export default async function Page() {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
+  await requireSessionUser();
 
   return (
     <main>
@@ -27,7 +22,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form id={user.idclinic} />
+      <Form />
     </main>
   );
 }

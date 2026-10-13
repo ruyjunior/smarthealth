@@ -1,36 +1,29 @@
 import Form from '../../components/edit-form';
+import { requireSessionUser } from '@/app/lib/session';
 import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-import { fetchNoteById } from '@/app/query/notes/data';
-import { fetchNoteTypes } from '@/app/query/notetypes/data';
+import { fetchNoteById } from '@/app/domains/notes/queries';
+import { fetchNoteTypes } from '@/app/domains/notetypes/queries';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { fetchClientById } from '@/app/query/clients/data';
-import { fetchUsers } from '@/app/query/users/data';
-import { auth } from '@/app/lib/auth';
-import { fetchUserById } from '@/app/query/users/data';
-
+import { fetchClientById } from '@/app/domains/clients/queries';
 
 export const metadata: Metadata = {
-  title: 'Edit Notes',
+  title: 'Editar ficha clínica',
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
+  const user = await requireSessionUser();
   const id = params.id;
 
-  const note = await fetchNoteById(id);
-  const client = await fetchClientById(note.idclient);
-  const types = await fetchNoteTypes();
-
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
-
+  const note = await fetchNoteById(user.idclinic, id);
+  if (!note) notFound();
+  const client = await fetchClientById(user.idclinic, note.idclient);
+  if (!client) notFound();
+  const types = await fetchNoteTypes(user.idclinic);
 
   return (
-    <main>
+    <main className="space-y-6 px-2 py-4 md:px-4">
       <Breadcrumbs
         breadcrumbs={[
           { label: 'Paciente', href: `/clients` },
@@ -39,14 +32,17 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
             label: 'Editar Ficha',
             href: `/notes/${id}/edit`,
             active: true,
-          }]}
+          },
+        ]}
       />
-      <Form
-        note={note}
-        client={client}
-        user={user}
-        types={types}
-      />
+      <div className="mx-auto max-w-5xl rounded-[2rem] border border-blue-100 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-6 shadow-[0_25px_80px_rgba(37,99,235,0.16)]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">Prontuário</p>
+        <h1 className="mt-2 text-2xl font-extrabold text-white sm:text-3xl">
+          Editar ficha clínica
+        </h1>
+        <p className="mt-2 text-sm text-blue-100 sm:text-base">Paciente: {client.name}</p>
+      </div>
+      <Form note={note} client={client} user={user} types={types} />
     </main>
   );
 }

@@ -1,19 +1,17 @@
 'use client';
 import { useActionState, useTransition } from 'react';
 import Link from 'next/link';
-import { TagIcon, AtSymbolIcon, KeyIcon, IdentificationIcon } from '@heroicons/react/24/outline';
+import { TagIcon, AtSymbolIcon, IdentificationIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
-import { createUser, State } from '@/app/query/users/actions';
+import { createUser, State } from '@/app/domains/users/actions';
 import Loading from '@/app/components/ui/loading';
 
-export default function Form({ id }: { id: string | undefined }) {
-
+export default function Form() {
   const initialState: State = { message: '', errors: {} };
 
   const [state, formAction] = useActionState(createUser, initialState);
 
   const [isPending, startTransition] = useTransition();
-
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,21 +22,16 @@ export default function Form({ id }: { id: string | undefined }) {
 
   return (
     <form onSubmit={handleSubmit}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
           {/* ID */}
-          <input type="hidden" name="idclinic" value={id} />
 
           {/* NAME and Pronoun */}
           <div className="mb-4">
-            <label className="mb-2 block text-sm font-medium">
-              Pronome e Nome
-            </label>
+            <label className="mb-2 block text-sm font-medium">Pronome e Nome</label>
             <div className="flex flex-col md:flex-row gap-2">
               {/* Pronome */}
               <div className="relative flex-1 md:max-w-[140px]">
@@ -143,7 +136,6 @@ export default function Form({ id }: { id: string | undefined }) {
 
           {/* Role */}
           <input type="hidden" name="role" value="Funcionário" />
-
         </div>
       )}
 
@@ -159,13 +151,20 @@ export default function Form({ id }: { id: string | undefined }) {
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>

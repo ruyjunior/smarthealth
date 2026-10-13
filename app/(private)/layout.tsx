@@ -1,15 +1,10 @@
-import Sidebar from "@/app/components/main/Sidebar";
-import { SessionProvider } from "next-auth/react";
+import Sidebar from '@/app/components/main/Sidebar';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider>
-      <div className="flex flex-row min-h-screen">
-        <Sidebar />
-        <main className="flex-grow p-4 w-full ">
-          {children}
-        </main>
-      </div>
-    </SessionProvider>
+    <div className="flex min-h-screen flex-row bg-slate-100">
+      <Sidebar />
+      <main className="min-w-0 w-full flex-grow bg-slate-100 p-3 sm:p-4 lg:p-6">{children}</main>
+    </div>
   );
 }

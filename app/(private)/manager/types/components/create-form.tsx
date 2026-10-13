@@ -1,13 +1,17 @@
 'use client';
 import { useActionState, useTransition } from 'react';
 import Link from 'next/link';
-import { TagIcon, CurrencyDollarIcon, ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
+import {
+  TagIcon,
+  CurrencyDollarIcon,
+  ChatBubbleBottomCenterTextIcon,
+} from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
-import { createType, State } from '@/app/query/types/actions';
+import { createType, State } from '@/app/domains/types/actions';
 import Loading from '@/app/components/ui/loading';
 import { formatCurrencyInput } from '@/app/lib/utils';
 
-export default function Form({ id }: { id: string | undefined }) {
+export default function Form() {
   const initialState: State = { message: undefined, errors: {} };
   const [state, formAction] = useActionState(createType, initialState);
 
@@ -21,15 +25,12 @@ export default function Form({ id }: { id: string | undefined }) {
 
   return (
     <form onSubmit={handleSubmit}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
           {/* ID */}
-          <input type="hidden" name="idclinic" value={id} />
 
           {/* Title */}
           <div className="mb-4">
@@ -126,13 +127,20 @@ export default function Form({ id }: { id: string | undefined }) {
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>

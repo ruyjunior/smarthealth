@@ -1,68 +1,129 @@
 'use client';
-import { UserGroupIcon, CalendarIcon, CurrencyDollarIcon, StarIcon, NewspaperIcon } from '@heroicons/react/24/outline';
+import {
+  UserGroupIcon,
+  CalendarIcon,
+  CurrencyDollarIcon,
+  StarIcon,
+  NewspaperIcon,
+} from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/components/ui/fonts';
-import { Service } from '@/app/query/services/definitions';
-import { User } from '@/app/query/users/definitions';
-import { Client } from '@/app/query/clients/definitions';
-import { Type } from '@/app/query/types/definitions';
-import { Office } from '@/app/query/offices/definitions';
+import { Service } from '@/app/domains/services/types';
+import { Type } from '@/app/domains/types/types';
 import { formatCurrency } from '@/app/lib/utils';
 
-export default function ResumeWeek(
-    { services, users, clients, types, offices }:
-        { services: Service[], users: User[], clients: Client[], types: Type[], offices: Office[] }
-) {
+export default function ResumeWeek({ services, types }: { services: Service[]; types: Type[] }) {
+  const totalDoneServices = services.filter((s) => s.status === 'Feito').length;
+  const totalEmptyServices = services.filter((s) => s.status === 'Vazia').length;
+  const serviceCounts = services.reduce<Map<string, number>>((counts, service) => {
+    if (service.status === 'Marcada' || service.status === 'Feito') {
+      counts.set(service.idtype, (counts.get(service.idtype) ?? 0) + 1);
+    }
+    return counts;
+  }, new Map());
+  const popularServices = Array.from(serviceCounts, ([typeId, count]) => ({
+    id: typeId,
+    title: types.find((type) => type.id === typeId)?.title ?? 'Tipo não encontrado',
+    count,
+  }))
+    .sort((a, b) => b.count - a.count || a.title.localeCompare(b.title, 'pt-BR'))
+    .slice(0, 3);
 
-    const totalServices = services.length;
-    const totalDoneServices = services.filter(s => s.status === 'Feito').length;
-    const totalBusyServices = services.filter(s => s.status === 'Marcada').length;
-    const totalEmptyServices = services.filter(s => s.status === 'Vazia').length;
-    const topServices = services.slice(0, 3);
+  const estimatedRevenue = services
+    .filter((service) => service.status === 'Feito')
+    .reduce((acc, service) => {
+      const type = types.find((t) => t.id === service.idtype);
+      return acc + (type ? Number(type.price) : 0);
+    }, 0);
 
-    const totalRevenue = services
-        .filter(service => service.status === 'Feito')
-        .reduce((acc, service) => {
-            const type = types.find(t => t.id === service.idtype);
-            return acc + (type ? Number(type.price) : 0);
-        }, 0);
-
-    return (
-        <div className="flex w-full items-center justify-between p-4">
-            <div className="rounded-xl border bg-gradient-to-br from-blue-50 to-blue-100 p-6 shadow-lg flex flex-col items-center w-full max-w-5xl mx-auto">
-                <div className="flex items-center gap-2 mb-2">
-                    <NewspaperIcon className="h-8 w-8 text-indigo-500" />
-                    <h1 className={`${lusitana.className} text-2xl text-blue-900 font-extrabold tracking-tight`}>
-                        Resumo Semanal
-                    </h1>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-                    <div className="bg-white rounded-xl shadow flex flex-col items-center p-5 border-t-4 border-blue-400">
-                        <UserGroupIcon className="h-8 w-8 text-blue-500 mb-2" />
-                        <h2 className="text-base font-semibold text-blue-900 mb-1">Atendimentos Realizados</h2>
-                        <p className="text-2xl font-bold text-blue-700">{totalDoneServices}</p>
-                    </div>
-                    <div className="bg-white rounded-xl shadow flex flex-col items-center p-5 border-t-4 border-green-400">
-                        <CalendarIcon className="h-8 w-8 text-green-500 mb-2" />
-                        <h2 className="text-base font-semibold text-blue-900 mb-1">Horários Vagos</h2>
-                        <p className="text-2xl font-bold text-green-700">{totalEmptyServices}</p>
-                    </div>
-                    <div className="bg-white rounded-xl shadow flex flex-col items-center p-5 border-t-4 border-yellow-400">
-                        <StarIcon className="h-8 w-8 text-yellow-500 mb-2" />
-                        <h2 className="text-base font-semibold text-blue-900 mb-1">Atendimentos Populares</h2>
-                        <p className="text-sm text-yellow-700 text-center">
-                            {topServices.map(service => {
-                                const type = types.find(t => t.id === service.idtype);
-                                return type ? type.title : 'Desconhecido';
-                            }).join(', ')}
-                        </p>
-                    </div>
-                    <div className="bg-white rounded-xl shadow flex flex-col items-center p-5 border-t-4 border-indigo-400">
-                        <CurrencyDollarIcon className="h-8 w-8 text-indigo-500 mb-2" />
-                        <h2 className="text-base font-semibold text-blue-900 mb-1">Receita</h2>
-                        <p className="text-2xl font-bold text-indigo-700">R$ {formatCurrency(totalRevenue)}</p>
-                    </div>
-                </div>
+  return (
+    <div className="flex w-full items-center justify-between p-2 md:p-4">
+      <div className="mx-auto flex w-full max-w-6xl flex-col rounded-[2rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-5 shadow-[0_20px_60px_rgba(37,99,235,0.08)] md:p-7">
+        <div className="mb-6 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600 shadow-inner shadow-indigo-200">
+              <NewspaperIcon className="h-6 w-6" />
             </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-500">
+                Resumo
+              </p>
+              <h1
+                className={`${lusitana.className} text-2xl font-extrabold tracking-tight text-blue-900`}
+              >
+                Resumo semanal
+              </h1>
+            </div>
+          </div>
         </div>
-    );
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-[1.5rem] border border-blue-100 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <UserGroupIcon className="h-8 w-8 text-blue-500" />
+              <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700">
+                Feitos
+              </span>
+            </div>
+            <h2 className="text-sm font-semibold text-slate-500">Atendimentos realizados</h2>
+            <p className="mt-3 text-3xl font-extrabold text-blue-700">{totalDoneServices}</p>
+          </div>
+
+          <div className="rounded-[1.5rem] border border-emerald-100 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <CalendarIcon className="h-8 w-8 text-emerald-500" />
+              <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">
+                Livres
+              </span>
+            </div>
+            <h2 className="text-sm font-semibold text-slate-500">Horários vagos</h2>
+            <p className="mt-3 text-3xl font-extrabold text-emerald-700">{totalEmptyServices}</p>
+          </div>
+
+          <div className="rounded-[1.5rem] border border-amber-100 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <StarIcon className="h-8 w-8 text-amber-500" />
+              <span className="rounded-full bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-700">
+                Esta semana
+              </span>
+            </div>
+            <h2 className="text-sm font-semibold text-slate-500">Tipos mais agendados</h2>
+            {popularServices.length > 0 ? (
+              <ol className="mt-3 space-y-2 text-sm text-slate-700">
+                {popularServices.map(({ id, title, count }) => (
+                  <li key={id} className="flex items-center justify-between gap-2">
+                    <span className="truncate font-medium">{title}</span>
+                    <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-700">
+                      {count} {count === 1 ? 'atendimento' : 'atendimentos'}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p className="mt-3 text-sm text-slate-500">
+                Nenhum atendimento agendado nesta semana.
+              </p>
+            )}
+          </div>
+
+          <div className="rounded-[1.5rem] border border-violet-100 bg-white p-5 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <CurrencyDollarIcon className="h-8 w-8 text-violet-500" />
+              <span className="rounded-full bg-violet-50 px-2 py-1 text-xs font-semibold text-violet-700">
+                Estimativa
+              </span>
+            </div>
+            <h2 className="text-sm font-semibold text-slate-500">
+              Valor dos atendimentos concluídos
+            </h2>
+            <p className="mt-3 text-2xl font-extrabold text-violet-700">
+              {formatCurrency(estimatedRevenue)}
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-slate-500">
+              Calculado pelos preços atuais dos serviços; não representa pagamentos recebidos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

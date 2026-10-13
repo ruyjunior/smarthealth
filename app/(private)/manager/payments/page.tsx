@@ -1,11 +1,12 @@
 import { Suspense } from 'react';
+import { getCurrentClinicId } from '@/app/lib/session';
 import { Metadata } from 'next';
 import Pagination from '@/app/components/ui/pagination';
 import Table from './components/table';
 import { PaymentsTableSkeleton } from './components/skeletons';
-import { fetchPaymentsPages } from '@/app/query/payments/data';
-import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-import { fetchFilteredPayments } from '@/app/query/payments/data';
+import { fetchPaymentsPages } from '@/app/domains/payments/queries';
+import { fetchFilteredPayments } from '@/app/domains/payments/queries';
+import ListPageShell from '@/app/components/ui/list-page-shell';
 
 export const metadata: Metadata = {
   title: 'Pagamentos',
@@ -17,34 +18,27 @@ export default async function Page(props: {
     page?: string;
   }>;
 }) {
-
+  const idclinic = await getCurrentClinicId();
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchPaymentsPages(query);
-  const payments = await fetchFilteredPayments(query, currentPage);
+  const totalPages = await fetchPaymentsPages(idclinic, query);
+  const payments = await fetchFilteredPayments(idclinic, query, currentPage);
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <Breadcrumbs
-          breadcrumbs={[
-            { label: 'Gerência', href: `/manager` },
-            { label: 'Pagamentos', href: `/manager/payments`, active: true },
-          ]}
-        />
-      </div>
-      {<Suspense key={query + currentPage} fallback={<PaymentsTableSkeleton />}>
-        <Table
-          query={query}
-          currentPage={currentPage}
-          payments={payments}
-        />
-      </Suspense>}
-      <div className="mt-5 flex w-full justify-center">
-        {<Pagination totalPages={totalPages} />}
-      </div>
-
-    </div>
+    <ListPageShell
+      breadcrumbs={[
+        { label: 'Gerência', href: '/manager' },
+        { label: 'Pagamentos', href: '/manager/payments', active: true },
+      ]}
+      eyebrow="Financeiro"
+      title="Pagamentos"
+      subtitle="Lançamentos financeiros registrados pela clínica."
+      footer={<Pagination totalPages={totalPages} />}
+    >
+      <Suspense key={query + currentPage} fallback={<PaymentsTableSkeleton />}>
+        <Table payments={payments} />
+      </Suspense>
+    </ListPageShell>
   );
 }

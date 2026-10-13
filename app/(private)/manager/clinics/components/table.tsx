@@ -1,7 +1,7 @@
-import { fetchClientById } from '@/app/query/clients/data';
-import { Updateclinic, Deleteclinic } from './buttons';
-import { fetchFilteredClinics } from '@/app/query/clinics/data';
-import { fetchUsers } from '@/app/query/users/data';
+import { getCurrentClinicId } from '@/app/lib/session';
+import { Updateclinic } from './buttons';
+import { fetchFilteredClinics } from '@/app/domains/clinics/queries';
+import { fetchUsers } from '@/app/domains/users/queries';
 
 export default async function clinicsTable({
   query,
@@ -10,23 +10,28 @@ export default async function clinicsTable({
   query: string;
   currentPage: number;
 }) {
-  const clinics = await fetchFilteredClinics(query, currentPage);
-  const users = await fetchUsers();
+  const idclinic = await getCurrentClinicId();
+  const clinics = await fetchFilteredClinics(idclinic, query, currentPage);
+  const users = await fetchUsers(idclinic);
 
   return (
     <div className="w-full">
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden rounded-lg bg-blue-200 shadow-md p-4 md:pt-0">
+            <div className="overflow-hidden rounded-[2rem] border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-3 shadow-[0_25px_80px_rgba(59,130,246,0.08)] md:p-5">
               {/* Mobile View */}
               <div className="md:hidden">
                 {clinics?.map((clinic) => {
-
-                  const manager = users.find((u) => u.id === clinic.idmanager) || { name: 'Gerente Desconhecido' };
+                  const manager = users.find((u) => u.id === clinic.idmanager) || {
+                    name: 'Gerente Desconhecido',
+                  };
 
                   return (
-                    <div key={clinic.id} className="mb-6 w-full rounded-lg bg-blue-300 p-4 shadow-sm">
+                    <div
+                      key={clinic.id}
+                      className="mb-4 w-full rounded-[1.5rem] border border-blue-100 bg-white p-4 shadow-sm shadow-blue-100"
+                    >
                       <div className="border-b pb-4">
                         <h3 className="text-xl font-semibold text-gray-900">{clinic.title}</h3>
                         <p className="text-sm text-gray-600">Gerente: {manager.name}</p>
@@ -55,9 +60,11 @@ export default async function clinicsTable({
                     <th className="px-2 py-2">Site</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-slate-200">
                   {clinics.map((clinic) => {
-                    const manager = users.find((u) => u.id === clinic.idmanager) || { name: 'Gerente Desconhecido' };
+                    const manager = users.find((u) => u.id === clinic.idmanager) || {
+                      name: 'Gerente Desconhecido',
+                    };
                     return (
                       <tr key={clinic.id} className="hover:bg-gray-300">
                         <td className="py-2 px-2 flex gap-2">

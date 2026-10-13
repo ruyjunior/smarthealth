@@ -1,16 +1,26 @@
 import { auth } from '@/app/lib/auth';
-import { fetchUserById } from '@/app/query/users/data';
-import { fetchClinicById } from '@/app/query/clinics/data';
-import Logo from './logoClinic';
+import { getSessionUser } from '@/app/lib/session';
+import { fetchClinicById } from '@/app/domains/clinics/queries';
+import Logo from './logo';
 
 export default async function ClinicCard() {
   const session = await auth();
   if (!session || !session.user) {
     return null;
   }
-  const user = await fetchUserById(session.user.id);
+
+  const userId = session.user.id;
+  if (!userId) {
+    return null;
+  }
+
+  const user = await getSessionUser();
+
+  if (!user) {
+    return null;
+  }
   const clinic = await fetchClinicById(user.idclinic);
-  const now = new Date().toLocaleDateString( 'pt-BR',{
+  const now = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -19,11 +29,11 @@ export default async function ClinicCard() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <Logo w={40} h={40} dw={20} dh={20} logourl={clinic.logourl} />
-      <div className="mt-2">
-        <p className="text-sm font-semibold"> {clinic.title} </p>
-        <p className="text-sm">{now}</p>
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-2 text-center md:p-3">
+      <Logo src={clinic.logourl} alt={clinic.title ?? 'Clínica'} size="md" priority />
+      <div className="mt-2 hidden md:block">
+        <p className="text-sm font-semibold text-white">{clinic.title}</p>
+        <p className="mt-1 text-xs text-slate-400">{now}</p>
       </div>
     </div>
   );

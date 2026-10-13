@@ -2,15 +2,19 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
-import { User } from '@/app/query/users/definitions';
-import { Clinic } from '@/app/query/clinics/definitions';
+import { User } from '@/app/domains/users/types';
+import { Clinic } from '@/app/domains/clinics/types';
 import { BudgetItem } from './table';
 import { DocPDF } from './docPDF';
 
 export const ButtonPDF = ({
-  list, clinic, user
+  list,
+  clinic,
+  user,
 }: {
-  list: BudgetItem[], clinic: Clinic, user: User
+  list: BudgetItem[];
+  clinic: Clinic;
+  user: User;
 }) => (
   <PDFDownloadLink
     document={<DocPDF list={list} clinic={clinic} user={user} />}

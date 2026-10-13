@@ -1,18 +1,13 @@
 'use client';
 import { useActionState, useTransition } from 'react';
-import { NoteType } from '@/app/query/notetypes/definitions';
+import { NoteType } from '@/app/domains/notetypes/types';
 import { TagIcon, CheckCircleIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { updateNoteType, State } from '@/app/query/notetypes/actions';
+import { updateNoteType, State } from '@/app/domains/notetypes/actions';
 import Loading from '@/app/components/ui/loading';
 
-export default function EditNoteTypeForm({
-  notetype,
-}: {
-  notetype: NoteType;
-}) {
-
+export default function EditNoteTypeForm({ notetype }: { notetype: NoteType }) {
   const initialState: State = { message: undefined, errors: {} };
   const updateNoteTypeWithId = updateNoteType.bind(null, notetype.id);
   const [state, formAction] = useActionState(updateNoteTypeWithId, initialState);
@@ -29,11 +24,9 @@ export default function EditNoteTypeForm({
     <form onSubmit={handleSubmit}>
       {/* Mensagem Carregando */}
       {isPending ? (
-        <Loading />      
+        <Loading />
       ) : (
-
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
           {/* Title */}
           <div className="mb-4">
             <label htmlFor="title" className="mb-2 block text-sm font-medium">
@@ -104,7 +97,6 @@ export default function EditNoteTypeForm({
               </div>
             </div>
           </div>
-
         </div>
       )}
 
@@ -120,13 +112,20 @@ export default function EditNoteTypeForm({
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>

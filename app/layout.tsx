@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./styles/globals.css";
-import { SessionProvider } from "next-auth/react";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './styles/globals.css';
+import AuthSessionProvider from '@/app/components/providers/session-provider';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +35,10 @@ export const metadata: Metadata = {
   },
 };
 
-
+/**
+ * Sole owner of the <html>/<head>/<body> document shell. Nested layouts render
+ * their content inside this body, never their own document tags.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,18 +46,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <head>
-        <script
-          async
-          src="https://js.stripe.com/v3/pricing-table.js">
-        </script>
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SessionProvider>
-          {children}
-        </SessionProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <AuthSessionProvider>{children}</AuthSessionProvider>
       </body>
     </html>
   );

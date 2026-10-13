@@ -1,6 +1,7 @@
 import Form from '../../components/edit-form';
+import { getCurrentClinicId } from '@/app/lib/session';
 import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-import {fetchOfficeById } from '@/app/query/offices/data';
+import { fetchOfficeById } from '@/app/domains/offices/queries';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
@@ -9,28 +10,27 @@ export const metadata: Metadata = {
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
-    const id = params.id;
-    const [office] = await Promise.all([
-        fetchOfficeById(id),
-      ]);
-      if (!office) {
+  const idclinic = await getCurrentClinicId();
+  const params = await props.params;
+  const id = params.id;
+  const [office] = await Promise.all([fetchOfficeById(idclinic, id)]);
+  if (!office) {
     notFound();
-    }
+  }
 
-    return (
-        <main>
-            <Breadcrumbs
-                breadcrumbs={[
-                { label: 'Consultórios', href: `/manager/offices` },
-                {
-                    label: 'Editar Consultório',
-                    href: `/manager/offices/${id}/edit`,
-                    active: true,
-                },
-                ]}
-            />
-        <Form office={office} />
-        </main>
+  return (
+    <main>
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: 'Consultórios', href: `/manager/offices` },
+          {
+            label: 'Editar Consultório',
+            href: `/manager/offices/${id}/edit`,
+            active: true,
+          },
+        ]}
+      />
+      <Form office={office} />
+    </main>
   );
 }

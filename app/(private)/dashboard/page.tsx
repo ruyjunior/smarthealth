@@ -1,41 +1,41 @@
-import { Metadata } from "next";
-import { fetchTodayServices, fetchCurrentWeekServices, fetchCurrentMonthServices } from '@/app/query/services/data';
-import { fetchTypes } from "@/app/query/types/data";
-import { fetchUserById, fetchUsers } from "@/app/query/users/data";
-import { fetchClients } from "@/app/query/clients/data";
-import { fetchOffices } from "@/app/query/offices/data";
-import { auth } from '@/app/lib/auth';
-import ServiceSwitcher from "./components/ServiceSwitcher";
+import { Metadata } from 'next';
+import { requireSessionUser } from '@/app/lib/session';
+import {
+  fetchTodayServices,
+  fetchCurrentWeekServices,
+  fetchCurrentMonthServices,
+} from '@/app/domains/services/queries';
+import { fetchTypes } from '@/app/domains/types/queries';
+import { fetchUsers } from '@/app/domains/users/queries';
+import { fetchClients } from '@/app/domains/clients/queries';
+import { fetchOffices } from '@/app/domains/offices/queries';
+import ServiceSwitcher from './components/ServiceSwitcher';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
 };
 
 export default async function Page() {
-  const session = await auth();
-  if (!session || !session.user || !session.user.id) {
-    throw new Error('User session is not available.');
-  }
-  const user = await fetchUserById(session.user.id);
+  const user = await requireSessionUser();
 
-  const todayServices = await fetchTodayServices();
-  const weekServices = await fetchCurrentWeekServices();
-  const monthServices = await fetchCurrentMonthServices();
-  const users = await fetchUsers();
-  const clients = await fetchClients();
-  const types = await fetchTypes();
-  const offices = await fetchOffices();
+  const todayServices = await fetchTodayServices(user.idclinic);
+  const weekServices = await fetchCurrentWeekServices(user.idclinic);
+  const monthServices = await fetchCurrentMonthServices(user.idclinic);
+  const users = await fetchUsers(user.idclinic);
+  const clients = await fetchClients(user.idclinic);
+  const types = await fetchTypes(user.idclinic);
+  const offices = await fetchOffices(user.idclinic);
 
   return (
-      <ServiceSwitcher
-        user={user}
-        todayServices={todayServices}
-        weekServices={weekServices}
-        monthServices={monthServices}
-        users={users}
-        clients={clients}
-        types={types}
-        offices={offices}
-      />
+    <ServiceSwitcher
+      user={user}
+      todayServices={todayServices}
+      weekServices={weekServices}
+      monthServices={monthServices}
+      users={users}
+      clients={clients}
+      types={types}
+      offices={offices}
+    />
   );
 }

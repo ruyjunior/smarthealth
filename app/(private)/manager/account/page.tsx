@@ -1,34 +1,38 @@
 import { Suspense } from 'react';
+import { getCurrentClinicId } from '@/app/lib/session';
 import { Metadata } from 'next';
 import Table from './components/table';
 import { TableSkeleton } from './components/skeletons';
-import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-import { fetchCredits } from '@/app/query/credit/data';
+import { fetchCredits } from '@/app/domains/credit/queries';
 import CreditComponent from './components/creditComponent';
 import PricingTable from '@/app/(public)/plans/pricingTable';
+import ListPageShell from '@/app/components/ui/list-page-shell';
 
 export const metadata: Metadata = {
   title: 'Conta',
 };
 
 export default async function Page() {
-  const credits = await fetchCredits();
+  const idclinic = await getCurrentClinicId();
+  const credits = await fetchCredits(idclinic);
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <Breadcrumbs
-          breadcrumbs={[
-            { label: 'Gerência', href: `/manager` },
-            { label: 'Conta', href: `/manager/account`, active: true },
-          ]}
-        />
-      </div>
-      {<Suspense fallback={<TableSkeleton />}>
-        <CreditComponent credits={credits} />
-        <Table credits={credits} />
-        <PricingTable />
-      </Suspense>}
-    </div>
+    <ListPageShell
+      breadcrumbs={[
+        { label: 'Gerência', href: '/manager' },
+        { label: 'Conta', href: '/manager/account', active: true },
+      ]}
+      eyebrow="Gerência"
+      title="Conta e créditos"
+      subtitle="Acompanhe seu plano, créditos disponíveis e opções de assinatura."
+    >
+      <Suspense fallback={<TableSkeleton />}>
+        <div className="mx-auto mt-6 max-w-7xl space-y-6">
+          <CreditComponent credits={credits} />
+          <Table credits={credits} />
+          <PricingTable />
+        </div>
+      </Suspense>
+    </ListPageShell>
   );
 }

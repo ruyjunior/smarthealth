@@ -1,19 +1,18 @@
 'use client';
 import { useActionState, useState, useTransition } from 'react';
-import { Credit } from '@/app/query/credit/definitions';
-import { User } from '@/app/query/users/definitions';
+import { Credit } from '@/app/domains/credit/types';
+import { User } from '@/app/domains/users/types';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { update, State } from '@/app/query/credit/actions';
+import { update, State } from '@/app/domains/credit/actions';
 import Loading from '@/app/components/ui/loading';
 import { UserGroupIcon } from '@heroicons/react/24/outline';
 
-
-export default function EditForm({ credit, users }: { credit: Credit, users: User[] }) {
+export default function EditForm({ credit, users }: { credit: Credit; users: User[] }) {
   const initialState: State = { message: undefined, errors: {} };
   const updateWithId = update.bind(null, credit.id);
   const [state, formAction] = useActionState(updateWithId, initialState);
-  const [uploading, setUploading] = useState(false);
+  const [uploading] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -29,9 +28,7 @@ export default function EditForm({ credit, users }: { credit: Credit, users: Use
       {isPending ? (
         <Loading />
       ) : (
-
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
           {/* Email */}
           <div className="mb-4">
             <label htmlFor="email" className="mb-2 block text-sm font-medium">
@@ -67,10 +64,8 @@ export default function EditForm({ credit, users }: { credit: Credit, users: Use
             </div>
           </div>
         </div>
-
-      )};
-
-      {/* Botões */}
+      )}
+      ;{/* Botões */}
       <div className="mt-6 flex justify-end gap-4">
         <Link
           href="/manager/account"
@@ -82,17 +77,23 @@ export default function EditForm({ credit, users }: { credit: Credit, users: Use
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-
     </form>
   );
 }

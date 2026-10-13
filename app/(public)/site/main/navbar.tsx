@@ -1,9 +1,8 @@
-'use client'
+'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import Logo from "@/app/components/ui/logoApp";
-
+import Logo from '@/app/components/ui/logo';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,33 +18,48 @@ const Navbar = () => {
   }, []);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((current) => !current);
   };
 
   return (
-    <nav className={
-      `fixed w-full top-0 z-50 transition-all duration-300 
-      ${isScrolled ? 'bg-gradient-to-br from-blue-100 to-blue-900 shadow-md' : 'bg-transparent'}`}>
-      <div className="container mx-auto flex justify-between items-center p-4">
-        <Logo w={20} h={20} dw={20} dh={20} />
+    <nav
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        isScrolled
+          ? 'bg-gradient-to-r from-blue-900/95 to-blue-700/90 shadow-lg backdrop-blur-sm'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="container mx-auto flex items-center justify-between p-4">
+        <Logo src="/images/logos/logoApp.png" alt="Smart Health" size="md" priority />
 
-        {/* Menu Desktop */}
-        <div className="hidden md:flex space-x-6 text-white text-lg font-semibold">
-          <Link href="/">Home</Link>
-          <Link href="/dashboard">Login</Link>
+        <div className="hidden items-center gap-6 text-lg font-semibold text-white md:flex">
+          <Link href="/" className="transition hover:text-blue-200">
+            Home
+          </Link>
+          <Link href="/dashboard" className="transition hover:text-blue-200">
+            Login
+          </Link>
         </div>
 
-        {/* Botão Menu Mobile */}
-        <button onClick={toggleMenu} className="md:hidden text-white focus:outline-none">
+        <button
+          onClick={toggleMenu}
+          className="text-white focus:outline-none md:hidden"
+          aria-label="Abrir menu"
+        >
           {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
       </div>
 
-      {/* Menu Mobile */}
       {isOpen && (
-        <div className="md:hidden bg-[#020d1f] text-white text-lg font-semibold py-4 flex flex-col items-center space-y-4">
-          <Link href="/" onClick={toggleMenu}>Home</Link>
-          <Link href="/dashboard" onClick={toggleMenu}>Login</Link>
+        <div className="border-t border-white/10 bg-sky-950/90 py-4 text-lg font-semibold text-white md:hidden">
+          <div className="container mx-auto flex flex-col items-center gap-4">
+            <Link href="/" onClick={toggleMenu} className="transition hover:text-blue-200">
+              Home
+            </Link>
+            <Link href="/dashboard" onClick={toggleMenu} className="transition hover:text-blue-200">
+              Login
+            </Link>
+          </div>
         </div>
       )}
     </nav>

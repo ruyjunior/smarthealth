@@ -1,53 +1,62 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { sql } from "@vercel/postgres";
-import bcrypt from "bcryptjs";
-import { z } from "zod";
-import { JWT } from "next-auth/jwt";
-import { AdapterUser } from "next-auth/adapters";
-import { DefaultSession, User, CustomUser } from "next-auth";
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { sql } from '@vercel/postgres';
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
 
-declare module "next-auth" {
-  interface CustomUser extends AdapterUser {
-    role: string;
-    password: string;
+interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+declare module 'next-auth' {
+  interface User {
+    id?: string;
+    role?: string;
+    password?: string;
   }
+
   interface Session {
-    user: CustomUser & DefaultSession["user"];
-  }
-}
-declare module "next-auth/jwt" {
-  interface JWT {
-    role: string;
+    user: {
+      id?: string;
+      name?: string | null;
+      email?: string | null;
+      role?: string;
+    };
   }
 }
 
-async function getUser(email: string): Promise<CustomUser | null> {
+async function getUser(email: string): Promise<AuthUser | null> {
   try {
-    const users = await sql<CustomUser>`SELECT * FROM smarthealth.users WHERE email=${email}`;
+    const users = await sql<AuthUser>`SELECT * FROM smarthealth.users WHERE email = ${email}`;
     return users.rows[0] || null;
   } catch (error) {
-    console.error("Erro ao buscar usuário:", error);
+    console.error('Erro ao buscar usuário:', error);
     return null;
   }
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
-    signIn: "/login",
-    signOut: "/login",
+    signIn: '/login',
+    signOut: '/login',
   },
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: 'credentials',
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Senha", type: "password" },
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Senha', type: 'password' },
       },
       async authorize(credentials) {
-        // Validação com Zod
         const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
+          .object({
+            email: z.string().email(),
+            password: z.string().min(6),
+          })
           .safeParse(credentials);
 
         if (!parsedCredentials.success) {
@@ -56,25 +65,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const { email, password } = parsedCredentials.data;
         const user = await getUser(email);
+
         if (!user) {
           return null;
         }
 
         const passwordsMatch = await bcrypt.compare(password, user.password);
+
         if (!passwordsMatch) {
           return null;
         }
-        return user;
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],
   session: {
-    strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 7, // 7 dias
-    updateAge: 60 * 60 * 2 // Atualiza o token a cada 1 hora
+    strategy: 'jwt',
+    maxAge: 60 * 60 * 24 * 7,
+    updateAge: 60 * 60 * 2,
   },
   jwt: {
-    maxAge: 60 * 60 * 24 * 7 // Expiração do token JWT
+    maxAge: 60 * 60 * 24 * 7,
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -84,23 +101,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.name,
           email: user.email,
-          role: (user as CustomUser).role
+          role: user.role,
         };
       }
+
       return token;
     },
-    async session({ session, token }: { session: any, token: JWT }) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.email = token.email as string;
-        session.user.role = token.role as string;
+        session.user.id = typeof token.id === 'string' ? token.id : '';
+        session.user.name = typeof token.name === 'string' ? token.name : '';
+        session.user.email = typeof token.email === 'string' ? token.email : '';
+        session.user.role = typeof token.role === 'string' ? token.role : '';
       }
+
       return session;
     },
-    async redirect({ url, baseUrl }: { url: string, baseUrl: string }) {
+    async redirect({ baseUrl }) {
       return `${baseUrl}/dashboard`;
-    }
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 });

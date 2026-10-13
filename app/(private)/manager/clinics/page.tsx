@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
+import { getCurrentClinicId } from '@/app/lib/session';
 import { Metadata } from 'next';
 import Table from './components/table';
 import { ClinicsTableSkeleton } from './components/skeletons';
-import { fetchClinicsPages } from '@/app/query/clinics/data';
-import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-
+import { fetchClinicsPages } from '@/app/domains/clinics/queries';
+import ListPageShell from '@/app/components/ui/list-page-shell';
 
 export const metadata: Metadata = {
   title: 'Clínica',
@@ -16,24 +16,25 @@ export default async function Page(props: {
     page?: string;
   }>;
 }) {
+  const idclinic = await getCurrentClinicId();
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchClinicsPages(query);
+  await fetchClinicsPages(idclinic, query);
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <Breadcrumbs
-          breadcrumbs={[
-            { label: 'Gerência', href: `/manager` },
-            { label: 'Clínica', href: `/manager/clinics`, active: true },
-          ]}
-        />
-      </div>
-      {<Suspense key={query + currentPage} fallback={<ClinicsTableSkeleton />}>
+    <ListPageShell
+      breadcrumbs={[
+        { label: 'Gerência', href: '/manager' },
+        { label: 'Clínica', href: '/manager/clinics', active: true },
+      ]}
+      eyebrow="Gerência"
+      title="Clínica"
+      subtitle="Dados cadastrais e configurações da clínica."
+    >
+      <Suspense key={query + currentPage} fallback={<ClinicsTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />
-      </Suspense>}
-    </div>
+      </Suspense>
+    </ListPageShell>
   );
 }

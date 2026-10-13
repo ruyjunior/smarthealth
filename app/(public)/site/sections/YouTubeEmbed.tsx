@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface YouTubeEmbedProps {
   videoId: string;
@@ -15,12 +15,11 @@ const YouTubeEmbed: React.FC<YouTubeEmbedProps> = ({ videoId, title }) => {
         Assita o nosso vídeo de apresentação para saber mais sobre o Smart Health App.
       </p>
 
-
       <div className="w-full max-w-4xl mx-auto aspect-video">
         <iframe
           className="w-full h-full rounded-lg shadow-lg"
           src={`https://www.youtube.com/embed/${videoId}`}
-          title={title || "YouTube video player"}
+          title={title || 'YouTube video player'}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>

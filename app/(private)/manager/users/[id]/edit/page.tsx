@@ -1,6 +1,7 @@
 import Form from '../../components/edit-form';
 import Breadcrumbs from '@/app/components/ui/breadcrumbs';
-import {fetchUserById } from '@/app/query/users/data';
+import { fetchUserById } from '@/app/domains/users/queries';
+import { getCurrentClinicId } from '@/app/lib/session';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
@@ -9,28 +10,27 @@ export const metadata: Metadata = {
 };
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
-    const params = await props.params;
-    const id = params.id;
-    const [user] = await Promise.all([
-        fetchUserById(id),
-      ]);
-      if (!user) {
+  const idclinic = await getCurrentClinicId();
+  const params = await props.params;
+  const id = params.id;
+  const user = await fetchUserById(idclinic, id);
+  if (!user) {
     notFound();
-    }
+  }
 
-    return (
-        <main>
-            <Breadcrumbs
-                breadcrumbs={[
-                { label: 'Usuários', href: `/manager/users` },
-                {
-                    label: 'Editar Usuário',
-                    href: `/manager/users/${id}/edit`,
-                    active: true,
-                },
-                ]}
-            />
-        <Form user={user} />
-        </main>
+  return (
+    <main>
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: 'Usuários', href: `/manager/users` },
+          {
+            label: 'Editar Usuário',
+            href: `/manager/users/${id}/edit`,
+            active: true,
+          },
+        ]}
+      />
+      <Form user={user} />
+    </main>
   );
 }

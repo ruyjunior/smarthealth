@@ -1,19 +1,18 @@
 'use client';
 import { useActionState, useTransition } from 'react';
-import { Type } from '@/app/query/types/definitions';
-import { TagIcon, ChatBubbleBottomCenterTextIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
+import { Type } from '@/app/domains/types/types';
+import {
+  TagIcon,
+  ChatBubbleBottomCenterTextIcon,
+  CurrencyDollarIcon,
+} from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
-import { updateType, State } from '@/app/query/types/actions';
+import { updateType, State } from '@/app/domains/types/actions';
 import Loading from '@/app/components/ui/loading';
 import { formatCurrency, formatCurrencyInput } from '@/app/lib/utils';
 
-export default function EditTypeForm({
-  type,
-}: {
-  type: Type;
-}) {
-
+export default function EditTypeForm({ type }: { type: Type }) {
   const initialState: State = { message: undefined, errors: {} };
   const updateTypeWithId = updateType.bind(null, type.id);
   const [state, formAction] = useActionState(updateTypeWithId, initialState);
@@ -28,14 +27,11 @@ export default function EditTypeForm({
 
   return (
     <form onSubmit={handleSubmit}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
-
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
           {/* Title */}
           <div className="mb-4">
             <label htmlFor="title" className="mb-2 block text-sm font-medium">
@@ -117,9 +113,7 @@ export default function EditTypeForm({
               </div>
             </div>
           </div>
-
         </div>
-
       )}
 
       {/* Botões de ação */}
@@ -134,17 +128,23 @@ export default function EditTypeForm({
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-
     </form>
   );
 }

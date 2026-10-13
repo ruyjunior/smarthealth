@@ -1,24 +1,29 @@
-import Hero from "./site/sections/hero";
-import Services from "./site/sections/services";
-import About from "./site/sections/about";
+import Hero from './site/sections/hero';
+import Services from './site/sections/services';
+import About from './site/sections/about';
+import Clients from './site/sections/clients';
+import Team from './site/sections/team';
+import CallToAction from './site/sections/call_to_action';
 import { Metadata } from 'next';
-import YouTubeEmbed from "./site/sections/YouTubeEmbed";
+import YouTubeEmbed from './site/sections/YouTubeEmbed';
 
 export const metadata: Metadata = {
   title: 'Smart Health App',
   description: 'Sua clínica online, na palma da sua mão!',
 };
 
-const videoId = "-qrYjDDNlUU?si=NXH_X1_2EkD7qTNM";
-
+const videoId = '-qrYjDDNlUU?si=NXH_X1_2EkD7qTNM';
 
 export default async function Page() {
   return (
-    <div className=" text-gray-900 ">
+    <div className="text-gray-900">
       <Hero />
       <Services />
       <YouTubeEmbed videoId={videoId} title="Apresentação do Smart Health" />
       <About />
+      <Clients />
+      <Team />
+      <CallToAction />
     </div>
   );
 }

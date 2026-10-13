@@ -1,6 +1,6 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 //import { useRouter } from "next/navigation";
-import LoginForm from "./components/login-form";
+import LoginForm from './components/login-form';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

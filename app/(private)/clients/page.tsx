@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { getCurrentClinicId } from '@/app/lib/session';
 import { Metadata } from 'next';
 import Pagination from '@/app/components/ui/pagination';
 import Search from '@/app/components/ui/search';
@@ -6,38 +7,55 @@ import Table from './components/table';
 import { CreateClient } from './components/buttons';
 import { ClientsTableSkeleton } from './components/skeletons';
 import { lusitana } from '@/app/components/ui/fonts';
-import { fetchClientsPages } from '@/app/query/clients/data';
-
+import { fetchClientsPages } from '@/app/domains/clients/queries';
 
 export const metadata: Metadata = {
   title: 'Pacientes',
 };
 
 export default async function Page(props: {
-      searchParams?: Promise<{
-        query?: string;
-        page?: string;
-      }>;
-    }) {
-    const searchParams = await props.searchParams;
-    const query = searchParams?.query || '';
-    const currentPage = Number(searchParams?.page) || 1;
-    const totalPages = await fetchClientsPages(query);
+  searchParams?: Promise<{
+    query?: string;
+    page?: string;
+  }>;
+}) {
+  const idclinic = await getCurrentClinicId();
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+  const totalPages = await fetchClientsPages(idclinic, query);
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Pacientes</h1>
+    <div className="w-full px-2 py-4 md:px-4">
+      <div className="mx-auto max-w-7xl rounded-[2rem] border border-blue-100 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-900 p-6 shadow-[0_25px_80px_rgba(37,99,235,0.18)]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">
+              Pacientes
+            </p>
+            <h1 className={`${lusitana.className} mt-2 text-3xl font-extrabold text-white`}>
+              Gestão de pacientes
+            </h1>
+          </div>
+
+          <CreateClient />
+        </div>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Procurar..." />
-        <CreateClient />
+
+      <div className="mx-auto mt-6 max-w-7xl rounded-[1.5rem] border border-slate-200 bg-white/80 p-4 shadow-[0_20px_60px_rgba(148,163,184,0.14)] backdrop-blur-sm md:p-5">
+        <div className="flex items-center justify-between gap-3">
+          <Search placeholder="Procurar paciente..." />
+        </div>
       </div>
-      {<Suspense key={query + currentPage} fallback={<ClientsTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
-      </Suspense> }
+
+      {
+        <Suspense key={query + currentPage} fallback={<ClientsTableSkeleton />}>
+          <Table query={query} currentPage={currentPage} />
+        </Suspense>
+      }
+
       <div className="mt-5 flex w-full justify-center">
-        {<Pagination totalPages={totalPages} /> }
+        {<Pagination totalPages={totalPages} />}
       </div>
     </div>
   );

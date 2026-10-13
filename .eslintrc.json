@@ -1,0 +1,21 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "overrides": [
+    {
+      "files": ["**/*docPDF.tsx"],
+      "rules": {
+        "jsx-a11y/alt-text": "off"
+      }
+    },
+    {
+      "files": [
+        "**/manager/clinics/components/edit-form.tsx",
+        "**/manager/users/components/edit-form.tsx",
+        "**/user/components/edit-form.tsx"
+      ],
+      "rules": {
+        "@next/next/no-img-element": "off"
+      }
+    }
+  ]
+}

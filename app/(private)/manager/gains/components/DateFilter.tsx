@@ -14,7 +14,6 @@ export const DateFilter: React.FC<DateFilterProps> = ({
   onStartDateChange,
   onEndDateChange,
 }) => {
-
   return (
     <div className="mb-4 flex flex-col sm:flex-row gap-4 items-end bg-white rounded-xl shadow p-4 border border-blue-100">
       {/* Mês Atual */}

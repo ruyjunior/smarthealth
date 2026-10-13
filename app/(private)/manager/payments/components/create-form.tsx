@@ -1,17 +1,19 @@
 'use client';
 import React, { useState, useActionState, useTransition } from 'react';
 import Link from 'next/link';
-import { TagIcon, CurrencyDollarIcon, ChatBubbleBottomCenterTextIcon, CalendarDateRangeIcon } from '@heroicons/react/24/outline';
+import {
+  TagIcon,
+  CurrencyDollarIcon,
+  ChatBubbleBottomCenterTextIcon,
+  CalendarDateRangeIcon,
+} from '@heroicons/react/24/outline';
 import { Button } from '@/app/components/ui/button';
-import { createPayment, State } from '@/app/query/payments/actions';
+import { createPayment, State } from '@/app/domains/payments/actions';
 import { formatDateBr } from '@/app/lib/utils';
 import Loading from '@/app/components/ui/loading';
 import { formatCurrencyInput } from '@/app/lib/utils';
 
-
-
-export default function Form({ idclinic }: { idclinic: string }) {
-
+export default function Form() {
   const initialState: State = { message: '', errors: {} };
   const [state, formAction] = useActionState(createPayment, initialState);
   const [isPending, startTransition] = useTransition();
@@ -28,21 +30,16 @@ export default function Form({ idclinic }: { idclinic: string }) {
     startTransition(() => {
       formAction(new FormData(e.currentTarget));
     });
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit}>
-
       {/* Mensagem Carregando */}
       {isPending ? (
         <Loading />
       ) : (
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-
-          <input type="hidden" name="idclinic" value={idclinic} />
-          <span className="text-sm text-gray-500">
-            Os campos com * são obrigatórios.
-          </span>
+          <span className="text-sm text-gray-500">Os campos com * são obrigatórios.</span>
 
           {/* Title */}
           <div className="mb-4">
@@ -149,7 +146,6 @@ export default function Form({ idclinic }: { idclinic: string }) {
               </div>
             </div>
           </div>
-
         </div>
       )}
 
@@ -165,17 +161,23 @@ export default function Form({ idclinic }: { idclinic: string }) {
           {isPending ? (
             <span className="flex items-center gap-2">
               <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
               </svg>
               Salvando...
             </span>
           ) : (
-            "Salvar"
+            'Salvar'
           )}
         </Button>
       </div>
-
     </form>
   );
 }
