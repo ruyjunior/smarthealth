@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@9.15.5",
+  "pnpm": {
+    "overrides": {
+      "postcss": "^8.5.23"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "nodemailer": "^10.0.0"
+      }
+    }
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -15,49 +25,40 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@auth/unstorage-adapter": "^2.8.0",
     "@heroicons/react": "^2.2.0",
-    "@react-pdf/renderer": "^4.3.0",
-    "@stripe/stripe-js": "^6.0.0",
-    "@vercel/analytics": "^1.5.0",
-    "@vercel/blob": "^1.0.1",
+    "@react-pdf/renderer": "^4.9.0",
+    "@vercel/analytics": "^1.6.1",
+    "@vercel/blob": "^2.8.1",
     "@vercel/postgres": "^0.10.0",
-    "auth": "^1.2.3",
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^3.0.2",
-    "chart.js": "^4.4.9",
-    "cloudinary": "^2.6.1",
+    "bcryptjs": "^3.0.3",
+    "chart.js": "^4.5.1",
     "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "jsonwebtoken": "^9.0.2",
+    "date-fns": "^4.4.0",
     "lucide-react": "^0.487.0",
-    "micro": "^10.0.1",
-    "next": "^15.3.0",
-    "next-auth": "^5.0.0-beta.25",
-    "nodemailer": "^6.10.0",
-    "react": "^19.1.0",
-    "react-big-calendar": "^1.18.0",
-    "react-chartjs-2": "^5.3.0",
-    "react-dom": "^19.1.0",
-    "react-icons": "^5.5.0",
+    "next": "^15.5.27",
+    "next-auth": "5.0.0-beta.32",
+    "nodemailer": "^10.1.0",
+    "react": "^19.3.0",
+    "react-big-calendar": "^1.20.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.3.0",
+    "react-icons": "^5.7.0",
     "stripe": "^17.7.0",
-    "unstorage": "^1.15.0",
-    "use-debounce": "^10.0.4",
-    "zod": "^3.24.2"
+    "use-debounce": "^10.1.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/jsonwebtoken": "^9.0.9",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.19.43",
-    "@types/nodemailer": "^6.4.17",
-    "@types/react": "^19",
-    "@types/react-big-calendar": "^1.16.1",
-    "@types/react-dom": "^19",
+    "@types/nodemailer": "^6.4.24",
+    "@types/react": "^19.3.0",
+    "@types/react-big-calendar": "^1.16.3",
+    "@types/react-dom": "^19.3.0",
     "eslint": "^8.57.1",
-    "eslint-config-next": "^15.3.0",
+    "eslint-config-next": "^15.5.27",
     "prettier": "^3.9.10",
-    "tailwindcss": "^4",
-    "typescript": "^5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.11"
   }
 }
