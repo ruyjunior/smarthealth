@@ -79,7 +79,7 @@ describe('help topic content', () => {
 
   it('gives device instructions the full public address', () => {
     // Quem pareia está em outra máquina: "abra /tv" não é acionável na TV.
-    const pairing = HELP_TOPICS.find((topic) => topic.slug === 'totem-e-telao');
+    const pairing = HELP_TOPICS.find((topic) => topic.slug === 'parear-dispositivos');
 
     expect(pairing).toBeDefined();
 
@@ -144,6 +144,13 @@ describe('listSiteGuides', () => {
     expect(slugs).toContain('agenda');
     expect(slugs).toContain('orcamento');
     expect(slugs).toContain('fila-de-espera');
+    expect(slugs).toContain('totem-e-telao');
+  });
+
+  it('keeps device setup out of the public guides', () => {
+    // O guia de gestão manda abrir Gerência > Atendimento, tela que um usuário
+    // comum não tem: ele aparece só depois do login.
+    expect(listSiteGuides().map((topic) => topic.slug)).not.toContain('parear-dispositivos');
   });
 
   it('never exposes a manager-only topic before login', () => {

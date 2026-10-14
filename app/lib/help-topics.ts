@@ -203,6 +203,60 @@ export const HELP_TOPICS: HelpTopic[] = [
     ],
   },
   {
+    slug: 'totem-e-telao',
+    title: 'Totem e telão',
+    summary: 'Veja como o paciente tira a senha e como as chamadas aparecem na TV.',
+    icon: 'devices',
+    audience: 'all',
+    sections: [
+      {
+        heading: 'Como o paciente é atendido',
+        body: 'Ao chegar, o paciente digita o CPF no totem da recepção, escolhe o serviço e recebe uma senha com a posição na fila e a espera estimada. A senha entra na tela Fila na hora, e a recepção chama pelo sistema.',
+        steps: [
+          'O paciente digita o CPF e confirma.',
+          'Escolhe o serviço na tela do totem.',
+          'Recebe a senha e aguarda ser chamado pelo telão.',
+        ],
+        tips: [
+          'Paciente ainda não cadastrado também tira senha: o CPF fica registrado e o cadastro pode ser completado depois.',
+        ],
+      },
+      {
+        heading: 'O totem',
+        body: 'É o quiosque da recepção, usado no toque. O CPF é digitado em um teclado na própria tela, sem abrir o teclado do sistema, e só é aceito quando os 11 dígitos formam um CPF válido.',
+        tips: [
+          'Os serviços que aparecem no totem são os produtos cadastrados em Gerência > Produtos.',
+          'A tela volta ao início sozinha depois de um tempo parada, para o próximo paciente não ver o CPF de quem foi antes.',
+        ],
+      },
+      {
+        heading: 'O telão',
+        body: 'É a TV da sala de espera. Mostra a senha chamada, o nome de quem foi chamado e a sala, além das próximas senhas — que aparecem apenas pelo código.',
+        tips: [
+          'A tela se atualiza sozinha: não é preciso recarregar nada.',
+          'A chamada nova pisca e, com o som ligado, é anunciada em voz alta.',
+          'Se o telão não falar, toque em "Ativar som": o navegador só libera áudio depois de um toque, e a escolha fica guardada no aparelho.',
+        ],
+      },
+      {
+        heading: 'Atendimento preferencial',
+        body: 'Idosos (60 anos ou mais), gestantes, lactantes e pessoas com deficiência têm prioridade garantida por lei. O totem já identifica a idade pelo cadastro do paciente e oferece a opção para quem tem direito por outro motivo.',
+        tips: [
+          'Senhas preferenciais ficam no topo da fila, com o motivo indicado ao lado da senha.',
+        ],
+      },
+      {
+        heading: 'Quando algo não sai como esperado',
+        body: 'Situações comuns no dia a dia da recepção.',
+        tips: [
+          'Totem avisando que não há serviço disponível: falta produto cadastrado em Gerência > Produtos.',
+          'Totem ou telão pedindo pareamento: o aparelho perdeu o vínculo com a clínica; quem administra resolve em Gerência > Atendimento.',
+          'Senha chamada e o paciente não apareceu: marque Ausente na Fila, assim ela sai do telão.',
+        ],
+      },
+    ],
+  },
+  {
     slug: 'pacientes',
     title: 'Pacientes',
     summary: 'Cadastre pacientes e acompanhe o histórico de cada um.',
@@ -352,19 +406,22 @@ export const HELP_TOPICS: HelpTopic[] = [
     ],
   },
   {
-    slug: 'totem-e-telao',
-    title: 'Totem e telão',
-    summary: 'Cadastre e pareie o totem da recepção e a TV que anuncia as chamadas.',
-    icon: 'devices',
+    slug: 'parear-dispositivos',
+    title: 'Cadastrar e parear dispositivos',
+    summary: 'Coloque o totem da recepção e a TV das chamadas em funcionamento.',
+    icon: 'settings',
     audience: 'manager',
     path: '/manager/devices',
     sections: [
       {
-        heading: 'Para que serve cada dispositivo',
-        body: 'O totem é o quiosque onde o paciente digita o CPF e escolhe o serviço para tirar a senha. O telão é a TV da sala de espera, que só exibe as senhas chamadas. Os serviços que aparecem no totem são os produtos cadastrados em Gerência > Produtos.',
+        heading: 'Antes de começar',
+        body: 'O totem e o telão são aparelhos separados, cada um com o próprio cadastro. Os serviços que o paciente vê no totem são os produtos cadastrados em Gerência > Produtos.',
         steps: [
           'Cadastre os produtos antes de colocar o totem em uso.',
-          'Decida onde cada dispositivo vai ficar: um totem na recepção, um telão na sala de espera.',
+          'Decida onde cada aparelho vai ficar: um totem na recepção, um telão na sala de espera.',
+        ],
+        tips: [
+          'Cada navegador guarda um pareamento, então o mesmo computador não serve para totem e telão ao mesmo tempo.',
         ],
       },
       {
@@ -382,33 +439,32 @@ export const HELP_TOPICS: HelpTopic[] = [
       },
       {
         heading: 'Parear no dispositivo',
-        body: 'O pareamento é feito uma única vez, no próprio dispositivo, e o endereço é digitado lá — não há como copiar do computador para a TV.',
+        body: 'O pareamento é feito uma única vez, no próprio aparelho, e o endereço é digitado lá — não há como copiar do computador para a TV. O guia Totem e telão, visível para toda a equipe, explica o que cada aparelho faz.',
         steps: [
           `No totem, abra ${APP_PUBLIC_URL}/totem; no telão, abra ${APP_PUBLIC_URL}/tv.`,
           'Digite o código de 8 caracteres, no formato K7M4-2QP9.',
-          'Confirme: o dispositivo já abre a própria tela.',
+          'Confirme: o aparelho já abre a própria tela.',
         ],
         tips: [
           'O endereço /tv é curto de propósito, porque em uma TV ele é digitado com o controle remoto.',
-          'Cada navegador guarda um pareamento, então o mesmo computador não serve para totem e telão ao mesmo tempo.',
         ],
       },
       {
         heading: 'Som do telão',
-        body: 'Na primeira vez, o telão precisa de um clique em "Ativar som", porque o navegador só libera áudio depois de uma interação. A escolha fica guardada no dispositivo.',
+        body: 'Na primeira vez, o telão precisa de um clique em "Ativar som", porque o navegador só libera áudio depois de uma interação. A escolha fica guardada no aparelho.',
         tips: [
           'O telão anuncia em voz alta somente a chamada nova, e não repete o que já estava na tela.',
         ],
       },
       {
         heading: 'Código perdido, revogar e excluir',
-        body: 'Se o código expirar antes de ser usado, gere outro: não é preciso recriar o dispositivo.',
+        body: 'Se o código expirar antes de ser usado, gere outro: não é preciso recriar o aparelho.',
         steps: [
-          'Novo código emite um código novo para o mesmo dispositivo.',
-          'Revogar interrompe o funcionamento do dispositivo e mantém o histórico dele guardado.',
+          'Novo código emite um código novo para o mesmo aparelho.',
+          'Revogar interrompe o funcionamento do aparelho e mantém o histórico dele guardado.',
           'Excluir remove o cadastro; as senhas já emitidas por ele continuam registradas.',
         ],
-        tips: ['Para um dispositivo que já operou, prefira Revogar: o histórico fica íntegro.'],
+        tips: ['Para um aparelho que já operou, prefira Revogar: o histórico fica íntegro.'],
       },
     ],
   },
@@ -502,6 +558,7 @@ const SITE_GUIDE_SLUGS = [
   'dashboard',
   'agenda',
   'fila-de-espera',
+  'totem-e-telao',
   'pacientes',
   'fichas',
   'orcamento',
