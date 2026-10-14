@@ -11,6 +11,13 @@ export const PUBLIC_PATHS = [
   '/auth/confirm',
   '/privacidade',
   '/termos',
+  // O quiosque da recepção não tem login: a credencial dele é o pareamento
+  // (Gerência > Atendimento), que cria o cookie lido por `requireDeviceClinic`.
+  '/totem',
+  // Alias curto de `/totem/parear`, para digitar o endereço na TV.
+  '/tv',
+  // Telão de chamadas: público pelo mesmo motivo do totem (dispositivo pareado).
+  '/painel',
 ];
 
 export const PROTECTED_PATHS = [
@@ -19,6 +26,7 @@ export const PROTECTED_PATHS = [
   '/clients',
   '/notes',
   '/services',
+  '/fila',
   '/user',
   '/help',
   '/manager',

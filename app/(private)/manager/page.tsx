@@ -8,6 +8,7 @@ import {
   CircleDollarSign,
   HandCoinsIcon,
   AtSignIcon,
+  MonitorSmartphoneIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import ListPageShell from '@/app/components/ui/list-page-shell';
@@ -41,6 +42,12 @@ export default async function Page() {
       path: '/manager/notetypes',
       icon: <ClipboardPenLine size={20} />,
       desc: 'Modelos de ficha clínica',
+    },
+    {
+      name: 'Atendimento',
+      path: '/manager/devices',
+      icon: <MonitorSmartphoneIcon size={20} />,
+      desc: 'Totem e telão da recepção',
     },
     {
       name: 'Usuários',
