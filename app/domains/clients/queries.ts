@@ -70,6 +70,26 @@ export async function fetchClientsPages(idclinic: string, query: string) {
   }
 }
 
+/** Used by the totem: the CPF is the only identifier the patient types in. */
+export async function fetchClientByCpf(idclinic: string, cpf: string) {
+  try {
+    const data = await sql<Client>`
+      SELECT id, cpf, name, birth, email, phone, cep, idclinic, pronoun
+      FROM smarthealth.clients
+      WHERE clients.cpf = ${cpf} AND clients.idclinic = ${idclinic}
+      -- O CPF não é único por clínica (não há índice único em clients), então sem
+      -- ORDER BY a escolha entre duplicatas seria indefinida.
+      ORDER BY clients.id
+      LIMIT 1
+    `;
+
+    return data.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch client by CPF.');
+  }
+}
+
 export async function fetchClientById(idclinic: string, id: string) {
   try {
     const data = await sql<Client>`

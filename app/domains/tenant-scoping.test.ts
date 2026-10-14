@@ -18,8 +18,11 @@ const ROOT = process.cwd();
 const DOMAINS = join(ROOT, 'app/domains');
 
 const READ_WRITE_SQL = /(INSERT INTO\s+smarthealth|UPDATE\s+smarthealth|DELETE FROM\s+smarthealth)/;
+// `requireDeviceClinic` entra na lista porque as actions do totem e do telão são
+// públicas (sem login): elas derivam a clínica do token do dispositivo pareado,
+// nunca do request.
 const SESSION_GUARD =
-  /await\s+(requireManagerClinicId|requireManager|getCurrentClinicId|requireSessionUser)\(/;
+  /await\s+(requireManagerClinicId|requireManager|getCurrentClinicId|requireSessionUser|requireDeviceClinic)\(/;
 const BINDS_CLINIC = /\$\{(idclinic|manager\.id)\}/;
 const VALIDATES_CLIENT = /fetchClientById\(idclinic/;
 
@@ -171,5 +174,17 @@ describe('tenant isolation in queries', () => {
     }
 
     expect(offenders, 'queries with a dead clinic parameter').toEqual([]);
+  });
+});
+
+describe('tenant isolation for paired devices', () => {
+  it('resolves the clinic from the pairing token, never from the request', () => {
+    const source = readFileSync(join(ROOT, 'app/lib/device-session.ts'), 'utf8');
+
+    // Diferente das demais buscas do app, a do dispositivo é cross-tenant de
+    // propósito: é o token_hash que identifica a clínica, então o arquivo não
+    // pode ler nenhum `idclinic` vindo do request.
+    expect(source).toMatch(/token_hash\s*=\s*\$\{/);
+    expect(source).not.toMatch(/get\('idclinic'\)/);
   });
 });
