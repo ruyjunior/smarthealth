@@ -83,6 +83,10 @@ export default function PanelBoard({
   const current = calls[0] ?? null;
   const others = calls.slice(1);
 
+  // Assinatura da chamada: a rechamada mantém o mesmo `id`, então o que muda é a
+  // hora da última chamada. É isso que faz o telão reanunciar ao ser rechamado.
+  const signature = current ? `${current.id}:${current.lastcallat?.getTime() ?? 0}` : null;
+
   // Relógio só depois de montar: renderizar a hora no servidor divergiria na hidratação.
   useEffect(() => {
     const tick = () =>
@@ -125,27 +129,27 @@ export default function PanelBoard({
   // Anuncia só chamada nova: a que já estava na tela quando o telão abriu não precisa
   // ser falada outra vez.
   useEffect(() => {
-    if (!current || announcedRef.current === current.id) {
+    if (!current || !signature || announcedRef.current === signature) {
       return;
     }
 
     const isFirstRender = announcedRef.current === null;
-    announcedRef.current = current.id;
+    announcedRef.current = signature;
 
     if (!isFirstRender && soundOn) {
       announce(current);
     }
-  }, [current, soundOn, announce]);
+  }, [current, signature, soundOn, announce]);
 
   useEffect(() => {
-    if (!current) {
+    if (!signature) {
       return;
     }
 
     setFlashing(true);
     const timer = setTimeout(() => setFlashing(false), FLASH_MS);
     return () => clearTimeout(timer);
-  }, [current]);
+  }, [signature]);
 
   const toggleSound = () => {
     const nextValue = !soundOn;

@@ -8,11 +8,13 @@ export type HelpIconKey =
   | 'rocket'
   | 'dashboard'
   | 'calendar'
+  | 'queue'
   | 'patients'
   | 'notes'
   | 'budget'
   | 'profile'
   | 'settings'
+  | 'devices'
   | 'users'
   | 'finance';
 
@@ -136,6 +138,58 @@ export const HELP_TOPICS: HelpTopic[] = [
           'Clique no atendimento na lista ou no calendário.',
           'Atualize os dados, mude o status ou exclua o registro.',
         ],
+      },
+    ],
+  },
+  {
+    slug: 'fila-de-espera',
+    title: 'Fila de espera',
+    summary: 'Chame o próximo paciente e acompanhe quem está aguardando.',
+    icon: 'queue',
+    audience: 'all',
+    path: '/fila',
+    sections: [
+      {
+        heading: 'Como a senha chega até aqui',
+        body: 'O paciente digita o CPF no totem da recepção, escolhe o serviço e recebe uma senha. Ela entra na Fila sozinha, sem precisar recarregar a página: a tela se atualiza a cada 15 segundos.',
+        steps: [
+          'Abra Fila no menu lateral.',
+          'Confira em "Aguardando" quem chegou e há quanto tempo espera.',
+        ],
+        tips: ['O tempo de espera é contado desde a emissão da senha no totem.'],
+      },
+      {
+        heading: 'Chamar o próximo',
+        body: 'A ordem é respeitada automaticamente: primeiro quem tem preferência legal, depois a ordem de chegada. A senha passa a ser anunciada no telão da sala de espera.',
+        steps: [
+          'Escolha a sala para o telão informar aonde o paciente deve ir.',
+          'Clique em Chamar próximo.',
+          'Acompanhe o andamento na seção "Em atendimento agora".',
+        ],
+        tips: [
+          'Com a fila vazia o app avisa, em vez de chamar em vão.',
+          'O botão de sala pode ficar em "sem informar": nesse caso o paciente é orientado a procurar a recepção.',
+        ],
+      },
+      {
+        heading: 'Rechamar e encerrar',
+        body: 'Toda senha chamada precisa de um desfecho. Enquanto ele não vem, a senha continua anunciada no telão.',
+        steps: [
+          'Rechamar repete o anúncio, para quem não ouviu na primeira vez.',
+          'Iniciar registra o começo do atendimento.',
+          'Finalizar encerra o atendimento.',
+          'Ausente marca quem foi chamado e não compareceu.',
+          'Cancelar serve para desistência ou senha emitida por engano.',
+        ],
+      },
+      {
+        heading: 'Atendimento preferencial',
+        body: 'Idosos (60 anos ou mais), gestantes, lactantes e pessoas com deficiência têm prioridade garantida por lei. O totem marca a preferência e registra o motivo, que aparece ao lado da senha na Fila.',
+        tips: ['Senhas preferenciais ficam no topo da fila, com o selo do motivo.'],
+      },
+      {
+        heading: 'Fechamento do dia',
+        body: 'A seção "Encerradas hoje" reúne o movimento do dia, com quem atendeu cada senha. A Fila mostra apenas o dia de hoje: cada novo dia começa vazia.',
       },
     ],
   },
@@ -285,6 +339,65 @@ export const HELP_TOPICS: HelpTopic[] = [
           'As mudanças em Gerência refletem na Agenda, nas Fichas e no Orçamento.',
           'Mantenha especialidades e valores atualizados para os orçamentos saírem corretos.',
         ],
+      },
+    ],
+  },
+  {
+    slug: 'totem-e-telao',
+    title: 'Totem e telão',
+    summary: 'Cadastre e pareie o totem da recepção e a TV que anuncia as chamadas.',
+    icon: 'devices',
+    audience: 'manager',
+    path: '/manager/devices',
+    sections: [
+      {
+        heading: 'Para que serve cada dispositivo',
+        body: 'O totem é o quiosque onde o paciente digita o CPF e escolhe o serviço para tirar a senha. O telão é a TV da sala de espera, que só exibe as senhas chamadas. Os serviços que aparecem no totem são os produtos cadastrados em Gerência > Produtos.',
+        steps: [
+          'Cadastre os produtos antes de colocar o totem em uso.',
+          'Decida onde cada dispositivo vai ficar: um totem na recepção, um telão na sala de espera.',
+        ],
+      },
+      {
+        heading: 'Cadastrar um dispositivo',
+        body: 'O cadastro gera um código de pareamento, que é o que autoriza o dispositivo a funcionar na sua clínica.',
+        steps: [
+          'Abra Gerência > Atendimento.',
+          'Preencha a identificação (por exemplo, "Totem da recepção") e escolha o tipo: Totem ou Telão.',
+          'Clique em Gerar código de pareamento.',
+          'Anote o código: ele aparece uma única vez e vale por 15 minutos.',
+        ],
+        tips: ['Use o botão de copiar e leve o código até o dispositivo.'],
+      },
+      {
+        heading: 'Parear no dispositivo',
+        body: 'O pareamento é feito uma única vez, no próprio dispositivo.',
+        steps: [
+          'No totem, abra o endereço /totem; no telão, abra /tv.',
+          'Digite o código de 8 caracteres, no formato K7M4-2QP9.',
+          'Confirme: o dispositivo já abre a própria tela.',
+        ],
+        tips: [
+          'O endereço /tv é curto de propósito, porque em uma TV ele é digitado com o controle remoto.',
+          'Cada navegador guarda um pareamento, então o mesmo computador não serve para totem e telão ao mesmo tempo.',
+        ],
+      },
+      {
+        heading: 'Som do telão',
+        body: 'Na primeira vez, o telão precisa de um clique em "Ativar som", porque o navegador só libera áudio depois de uma interação. A escolha fica guardada no dispositivo.',
+        tips: [
+          'O telão anuncia em voz alta somente a chamada nova, e não repete o que já estava na tela.',
+        ],
+      },
+      {
+        heading: 'Código perdido, revogar e excluir',
+        body: 'Se o código expirar antes de ser usado, gere outro: não é preciso recriar o dispositivo.',
+        steps: [
+          'Novo código emite um código novo para o mesmo dispositivo.',
+          'Revogar interrompe o funcionamento do dispositivo e mantém o histórico dele guardado.',
+          'Excluir remove o cadastro; as senhas já emitidas por ele continuam registradas.',
+        ],
+        tips: ['Para um dispositivo que já operou, prefira Revogar: o histórico fica íntegro.'],
       },
     ],
   },

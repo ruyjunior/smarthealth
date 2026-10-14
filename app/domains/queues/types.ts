@@ -50,6 +50,8 @@ export type PanelCall = {
   priority: boolean;
   priorityreason: string | null;
   calledat: Date | null;
+  /** Última chamada, lida da trilha de eventos: muda quando a recepção rechama. */
+  lastcallat: Date | null;
   startedat: Date | null;
   patientname: string | null;
   patientpronoun: string | null;

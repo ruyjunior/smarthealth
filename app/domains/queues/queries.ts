@@ -75,23 +75,34 @@ export async function fetchQueueByDay(idclinic: string, day: string) {
 export async function fetchPanelCalls(idclinic: string, day: string) {
   try {
     const data = await sql<PanelCall>`
-      SELECT
-        queues.id, queues.code, queues.status, queues.priority, queues.priorityreason,
-        queues.calledat, queues.startedat,
-        clients.name AS patientname, clients.pronoun AS patientpronoun,
-        offices.title AS officetitle,
-        users.name AS doctorname
-      FROM smarthealth.queues
-      LEFT JOIN smarthealth.clients ON queues.idclient = clients.id
-        AND clients.idclinic = queues.idclinic
-      LEFT JOIN smarthealth.offices ON queues.idoffice = offices.id
-        AND offices.idclinic = queues.idclinic
-      LEFT JOIN smarthealth.users ON queues.iduser = users.id
-        AND users.idclinic = queues.idclinic
-      WHERE queues.idclinic = ${idclinic}
-        AND queues.day = ${day}
-        AND queues.status IN ('Chamada', 'EmAtendimento')
-      ORDER BY queues.calledat DESC
+      WITH panel AS (
+        SELECT
+          queues.id, queues.code, queues.status, queues.priority, queues.priorityreason,
+          queues.calledat, queues.startedat,
+          clients.name AS patientname, clients.pronoun AS patientpronoun,
+          offices.title AS officetitle,
+          users.name AS doctorname,
+          -- A coluna calledat guarda a PRIMEIRA chamada (é a base do tempo de espera),
+          -- então a última vem da trilha de eventos: é isso que faz a rechamada
+          -- reanunciar no telão.
+          (
+            SELECT MAX(events.at)
+            FROM smarthealth.queueevents AS events
+            WHERE events.idqueue = queues.id AND events.status = 'Chamada'
+          ) AS lastcallat
+        FROM smarthealth.queues
+        LEFT JOIN smarthealth.clients ON queues.idclient = clients.id
+          AND clients.idclinic = queues.idclinic
+        LEFT JOIN smarthealth.offices ON queues.idoffice = offices.id
+          AND offices.idclinic = queues.idclinic
+        LEFT JOIN smarthealth.users ON queues.iduser = users.id
+          AND users.idclinic = queues.idclinic
+        WHERE queues.idclinic = ${idclinic}
+          AND queues.day = ${day}
+          AND queues.status IN ('Chamada', 'EmAtendimento')
+      )
+      SELECT * FROM panel
+      ORDER BY COALESCE(panel.lastcallat, panel.calledat) DESC
     `;
 
     return data.rows;
