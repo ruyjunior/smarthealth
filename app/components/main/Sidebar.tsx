@@ -39,8 +39,10 @@ export default async function Sidebar() {
     <aside className="sticky top-0 flex h-screen w-20 shrink-0 flex-col overflow-y-auto bg-gradient-to-b from-slate-950 via-blue-950 to-slate-950 p-3 text-white shadow-xl shadow-slate-900/15 md:w-64 md:p-4">
       <ClinicCard />
       <Nav user={user} />
-      <UserCard />
-      <Logout />
+      <div className="mt-auto flex flex-col gap-3 pt-6">
+        <UserCard />
+        <Logout />
+      </div>
     </aside>
   );
 }
