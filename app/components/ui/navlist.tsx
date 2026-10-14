@@ -8,6 +8,7 @@ import {
   ContactIcon,
   ShieldUserIcon,
   ListPlusIcon,
+  ListOrderedIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,6 +20,7 @@ export default function Nav({ user }: { user: User }) {
     { name: 'Dashboard', path: '/dashboard', icon: <ChartPieIcon size={20} /> },
     { name: 'Orçamento', path: '/budget', icon: <ListPlusIcon size={20} /> },
     { name: 'Agenda', path: '/services', icon: <CalendarDays size={20} /> },
+    { name: 'Fila', path: '/fila', icon: <ListOrderedIcon size={20} /> },
     { name: 'Pacientes', path: '/clients', icon: <ContactIcon size={20} /> },
     ...(isManager(user.role)
       ? [{ name: 'Gerência', path: '/manager', icon: <ShieldUserIcon size={20} /> }]
