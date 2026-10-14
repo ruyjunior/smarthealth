@@ -18,6 +18,15 @@ export type HelpIconKey =
   | 'users'
   | 'finance';
 
+/**
+ * Endereço público usado nas instruções da ajuda.
+ *
+ * É o mesmo de `metadataBase` no layout público. Fica como constante, e não vindo
+ * do ambiente, porque é conteúdo: o texto precisa mostrar o endereço real da
+ * clínica, não o `localhost` de quem está desenvolvendo.
+ */
+export const APP_PUBLIC_URL = 'https://smarthealth.app.br';
+
 export type HelpSection = {
   heading: string;
   body: string;
@@ -367,13 +376,15 @@ export const HELP_TOPICS: HelpTopic[] = [
           'Clique em Gerar código de pareamento.',
           'Anote o código: ele aparece uma única vez e vale por 15 minutos.',
         ],
-        tips: ['Use o botão de copiar e leve o código até o dispositivo.'],
+        tips: [
+          'O código é digitado no dispositivo, que é outra máquina — por isso ele é curto e não tem como ser copiado.',
+        ],
       },
       {
         heading: 'Parear no dispositivo',
-        body: 'O pareamento é feito uma única vez, no próprio dispositivo.',
+        body: 'O pareamento é feito uma única vez, no próprio dispositivo, e o endereço é digitado lá — não há como copiar do computador para a TV.',
         steps: [
-          'No totem, abra o endereço /totem; no telão, abra /tv.',
+          `No totem, abra ${APP_PUBLIC_URL}/totem; no telão, abra ${APP_PUBLIC_URL}/tv.`,
           'Digite o código de 8 caracteres, no formato K7M4-2QP9.',
           'Confirme: o dispositivo já abre a própria tela.',
         ],
@@ -490,6 +501,7 @@ const SITE_GUIDE_SLUGS = [
   'primeiros-passos',
   'dashboard',
   'agenda',
+  'fila-de-espera',
   'pacientes',
   'fichas',
   'orcamento',

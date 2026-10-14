@@ -1,14 +1,10 @@
 'use client';
 
 import { useActionState, useTransition } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { pairDevice, type PairState } from '@/app/domains/devices/actions';
 import Loading from '@/app/components/ui/loading';
 
 export default function PairDeviceForm() {
-  // Lido no cliente para que um `?codigo=` (link pronto para o técnico) não force
-  // a página a depender de searchParams no servidor.
-  const prefill = useSearchParams().get('codigo') ?? '';
   const [state, formAction] = useActionState<PairState, FormData>(pairDevice, {});
   const [isPending, startTransition] = useTransition();
 
@@ -29,7 +25,6 @@ export default function PairDeviceForm() {
           <input
             id="code"
             name="code"
-            defaultValue={prefill}
             autoComplete="off"
             autoCapitalize="characters"
             spellCheck={false}

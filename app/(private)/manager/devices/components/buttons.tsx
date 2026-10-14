@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { ArrowPathIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { DeleteAction } from '@/app/components/ui/action-icon';
 import { PAIRING_CODE_TTL_MINUTES } from '@/app/lib/device';
 import { deleteDevice, regeneratePairingCode, revokeDevice } from '@/app/domains/devices/actions';
@@ -29,11 +29,9 @@ export function NewPairingCode({ id }: { id: string }) {
     null,
   );
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
 
   const generate = () => {
     setError(null);
-    setCopied(false);
 
     startTransition(async () => {
       const response = await regeneratePairingCode(id);
@@ -49,19 +47,6 @@ export function NewPairingCode({ id }: { id: string }) {
         setError(response.message ?? 'Não foi possível gerar o código.');
       }
     });
-  };
-
-  const copy = async () => {
-    if (!result) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(result.pairingCode);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
   };
 
   return (
@@ -83,16 +68,8 @@ export function NewPairingCode({ id }: { id: string }) {
             {result.pairingCode}
           </p>
           <p className="mt-1 text-[11px] text-slate-600">
-            aparece uma única vez · vale {result.expiresInMinutes} min
+            aparece uma única vez · vale {result.expiresInMinutes} min · digite no dispositivo
           </p>
-          <button
-            type="button"
-            onClick={copy}
-            className="mt-2 inline-flex items-center gap-1 rounded-lg bg-amber-600 px-2 py-1 text-[11px] font-semibold text-white transition hover:bg-amber-500"
-          >
-            <ClipboardDocumentIcon className="h-3 w-3" />
-            {copied ? 'Copiado' : 'Copiar'}
-          </button>
         </div>
       )}
 

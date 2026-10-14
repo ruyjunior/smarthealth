@@ -1,6 +1,4 @@
-import { Suspense } from 'react';
 import Link from 'next/link';
-import Loading from '@/app/components/ui/loading';
 import { deviceHomePath } from '@/app/lib/device';
 import { getDeviceSession } from '@/app/lib/device-session';
 import { unpairDeviceAction } from '@/app/domains/devices/actions';
@@ -63,10 +61,7 @@ export default async function PairingScreen() {
           deste dispositivo.
         </p>
 
-        {/* O formulário lê `useSearchParams`, que precisa de fronteira de Suspense. */}
-        <Suspense fallback={<Loading />}>
-          <PairDeviceForm />
-        </Suspense>
+        <PairDeviceForm />
       </div>
     </div>
   );

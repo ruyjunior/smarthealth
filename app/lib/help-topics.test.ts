@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { isProtectedPath } from '@/app/lib/access';
 import {
+  APP_PUBLIC_URL,
   HELP_TOPICS,
   findHelpTopic,
   helpTopicNeighbours,
@@ -75,6 +76,24 @@ describe('help topic content', () => {
       }
     }
   });
+
+  it('gives device instructions the full public address', () => {
+    // Quem pareia está em outra máquina: "abra /tv" não é acionável na TV.
+    const pairing = HELP_TOPICS.find((topic) => topic.slug === 'totem-e-telao');
+
+    expect(pairing).toBeDefined();
+
+    const instructions = pairing!.sections
+      .flatMap((section) => [...(section.steps ?? []), ...(section.tips ?? [])])
+      .join(' ');
+    // A URL vem no meio da frase, então a pontuação final não faz parte dela.
+    const listedUrls = (instructions.match(new RegExp(`${APP_PUBLIC_URL}\\S*`, 'g')) ?? []).map(
+      (url) => url.replace(/[.;,)]+$/, ''),
+    );
+
+    expect(listedUrls).toContain(`${APP_PUBLIC_URL}/totem`);
+    expect(listedUrls).toContain(`${APP_PUBLIC_URL}/tv`);
+  });
 });
 
 describe('listHelpTopics', () => {
@@ -124,6 +143,7 @@ describe('listSiteGuides', () => {
     expect(slugs).toContain('primeiros-passos');
     expect(slugs).toContain('agenda');
     expect(slugs).toContain('orcamento');
+    expect(slugs).toContain('fila-de-espera');
   });
 
   it('never exposes a manager-only topic before login', () => {

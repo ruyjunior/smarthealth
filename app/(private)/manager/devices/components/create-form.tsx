@@ -1,7 +1,7 @@
 'use client';
 
-import { useActionState, useState, useTransition } from 'react';
-import { CheckCircleIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
+import { useActionState, useTransition } from 'react';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import Loading from '@/app/components/ui/loading';
 import { createDevice, type State } from '@/app/domains/devices/actions';
 import { DEVICE_KINDS, devicePairingHintPath, type DeviceKind } from '@/app/lib/device';
@@ -14,25 +14,10 @@ const KIND_LABEL: Record<DeviceKind, string> = {
 export default function DeviceForm() {
   const [state, formAction] = useActionState<State, FormData>(createDevice, {});
   const [isPending, startTransition] = useTransition();
-  const [copied, setCopied] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCopied(false);
     startTransition(() => formAction(new FormData(event.currentTarget)));
-  };
-
-  const copy = async () => {
-    if (!state.created) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(state.created.pairingCode);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
   };
 
   return (
@@ -58,15 +43,6 @@ export default function DeviceForm() {
               <p className="mt-3 rounded-xl border border-amber-200 bg-white p-4 text-center font-mono text-3xl font-bold tracking-[0.25em] text-slate-800">
                 {state.created.pairingCode}
               </p>
-
-              <button
-                type="button"
-                onClick={copy}
-                className="mt-3 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-500"
-              >
-                <ClipboardDocumentIcon className="h-4 w-4" />
-                {copied ? 'Código copiado' : 'Copiar código'}
-              </button>
             </div>
           </div>
         </div>
