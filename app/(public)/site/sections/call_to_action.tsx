@@ -40,7 +40,7 @@ const CallToAction: React.FC = () => {
           </Link>
 
           <Link
-            href="https://wa.me/5571991258769"
+            href="https://wa.me/5551992274105"
             className="group flex items-center justify-center gap-3 rounded-[1.5rem] border border-slate-200 bg-white p-5 text-left shadow-[0_18px_50px_rgba(148,163,184,0.18)] transition-all duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-[0_25px_70px_rgba(16,185,129,0.12)]"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
@@ -51,7 +51,7 @@ const CallToAction: React.FC = () => {
                 WhatsApp
               </span>
               <span className="block text-base font-semibold text-slate-800">
-                +55 71 99125-8769
+                +55 51 99227-4105
               </span>
             </span>
           </Link>
